@@ -1,0 +1,11 @@
+# dependencies
+node_modules
+
+# logs
+*.log
+
+# VS Code
+.idea
+
+# Macos
+.DS_Store
