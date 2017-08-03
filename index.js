@@ -2,16 +2,16 @@ const path = require('path')
 
 module.exports = function nuxtApollo(moduleOptions) {
   const options = Object.assign({}, this.options.apollo, moduleOptions)
-  options.clients = options.clients || {}
+  options.networkInterfaces = options.networkInterfaces || {}
 
-  const clients = options.clients
-  if (Object.keys(clients).length === 0) throw new Error('No clients found in apollo configuration')
-  if (!clients.default) throw new Error('No default client found in apollo configuration')
+  const networkInterfaces = options.networkInterfaces
+  if (Object.keys(networkInterfaces).length === 0) throw new Error('[Apollo module] No network interfaces found in apollo configuration')
+  if (!networkInterfaces.default) throw new Error('[Apollo module] No default network interface found in apollo configuration')
 
-  // Sanitize clients option
-  Object.keys(clients).forEach((key) => {
-    if (typeof clients[key] === 'string') {
-      clients[key] = { uri: clients[key] }
+  // Sanitize networkInterfaces option
+  Object.keys(networkInterfaces).forEach((key) => {
+    if (typeof networkInterfaces[key] !== 'string' || (typeof networkInterfaces[key] === 'string' && /^https?:\/\//.test(networkInterfaces[key]))) {
+      throw new Error(`[Apollo module] Network interface "${key}" should be a path to a network interface.`)
     }
   })
 

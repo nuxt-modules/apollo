@@ -10,11 +10,11 @@ export default ({ isClient, isServer, app, route, beforeNuxtRender }) => {
     clients: {}
   }
 
-  <% Object.keys(options.clients).forEach((key) => {
-    const client = options.clients[key]
-  %>
+  <% Object.keys(options.networkInterfaces).forEach((key) => { %>
+    let networkInterface = require('<%= options.networkInterfaces[key] %>')
+    networkInterface = networkInterface.default || networkInterface
     const <%= key %>Client = new ApolloClient({
-      networkInterface: createNetworkInterface(<%= serialize(client, { isJSON: true }) %>),
+      networkInterface,
       ...(isServer ? {
         ssrMode: true
       } : {

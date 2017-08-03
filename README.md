@@ -19,8 +19,8 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
  
   // Give apollo module options
   apollo: {
-    clients: {
-      default: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu'
+    networkInterfaces: {
+      default: '~/apollo/network-interfaces/default.js'
     }
   }
 }
@@ -29,7 +29,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 ## Options
 
 - clients: `Object`
-  - default: `String` or `Object` (if `Object`, should be [NetworkInterface options](http://dev.apollodata.com/core/apollo-client-api.html#NetworkInterfaceOptions))
+  - default: `String`
   - [otherClient]: `String` or `Object`
   
 Example (`nuxt.config.js`):
@@ -37,15 +37,22 @@ Example (`nuxt.config.js`):
 module.exports = {
   modules: ['@nuxtjs/apollo'],
   apollo: {
-    clients: {
-      default: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu',
-      test: {
-        uri: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu',
-        transportBatching: true
-      }
+    networkInterfaces: {
+      default: '~/apollo/network-interfaces/default.js',
+      test: '~/apollo/network-interfaces/test.js'
     }
   }
 }
+```
+
+Then in `~/apollo/network-interfaces/default.js`:
+
+```js
+import { createNetworkInterface } from 'apollo-client'
+
+export default createNetworkInterface({
+  uri: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu'
+})
 ```
 
 ## Usage
