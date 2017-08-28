@@ -15,9 +15,7 @@ export default (ctx) => {
 
   <% Object.keys(options.networkInterfaces).forEach((key) => { %>
     let networkInterface = require('<%= options.networkInterfaces[key] %>')
-    console.log("networkInterface",networkInterface)
     networkInterface = networkInterface.default(ctx) || networkInterface(ctx)
-    console.log("second call",networkInterface)
     const <%= key %>Client = new ApolloClient({
       networkInterface,
       ...(isServer ? {
