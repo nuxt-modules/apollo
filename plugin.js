@@ -14,8 +14,10 @@ export default (ctx) => {
   const { isClient, isServer, app, route, beforeNuxtRender, store } = ctx
 
   <% Object.keys(options.networkInterfaces).forEach((key) => { %>
-    let networkInterface = require('<%= options.networkInterfaces[key](ctx) %>')
-    networkInterface = networkInterface.default(ctx) || networkInterface
+    let networkInterface = require('<%= options.networkInterfaces[key] %>')
+    console.log("networkInterface",networkInterface)
+    networkInterface = networkInterface.default(ctx) || networkInterface(ctx)
+    console.log("second call",networkInterface)
     const <%= key %>Client = new ApolloClient({
       networkInterface,
       ...(isServer ? {
