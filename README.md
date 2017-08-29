@@ -31,7 +31,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
 ## Options
 
-- clients: `Object`
+- networkInterfaces: `Object`
   - default: `String`
   - [otherClient]: `String` or `Object`
 
