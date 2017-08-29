@@ -5,15 +5,17 @@ import { ApolloClient, createNetworkInterface } from 'apollo-client'
 
 Vue.use(VueApollo)
 
-export default ({ isClient, isServer, app, route, beforeNuxtRender, store }) => {
+export default (ctx) => {
 
   const providerOptions = {
     clients: {}
   }
 
+  const { isClient, isServer, app, route, beforeNuxtRender, store } = ctx
+
   <% Object.keys(options.networkInterfaces).forEach((key) => { %>
     let networkInterface = require('<%= options.networkInterfaces[key] %>')
-    networkInterface = networkInterface.default || networkInterface
+    networkInterface = networkInterface.default(ctx) || networkInterface(ctx)
     const <%= key %>Client = new ApolloClient({
       networkInterface,
       ...(isServer ? {
@@ -36,7 +38,7 @@ export default ({ isClient, isServer, app, route, beforeNuxtRender, store }) => 
 
   if (isServer) {
     beforeNuxtRender(async ({ Components, nuxtState }) => {
-      await app.apolloProvider.prefetchAll({ route, store }, Components)
+      await app.apolloProvider.prefetchAll(ctx, Components)
       nuxtState.apollo = app.apolloProvider.getStates()
     })
   }

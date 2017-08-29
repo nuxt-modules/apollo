@@ -16,7 +16,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 {
   // Add apollo module
   modules: ['@nuxtjs/apollo'],
- 
+
   // Give apollo module options
   apollo: {
     networkInterfaces: {
@@ -31,7 +31,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 - clients: `Object`
   - default: `String`
   - [otherClient]: `String` or `Object`
-  
+
 Example (`nuxt.config.js`):
 ```js
 module.exports = {
@@ -50,12 +50,15 @@ Then in `~/apollo/network-interfaces/default.js`:
 ```js
 import { createNetworkInterface } from 'apollo-client'
 
-export default createNetworkInterface({
-  uri: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu'
-})
+export default (ctx) => {
+  const networkInterface = createNetworkInterface({
+    uri: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu'
+  })
+  // here you can place your middleware. ctx has the context forwarded from Nuxt
+  return networkInterface
+}
 ```
 
 ## Usage
 
 See [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo).
-  
