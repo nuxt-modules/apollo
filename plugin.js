@@ -38,6 +38,12 @@ export default (ctx) => {
 
   if (isServer) {
     beforeNuxtRender(async ({ Components, nuxtState }) => {
+      Components.forEach((Component) => {
+        // Fix https://github.com/nuxt-community/apollo-module/issues/19
+        if (Component.options && Component.options.apollo && Component.options.apollo.$init) {
+          delete Component.options.apollo.$init
+        }
+      })
       await app.apolloProvider.prefetchAll(ctx, Components)
       nuxtState.apollo = app.apolloProvider.getStates()
     })
