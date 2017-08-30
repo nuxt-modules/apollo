@@ -11,6 +11,6 @@
   "dependencies": {
     "apollo-client": "^1.9.0-1",
     "isomorphic-fetch": "^2.2.1",
-    "vue-apollo": "^2.1.0-beta.20"
+    "vue-apollo": "^2.1.0-rc.4"
   }
 }
