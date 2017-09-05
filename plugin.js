@@ -16,14 +16,15 @@ export default (ctx) => {
   <% Object.keys(options.networkInterfaces).forEach((key) => { %>
     let networkInterface = require('<%= options.networkInterfaces[key] %>')
     networkInterface = networkInterface.default(ctx) || networkInterface(ctx)
-    const <%= key %>Client = new ApolloClient({
-      networkInterface,
+
+    const opts = Object.assign(
       ...(isServer ? {
         ssrMode: true
       } : {
         initialState: window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %>,
         ssrForceFetchDelay: 100
-      })
+      },networkInterface.constructor === Object ? networkInterface : {networkInterface})
+    const <%= key %>Client = new ApolloClient()
     })
     <% if (key === 'default') { %>
       providerOptions.<%= key %>Client = <%= key %>Client
