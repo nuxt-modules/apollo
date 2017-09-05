@@ -24,7 +24,7 @@ export default (ctx) => {
         initialState: window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %>,
         ssrForceFetchDelay: 100
       },networkInterface.constructor === Object ? networkInterface : {networkInterface})
-    const <%= key %>Client = new ApolloClient()
+    const <%= key %>Client = new ApolloClient(opts)
     })
     <% if (key === 'default') { %>
       providerOptions.<%= key %>Client = <%= key %>Client
