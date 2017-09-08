@@ -6,7 +6,7 @@ import {ApolloClient} from 'apollo-client'
 Vue.use(VueApollo)
 
 export default (ctx) => {
-    const {isServer, app, beforeNuxtRender, isDev} = ctx
+    const {isServer, app, beforeNuxtRender, isDev, nuxtState} = ctx
 
     const providerOptions = {
         clients: {}
@@ -17,7 +17,7 @@ export default (ctx) => {
         ...(isServer ? {
             ssrMode: true
         } : {
-            initialState: window.__NUXT__.apollo[`<%= key === 'default' ? 'defaultClient' : key %>`],
+            initialState: nuxtState.apollo[`<%= key === 'default' ? 'defaultClient' : key %>`],
             ssrForceFetchDelay: 100,
             connectToDevTools: isDev
         })
