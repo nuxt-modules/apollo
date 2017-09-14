@@ -58,7 +58,16 @@ export default (ctx) => {
     uri: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu'
   })
   // here you can place your middleware. ctx has the context forwarded from Nuxt
-  return networkInterface
+
+  // you can return the networkInterface directly or return an object with additional
+  // apollo-client options
+  // return networkInterface
+
+  // alternative return a object with constructor options of apollo-client
+  return {
+    networkInterface,
+    dataIdFromObject: o => o.id
+  }
 }
 ```
 
