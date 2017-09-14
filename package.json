@@ -9,8 +9,8 @@
     "access": "public"
   },
   "dependencies": {
-    "apollo-client": "^1.9.1",
+    "apollo-client": "^1.9.2",
     "isomorphic-fetch": "^2.2.1",
-    "vue-apollo": "^2.1.0-rc.2"
+    "vue-apollo": "^2.1.0-rc.5"
   }
 }
