@@ -21,7 +21,7 @@ export default (ctx) => {
       ...(isServer ? {
         ssrMode: true
       } : {
-        initialState: window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %>,
+        initialState: window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null,
         ssrForceFetchDelay: 100
       })
     })
