@@ -14,18 +14,20 @@ export default (ctx) => {
   const { isDev, isClient, isServer, app, route, beforeNuxtRender, store } = ctx
 
   <% Object.keys(options.networkInterfaces).forEach((key) => { %>
-    let networkInterface = require('<%= options.networkInterfaces[key] %>')
-    networkInterface = networkInterface.default(ctx) || networkInterface(ctx)
+    <% let networkInterface = `${key}NetworkInterface` %>
+    let <%= networkInterface %> = require('<%= options.networkInterfaces[key] %>')
+    <%= networkInterface %> = <%= networkInterface %>.default(ctx) || <%= networkInterface %>(ctx)
 
-    const opts = isServer ? {
+    <% const opts = `${key}Opts` %>
+    const <%= opts %> = isServer ? {
         ssrMode: true
     } : {
       initialState: window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null,
       ssrForceFetchDelay: 100,
       connectToDevTools: isDev
     }
-    Object.assign(opts, networkInterface.constructor === Object ? networkInterface : {networkInterface})
-    const <%= key %>Client = new ApolloClient(opts)
+    Object.assign(<%= opts %>, <%= networkInterface %>.constructor === Object ? <%= networkInterface %> : { networkInterface: <%= networkInterface %> })
+    const <%= key %>Client = new ApolloClient(<%= opts %>)
 
     <% if (key === 'default') { %>
       providerOptions.<%= key %>Client = <%= key %>Client
@@ -34,7 +36,6 @@ export default (ctx) => {
     <% } %>
 
   <% }) %>
-
 
   app.apolloProvider = new VueApollo(providerOptions)
 
@@ -50,5 +51,4 @@ export default (ctx) => {
       nuxtState.apollo = app.apolloProvider.getStates()
     })
   }
-
 }
