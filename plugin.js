@@ -20,7 +20,8 @@ export default (ctx) => {
     client = client.default(ctx) || client(ctx)
 
     const opts = isServer ? {
-        ssrMode: true
+        ssrMode: true,
+        cache: new InMemoryCache()
     } : {
       initialState: window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultLink' : key %> : null,
       ssrForceFetchDelay: 100,
@@ -28,6 +29,7 @@ export default (ctx) => {
       connectToDevTools: isDev
     }
     const finalOptions = Object.assign({}, opts, client)
+    console.log(finalOptions)
     const <%= key %>Client = new ApolloClient(finalOptions)
 
     <% if (key === 'default') { %>
