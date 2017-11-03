@@ -1,16 +1,17 @@
 {
-  "name": "@nuxtjs/apollo",
-  "version": "2.1.1",
+  "name": "@tipe/nuxt-apollo-module",
+  "version": "0.0.6",
   "license": "MIT",
   "main": "index.js",
-  "repository": "https://github.com/nuxt/apollo-module",
-  "homepage": "https://github.com/nuxt/apollo-module",
+  "repository": "https://github.com/tipe/apollo-module",
+  "homepage": "https://github.com/tipe/apollo-module",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "apollo-client": "^1.9.2",
+    "apollo-client": "^2.0.1",
+    "apollo-cache-inmemory": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
-    "vue-apollo": "^2.1.0-rc.5"
+    "vue-apollo": "^3.0.0-alpha.1"
   }
 }
