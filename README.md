@@ -22,8 +22,8 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
   // Give apollo module options
   apollo: {
-    networkInterfaces: {
-      default: '~/apollo/network-interfaces/default.js'
+    clientConfigs: {
+      default: '~/apollo/clientConfigs/default.js'
     }
   }
 }
@@ -31,7 +31,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
 ## Options
 
-- networkInterfaces: `Object`
+- clientConfig: `Object` Config passed to ApolloClient
   - default: `String`
   - [otherClient]: `String` or `Object`
 
@@ -40,7 +40,7 @@ Example (`nuxt.config.js`):
 module.exports = {
   modules: ['@nuxtjs/apollo'],
   apollo: {
-    networkInterfaces: {
+    clientConfigs: {
       default: '~/apollo/network-interfaces/default.js',
       test: '~/apollo/network-interfaces/test.js'
     }
@@ -51,21 +51,20 @@ module.exports = {
 Then in `~/apollo/network-interfaces/default.js`:
 
 ```js
-import { createNetworkInterface } from 'apollo-client'
+import { HttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 
+
+// make sure to export default
 export default (ctx) => {
-  const networkInterface = createNetworkInterface({
-    uri: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu'
-  })
+  // compose your Links here for the current client
+  const appLink = new HttpLink({ uri: 'https://graphql-url.com' })
   // here you can place your middleware. ctx has the context forwarded from Nuxt
 
-  // you can return the networkInterface directly or return an object with additional
-  // apollo-client options
-  // return networkInterface
-
-  // alternative return a object with constructor options of apollo-client
+  // return the an object with additional apollo-client options
   return {
-    networkInterface,
+    link: appLink,
+    cache: new InMemoryCache(),
     dataIdFromObject: o => o.id
   }
 }
