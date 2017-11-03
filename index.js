@@ -11,8 +11,8 @@ module.exports = function nuxtApollo(moduleOptions) {
   if (!clientConfigs.default) throw new Error('[Apollo module] No default link found in apollo configuration')
 
   // Sanitize clientConfigs option
-  Object.keys(networkInterfaces).forEach((key) => {
-    if (typeof networkInterfaces[key] !== 'string' || (typeof networkInterfaces[key] === 'string' && /^https?:\/\//.test(networkInterfaces[key]))) {
+  Object.keys(clientConfigs).forEach((key) => {
+    if (typeof clientConfigs[key] !== 'string' || (typeof clientConfigs[key] === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
       throw new Error(`[Apollo module] Network interface "${key}" should be a path to an exported Apollo Client config object.`)
     }
   })
