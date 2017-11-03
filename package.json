@@ -1,6 +1,6 @@
 {
   "name": "@tipe/nuxt-apollo-module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "main": "index.js",
   "repository": "https://github.com/tipe/apollo-module",
