@@ -29,7 +29,6 @@ export default (ctx) => {
       connectToDevTools: isDev
     }
     const finalOptions = Object.assign({}, opts, client)
-    console.log(finalOptions)
     const <%= key %>Client = new ApolloClient(finalOptions)
 
     <% if (key === 'default') { %>
