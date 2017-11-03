@@ -41,14 +41,14 @@ module.exports = {
   modules: ['@nuxtjs/apollo'],
   apollo: {
     clientConfigs: {
-      default: '~/apollo/network-interfaces/default.js',
-      test: '~/apollo/network-interfaces/test.js'
+      default: '~/apollo/clientConfigs/default.js',
+      test: '~/apollo/clientConfigs/test.js'
     }
   }
 }
 ```
 
-Then in `~/apollo/network-interfaces/default.js`:
+Then in `~/apollo/clientConfigs/default.js`:
 
 ```js
 import { HttpLink } from 'apollo-link-http'
