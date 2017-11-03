@@ -14,8 +14,8 @@ export default (ctx) => {
 
   const { isDev, isClient, isServer, app, route, beforeNuxtRender, store } = ctx
 
-  <% Object.keys(options.clients).forEach((key) => { %>
-    let client = require('<%= options.clients[key] %>')
+  <% Object.keys(options.clientConfigs).forEach((key) => { %>
+    let client = require('<%= options.clientConfigs[key] %>')
     // es6 module default export or not
     client = client.default(ctx) || client(ctx)
 
