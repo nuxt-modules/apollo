@@ -3,28 +3,28 @@ const path = require('path')
 module.exports = function nuxtApollo(moduleOptions) {
   // Fetch `apollo` option from `nuxt.config.js`
   const options = Object.assign({}, this.options.apollo, moduleOptions)
-  options.networkInterfaces = options.networkInterfaces || {}
+  options.clientConfigs = options.clientConfigs || {}
 
   // Check network interfaces valid definition
-  const networkInterfaces = options.networkInterfaces
-  if (Object.keys(networkInterfaces).length === 0) throw new Error('[Apollo module] No network interfaces found in apollo configuration')
-  if (!networkInterfaces.default) throw new Error('[Apollo module] No default network interface found in apollo configuration')
+  const clientConfigs = options.clientConfigs
+  if (Object.keys(clientConfigs).length === 0) throw new Error('[Apollo module] No clientConfigs found in apollo configuration')
+  if (!clientConfigs.default) throw new Error('[Apollo module] No default link found in apollo configuration')
 
-  // Sanitize networkInterfaces option
+  // Sanitize clientConfigs option
   Object.keys(networkInterfaces).forEach((key) => {
     if (typeof networkInterfaces[key] !== 'string' || (typeof networkInterfaces[key] === 'string' && /^https?:\/\//.test(networkInterfaces[key]))) {
-      throw new Error(`[Apollo module] Network interface "${key}" should be a path to a network interface.`)
+      throw new Error(`[Apollo module] Network interface "${key}" should be a path to an exported Apollo Client config object.`)
     }
   })
 
   // Add plugin for vue-apollo
   this.addPlugin({
-    src: path.join(__dirname, 'plugin.js'),
-    options: options
+    options: options,
+    src: path.join(__dirname, 'plugin.js')
   })
 
   // Add vue-apollo and apollo-client in common bundle
-  this.addVendor(['vue-apollo', 'apollo-client'])
+  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory'])
  
   // Add graphql loader
   this.extendBuild((config) => {
