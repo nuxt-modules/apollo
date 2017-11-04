@@ -64,8 +64,7 @@ export default (ctx) => {
   // return the an object with additional apollo-client options
   return {
     link: appLink,
-    cache: new InMemoryCache(),
-    dataIdFromObject: o => o.id
+    cache: new InMemoryCache()
   }
 }
 ```

@@ -23,7 +23,6 @@ export default (ctx) => {
         ssrMode: true,
         cache: new InMemoryCache()
     } : {
-      initialState: window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultLink' : key %> : null,
       ssrForceFetchDelay: 100,
       cache: new InMemoryCache(),
       connectToDevTools: isDev
