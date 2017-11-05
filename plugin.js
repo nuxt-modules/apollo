@@ -18,16 +18,21 @@ export default (ctx) => {
     let client = require('<%= options.clientConfigs[key] %>')
     // es6 module default export or not
     client = client.default(ctx) || client(ctx)
+    const cache = client.cache || new InMemoryCache()
 
     const opts = isServer ? {
-        ssrMode: true,
-        cache: new InMemoryCache()
+        ssrMode: true
     } : {
       ssrForceFetchDelay: 100,
-      cache: new InMemoryCache(),
       connectToDevTools: isDev
     }
-    const finalOptions = Object.assign({}, opts, client)
+
+    // hydrate client cache from the server
+    if (!isServer) {
+      cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
+    }
+
+    const finalOptions = Object.assign({}, opts, client, { cache })
     const <%= key %>Client = new ApolloClient(finalOptions)
 
     <% if (key === 'default') { %>

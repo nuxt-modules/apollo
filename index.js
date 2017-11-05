@@ -8,12 +8,12 @@ module.exports = function nuxtApollo(moduleOptions) {
   // Check network interfaces valid definition
   const clientConfigs = options.clientConfigs
   if (Object.keys(clientConfigs).length === 0) throw new Error('[Apollo module] No clientConfigs found in apollo configuration')
-  if (!clientConfigs.default) throw new Error('[Apollo module] No default link found in apollo configuration')
+  if (!clientConfigs.default) throw new Error('[Apollo module] No default client configuration found in apollo configuration')
 
   // Sanitize clientConfigs option
   Object.keys(clientConfigs).forEach((key) => {
     if (typeof clientConfigs[key] !== 'string' || (typeof clientConfigs[key] === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
-      throw new Error(`[Apollo module] Network interface "${key}" should be a path to an exported Apollo Client config object.`)
+      throw new Error(`[Apollo module] Client configuration "${key}" should be a path to an exported Apollo Client config object.`)
     }
   })
 
