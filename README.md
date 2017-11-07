@@ -41,29 +41,36 @@ module.exports = {
   modules: ['@nuxtjs/apollo'],
   apollo: {
     clientConfigs: {
-      default: '~/apollo/clientConfigs/default.js',
-      test: '~/apollo/clientConfigs/test.js'
+      default: '~/apollo/client-configs/default.js',
+      test: '~/apollo/client-configs/test.js'
     }
   }
 }
 ```
 
-Then in `~/apollo/clientConfigs/default.js`:
+Then in `~/apollo/client-configs/default.js`:
 
 ```js
+import { ApolloLink } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
-
-// make sure to export default
 export default (ctx) => {
-  // compose your Links here for the current client
-  const appLink = new HttpLink({ uri: 'https://graphql-url.com' })
-  // here you can place your middleware. ctx has the context forwarded from Nuxt
+  const httpLink = new HttpLink({ uri: 'http://localhost:8000/graphql' })
 
-  // return the an object with additional apollo-client options
+  // auth token
+  let token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.session
+
+  // middleware
+  const middlewareLink = new ApolloLink((operation, forward) => {
+    operation.setContext({
+      headers: { authorization: `Bearer ${token}` }
+    })
+    return forward(operation)
+  })
+  const link = middlewareLink.concat(httpLink)
   return {
-    link: appLink,
+    link,
     cache: new InMemoryCache()
   }
 }
