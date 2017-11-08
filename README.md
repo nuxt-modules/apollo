@@ -22,8 +22,8 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
   // Give apollo module options
   apollo: {
-    networkInterfaces: {
-      default: '~/apollo/network-interfaces/default.js'
+    clientConfigs: {
+      default: '~/apollo/clientConfigs/default.js'
     }
   }
 }
@@ -31,7 +31,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
 ## Options
 
-- networkInterfaces: `Object`
+- clientConfig: `Object` Config passed to ApolloClient
   - default: `String`
   - [otherClient]: `String` or `Object`
 
@@ -40,33 +40,38 @@ Example (`nuxt.config.js`):
 module.exports = {
   modules: ['@nuxtjs/apollo'],
   apollo: {
-    networkInterfaces: {
-      default: '~/apollo/network-interfaces/default.js',
-      test: '~/apollo/network-interfaces/test.js'
+    clientConfigs: {
+      default: '~/apollo/client-configs/default.js',
+      test: '~/apollo/client-configs/test.js'
     }
   }
 }
 ```
 
-Then in `~/apollo/network-interfaces/default.js`:
+Then in `~/apollo/client-configs/default.js`:
 
 ```js
-import { createNetworkInterface } from 'apollo-client'
+import { ApolloLink } from 'apollo-link'
+import { HttpLink } from 'apollo-link-http'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 
 export default (ctx) => {
-  const networkInterface = createNetworkInterface({
-    uri: 'https://api.graph.cool/simple/v1/cj1dqiyvqqnmj0113yuqamkuu'
+  const httpLink = new HttpLink({ uri: 'http://localhost:8000/graphql' })
+
+  // auth token
+  let token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.session
+
+  // middleware
+  const middlewareLink = new ApolloLink((operation, forward) => {
+    operation.setContext({
+      headers: { authorization: `Bearer ${token}` }
+    })
+    return forward(operation)
   })
-  // here you can place your middleware. ctx has the context forwarded from Nuxt
-
-  // you can return the networkInterface directly or return an object with additional
-  // apollo-client options
-  // return networkInterface
-
-  // alternative return a object with constructor options of apollo-client
+  const link = middlewareLink.concat(httpLink)
   return {
-    networkInterface,
-    dataIdFromObject: o => o.id
+    link,
+    cache: new InMemoryCache()
   }
 }
 ```

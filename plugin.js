@@ -1,7 +1,8 @@
-import Vue from 'vue'
 import 'isomorphic-fetch'
+import Vue from 'vue'
+import { ApolloClient } from 'apollo-client'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
-import { ApolloClient, createNetworkInterface } from 'apollo-client'
 
 Vue.use(VueApollo)
 
@@ -13,19 +14,26 @@ export default (ctx) => {
 
   const { isDev, isClient, isServer, app, route, beforeNuxtRender, store } = ctx
 
-  <% Object.keys(options.networkInterfaces).forEach((key) => { %>
-    let networkInterface = require('<%= options.networkInterfaces[key] %>')
-    networkInterface = networkInterface.default(ctx) || networkInterface(ctx)
+  <% Object.keys(options.clientConfigs).forEach((key) => { %>
+    let client = require('<%= options.clientConfigs[key] %>')
+    // es6 module default export or not
+    client = client.default(ctx) || client(ctx)
+    const cache = client.cache || new InMemoryCache()
 
     const opts = isServer ? {
         ssrMode: true
     } : {
-      initialState: window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null,
       ssrForceFetchDelay: 100,
       connectToDevTools: isDev
     }
-    Object.assign(opts, networkInterface.constructor === Object ? networkInterface : {networkInterface})
-    const <%= key %>Client = new ApolloClient(opts)
+
+    // hydrate client cache from the server
+    if (!isServer) {
+      cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
+    }
+
+    const finalOptions = Object.assign({}, opts, client, { cache })
+    const <%= key %>Client = new ApolloClient(finalOptions)
 
     <% if (key === 'default') { %>
       providerOptions.<%= key %>Client = <%= key %>Client
