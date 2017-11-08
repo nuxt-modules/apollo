@@ -82,6 +82,6 @@ export default (ctx) => {
 See [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo).
 
 
-### Upgrade notice v2 => v3
+### Upgrade Guide apollo-client v1 => v2
 
 Version 3 of this module is using apollo-client 2.x. You need to make sure to update all your middle/afterware according to the upgrade guide of apollo-client. Check this source for a reference: https://github.com/apollographql/apollo-client/blob/master/Upgrade.md
