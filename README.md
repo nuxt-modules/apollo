@@ -24,7 +24,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
   // Give apollo module options
   apollo: {
     clientConfigs: {
-      default: '~/apollo/clientConfigs/default.js'
+      default: '~/apollo/client-configs/default.js'
     }
   }
 }
