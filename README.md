@@ -85,3 +85,12 @@ See [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apo
 ### Upgrade Guide apollo-client v1 => v2
 
 Version 3 of this module is using apollo-client 2.x. You need to make sure to update all your middle/afterware according to the upgrade guide of apollo-client. Check this source for a reference: https://github.com/apollographql/apollo-client/blob/master/Upgrade.md
+
+### Adjust dependencies of package.json
+As this package is not taking care of your apollo-link endpoints please make sure you add these to your package.json. Most of you will end up adding these packages:
+* apollo-link-http
+* graphql
+You can add them like with one command:
+```
+npm install --save apollo-link-http graphql
+```
