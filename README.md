@@ -86,7 +86,7 @@ See [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apo
 ```js
 export default {
   actions: {
-    foo (context, payload) {
+    foo (store, payload) {
       let client = this.app.apolloProvider.defaultClient
     }
 }
@@ -100,6 +100,16 @@ export default {
   }
 }
 ```
+
+##### onServerInit
+```js
+export default {
+  nuxtServerInit (store, context) {
+    let client = context.app.apolloProvider.defaultClient
+  }
+}
+```
+
 
 ##### access client or call mutations of any method inside of component
 ```js
