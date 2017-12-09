@@ -81,7 +81,54 @@ export default (ctx) => {
 
 See [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo).
 
+#### Examples to access the defaultClient of your apolloProvider
+##### Vuex actions
+```js
+export default {
+  actions: {
+    foo (context, payload) {
+      let client = this.app.apolloProvider.defaultClient
+    }
+}
+```
 
+##### ayncData/fetch method of page component
+```js
+export default {
+  asycData (context) {
+    let client = context.app.apolloProvider.defaultClient
+  }
+}
+```
+
+##### access client or call mutations of any method inside of component
+```js
+export default {
+  methods:{
+    foo(){
+      // receive the defaultClient 
+      const client = this.$apollo.defaultClient
+
+      // most likely you would call mutations like following:
+      this.$apollo.mutate({mutation, variables})
+    }
+  }
+}
+```
+
+##### query on any component
+```js
+export default {
+  $apollo: {
+    foo: {
+      query: fooGql
+      variables: {id} // any variables
+    }
+  }
+}
+```
+
+## Upgrade
 ### Upgrade Guide apollo-client v1 => v2
 
 Version 3 of this module is using apollo-client 2.x. You need to make sure to update all your middle/afterware according to the upgrade guide of apollo-client. Check this source for a reference: https://github.com/apollographql/apollo-client/blob/master/Upgrade.md
