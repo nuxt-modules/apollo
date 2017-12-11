@@ -129,7 +129,7 @@ export default {
 ##### query on any component
 ```js
 export default {
-  $apollo: {
+  apollo: {
     foo: {
       query: fooGql
       variables: {id} // any variables
