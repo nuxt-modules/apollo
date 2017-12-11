@@ -147,6 +147,7 @@ Version 3 of this module is using apollo-client 2.x. You need to make sure to up
 As this package is not taking care of your apollo-link endpoints. Please make sure you add these to your package.json. Most of you will end up adding these packages:
 * apollo-link-http
 * graphql
+* graphql-tag (important if you use *.gql files)
 
 You can add them with one command:
 ```
