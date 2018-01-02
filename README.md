@@ -51,7 +51,7 @@ module.exports = {
 
 Then in `~/apollo/client-configs/default.js`:
 
-### Example without subscription
+#### Example without subscription
 
 ```js
 import { ApolloLink } from 'apollo-link'
@@ -79,7 +79,7 @@ export default (ctx) => {
 }
 ```
 
-### Example with subscription (graph.cool as example)
+#### Example with subscription (graph.cool as example)
 
 ```js
 import { ApolloLink, concat, split } from 'apollo-link'
