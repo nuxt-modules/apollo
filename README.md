@@ -202,6 +202,11 @@ As this package is not taking care of your apollo-link endpoints. Please make su
 * graphql
 * graphql-tag (important if you use *.gql files)
 
+In case of subscriptions:
+* apollo-link-ws
+* apollo-utilities
+* subscriptions-transport-ws
+
 You can add them with one command:
 ```
 npm install --save apollo-link-http graphql
