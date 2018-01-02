@@ -209,5 +209,5 @@ In case of subscriptions:
 
 You can add them with one command:
 ```
-npm install --save apollo-link-http graphql
+npm install --save apollo-link-http graphql graphql-tag apollo-link-ws apollo-utilities subscriptions-transport-ws
 ```
