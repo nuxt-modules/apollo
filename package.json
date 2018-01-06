@@ -1,5 +1,5 @@
 {
-  "name": "@nuxtjs/apollo",
+  "name": "@tipe/nuxt-apollo-module",
   "version": "3.0.1",
   "license": "MIT",
   "main": "index.js",
