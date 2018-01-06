@@ -12,7 +12,8 @@ export default (ctx) => {
     clients: {}
   }
 
-  const { isDev, isClient, isServer, app, route, beforeNuxtRender, store } = ctx
+  const { isDev, app, route, beforeNuxtRender, store } = ctx
+  const isServer = process.server !=== undefined : ctx.isServer
 
   <% Object.keys(options.clientConfigs).forEach((key) => { %>
     let client = require('<%= options.clientConfigs[key] %>')
