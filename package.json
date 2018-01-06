@@ -1,10 +1,10 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "2.1.1",
+  "version": "3.0.1",
   "license": "MIT",
   "main": "index.js",
-  "repository": "https://github.com/nuxt/apollo-module",
-  "homepage": "https://github.com/nuxt/apollo-module",
+  "repository": "https://github.com/nuxt-community/apollo-module",
+  "homepage": "https://github.com/nuxt-community/apollo-module",
   "publishConfig": {
     "access": "public"
   },
