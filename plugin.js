@@ -12,7 +12,7 @@ export default (ctx) => {
     clients: {}
   }
 
-  const { isDev, isClient, isServer, app, route, beforeNuxtRender, store } = ctx
+  const { isDev, app, route, beforeNuxtRender, store } = ctx
 
   <% Object.keys(options.clientConfigs).forEach((key) => { %>
     let client = require('<%= options.clientConfigs[key] %>')
@@ -20,7 +20,7 @@ export default (ctx) => {
     client = client.default(ctx) || client(ctx)
     const cache = client.cache || new InMemoryCache()
 
-    const opts = isServer ? {
+    const opts = process.server ? {
         ssrMode: true
     } : {
       ssrForceFetchDelay: 100,
@@ -28,7 +28,7 @@ export default (ctx) => {
     }
 
     // hydrate client cache from the server
-    if (!isServer) {
+    if (!process.server) {
       cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
     }
 
@@ -46,7 +46,7 @@ export default (ctx) => {
 
   app.apolloProvider = new VueApollo(providerOptions)
 
-  if (isServer) {
+  if (process.server) {
     beforeNuxtRender(async ({ Components, nuxtState }) => {
       Components.forEach((Component) => {
         // Fix https://github.com/nuxt-community/apollo-module/issues/19
