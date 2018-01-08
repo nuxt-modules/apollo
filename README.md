@@ -62,7 +62,7 @@ export default (ctx) => {
   const httpLink = new HttpLink({ uri: 'http://localhost:8000/graphql' })
 
   // auth token
-  let token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.session
+  let token = process.server ? ctx.req.session : window.__NUXT__.state.session
 
   // middleware
   const middlewareLink = new ApolloLink((operation, forward) => {
@@ -92,7 +92,7 @@ import 'subscriptions-transport-ws' // this is the default of apollo-link-ws
 export default (ctx) => {
   const httpLink = new HttpLink({uri: 'https://api.graph.cool/simple/v1/' + process.env.GRAPHQL_ALIAS})
   const authMiddleware = new ApolloLink((operation, forward) => {
-    const token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.session
+    const token = process.server ? ctx.req.session : window.__NUXT__.state.session
     operation.setContext({
       headers: {
         Authorization: token ? `Bearer ${token}` : null
@@ -106,7 +106,7 @@ export default (ctx) => {
     options: {
       reconnect: true,
       connectionParams: () => {
-        const token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.session
+        const token = process.server ? ctx.req.session : window.__NUXT__.state.session
         return {
           Authorization: token ? `Bearer ${token}` : null
         }
