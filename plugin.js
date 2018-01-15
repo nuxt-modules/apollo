@@ -7,21 +7,22 @@ import VueApollo from 'vue-apollo'
 Vue.use(VueApollo)
 
 export default (ctx) => {
-
-  const providerOptions = {
-    clients: {}
-  }
-
+  const providerOptions = { clients: {} }
   const { isDev, app, route, beforeNuxtRender, store } = ctx
 
   <% Object.keys(options.clientConfigs).forEach((key) => { %>
-    let client = require('<%= options.clientConfigs[key] %>')
+    // *** <%= key %> Apollo client ***
+    <% let clientConfig = `${key}ClientConfig` %>
+    let <%= clientConfig %> = require('<%= options.clientConfigs[key] %>')
     // es6 module default export or not
-    client = client.default(ctx) || client(ctx)
-    const cache = client.cache || new InMemoryCache()
+    <%= clientConfig %> = <%= clientConfig %>.default(ctx) || <%= clientConfig %>(ctx)
 
-    const opts = process.server ? {
-        ssrMode: true
+    <% let cache = `${key}Cache` %>
+    const <%= cache %> = <%= clientConfig %>.cache || new InMemoryCache()
+
+    <% let opts = `${key}Opts` %>
+    const <%= opts %> = process.server ? {
+      ssrMode: true
     } : {
       ssrForceFetchDelay: 100,
       connectToDevTools: isDev
@@ -29,20 +30,19 @@ export default (ctx) => {
 
     // hydrate client cache from the server
     if (!process.server) {
-      cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
+      <%= cache %>.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
     }
 
-    const finalOptions = Object.assign({}, opts, client, { cache })
-    const <%= key %>Client = new ApolloClient(finalOptions)
+    <% let finalOptions = `${key}FinalOpts` %>
+    const <%= finalOptions %> = Object.assign({}, <%= opts %>, <%= clientConfig %>, { <%= cache %> })
+    const <%= key %>Client = new ApolloClient(<%= finalOptions %>)
 
     <% if (key === 'default') { %>
       providerOptions.<%= key %>Client = <%= key %>Client
     <% } else { %>
       providerOptions.clients.<%= key %> = <%= key %>Client
     <% } %>
-
   <% }) %>
-
 
   app.apolloProvider = new VueApollo(providerOptions)
 
@@ -58,5 +58,4 @@ export default (ctx) => {
       nuxtState.apollo = app.apolloProvider.getStates()
     })
   }
-
 }
