@@ -17,7 +17,7 @@ export default (ctx) => {
   <% Object.keys(options.clientConfigs).forEach((key) => { %>
     let client = require('<%= options.clientConfigs[key] %>')
     // es6 module default export or not
-    client = client.default(ctx) || client(ctx)
+    client = (client.default || client)(ctx)
     const cache = client.cache || new InMemoryCache()
 
     const opts = process.server ? {
