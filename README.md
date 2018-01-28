@@ -142,13 +142,14 @@ export default {
     foo (store, payload) {
       let client = this.app.apolloProvider.defaultClient
     }
+  }
 }
 ```
 
 ##### ayncData/fetch method of page component
 ```js
 export default {
-  asycData (context) {
+  asyncData (context) {
     let client = context.app.apolloProvider.defaultClient
   }
 }
