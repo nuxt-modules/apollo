@@ -12,6 +12,6 @@
     "apollo-cache-inmemory": "^1.0.0",
     "apollo-client": "^2.0.1",
     "isomorphic-fetch": "^2.2.1",
-    "vue-apollo": "^3.0.0-alpha.1"
+    "vue-apollo": "^3.0.0-beta.1"
   }
 }
