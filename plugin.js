@@ -44,7 +44,8 @@ export default (ctx) => {
     <% } %>
   <% }) %>
 
-  app.apolloProvider = new VueApollo(providerOptions)
+  const apolloProvider = new VueApollo(providerOptions)
+  app.provide = apolloProvider.provide()
 
   if (process.server) {
     beforeNuxtRender(async ({ Components, nuxtState }) => {
@@ -54,8 +55,8 @@ export default (ctx) => {
           delete Component.options.apollo.$init
         }
       })
-      await app.apolloProvider.prefetchAll(ctx, Components)
-      nuxtState.apollo = app.apolloProvider.getStates()
+      await apolloProvider.prefetchAll(ctx, Components)
+      nuxtState.apollo = apolloProvider.getStates()
     })
   }
 }
