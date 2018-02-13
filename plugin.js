@@ -55,8 +55,8 @@ export default (ctx) => {
           delete Component.options.apollo.$init
         }
       })
-      await app.apolloProvider.prefetchAll(ctx, Components)
-      nuxtState.apollo = app.apolloProvider.getStates()
+      await apolloProvider.prefetchAll(ctx, Components)
+      nuxtState.apollo = apolloProvider.getStates()
     })
   }
 }
