@@ -170,8 +170,8 @@ export default {
 export default {
   methods:{
     foo(){
-      // receive the defaultClient 
-      const client = this.$apollo.defaultClient
+      // receive the associated Apollo client 
+      const client = this.$apollo.getClient()
 
       // most likely you would call mutations like following:
       this.$apollo.mutate({mutation, variables})
@@ -185,8 +185,12 @@ export default {
 export default {
   apollo: {
     foo: {
-      query: fooGql
-      variables: {id} // any variables
+      query: fooGql,
+      variables () {
+        return {
+          myVar: this.myVar
+        }
+      }
     }
   }
 }
