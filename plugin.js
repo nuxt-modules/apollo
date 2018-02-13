@@ -45,6 +45,9 @@ export default (ctx) => {
   <% }) %>
 
   const apolloProvider = new VueApollo(providerOptions)
+  // Allow access to the provider in the context
+  app.apolloProvider = apolloProvider
+  // Install the provider into the app
   app.provide = apolloProvider.provide()
 
   if (process.server) {
