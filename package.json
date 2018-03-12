@@ -3,8 +3,8 @@
   "version": "3.0.4",
   "license": "MIT",
   "main": "index.js",
-  "repository": "https://github.com/nuxt/apollo-module",
-  "homepage": "https://github.com/nuxt/apollo-module",
+  "repository": "https://github.com/nuxt-community/apollo-module",
+  "homepage": "https://github.com/nuxt-community/apollo-module",
   "publishConfig": {
     "access": "public"
   },
