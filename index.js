@@ -31,7 +31,8 @@ module.exports = function nuxtApollo(moduleOptions) {
     config.resolve.extensions = config.resolve.extensions.concat('.graphql', '.gql')
     config.module.rules.push({
       test: /\.(graphql|gql)$/,
-      use: 'graphql-tag/loader'
+      use: 'graphql-tag/loader',
+      exclude: /(node_modules)/
     })
   })
 }
