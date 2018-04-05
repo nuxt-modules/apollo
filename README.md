@@ -196,6 +196,16 @@ export default {
 }
 ```
 
+#### Add GQL file recognition on node_modules
+```js
+  apollo: {
+    clientConfigs: {
+      default: '~/apollo/client-configs/default.js'
+    },
+    includeNodeModules: true
+  }
+```
+
 ## Upgrade
 ### Upgrade Guide apollo-client v1 => v2
 
