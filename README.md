@@ -64,6 +64,8 @@ export default (ctx) => {
 
   // middleware
   const middlewareLink = new ApolloLink((operation, forward) => {
+    //This function is called before every request. Update ctx.req.session and window.__NUXT__.state.session
+    //To point to wherever you store your token
     const token = process.server ? ctx.req.session : window.__NUXT__.state.session
 
     operation.setContext({
@@ -92,6 +94,8 @@ import 'subscriptions-transport-ws' // this is the default of apollo-link-ws
 export default (ctx) => {
   const httpLink = new HttpLink({uri: 'https://api.graph.cool/simple/v1/' + process.env.GRAPHQL_ALIAS})
   const authMiddleware = new ApolloLink((operation, forward) => {
+    //This function is called before every request. Update ctx.req.session and window.__NUXT__.state.session
+    //To point to wherever you store your token
     const token = process.server ? ctx.req.session : window.__NUXT__.state.session
     operation.setContext({
       headers: {
@@ -226,3 +230,14 @@ You can add them with one command:
 ```
 npm install --save apollo-link-http graphql graphql-tag apollo-link-ws apollo-utilities subscriptions-transport-ws
 ```
+
+## Troubleshooting 
+
+### Proxies
+
+CORS errors are most often resolved with proxies.  If you see a Cross-Origin-Request error in your client side console look into setting up a proxy.  Check out https://github.com/nuxt-community/proxy-module for quick and straight forward setup.
+
+###  ctx.req.session - req is undefined
+
+This is just a placeholder.  You'll want to replace it with whatever storage mechanism you choose to store your token.
+Here is an example using local storage : https://github.com/Akryum/vue-apollo/issues/144
