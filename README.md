@@ -146,7 +146,7 @@ export default {
 }
 ```
 
-##### ayncData/fetch method of page component
+##### asyncData/fetch method of page component
 ```js
 export default {
   asyncData (context) {
