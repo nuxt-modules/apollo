@@ -25,17 +25,10 @@ module.exports = function nuxtApollo(moduleOptions) {
   })
 
   // Add vue-apollo and apollo-client in common bundle
-  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory'])
+  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory', 'universal-cookie'])
  
   // Add graphql loader
   this.extendBuild((config, {isServer}) => {
-    if (isServer) {
-      config.externals = [
-        nodeExternals({
-          whitelist: [/^vue-cli-plugin-apollo/]
-        })
-      ]
-    }
     config.resolve.extensions = config.resolve.extensions.concat('.graphql', '.gql')
     const gqlRules = {
       test: /\.(graphql|gql)$/,
@@ -46,5 +39,12 @@ module.exports = function nuxtApollo(moduleOptions) {
       delete gqlRules.exclude
     }
     config.module.rules.push(gqlRules)
+    if (isServer) {
+      config.externals = [
+        nodeExternals({
+          whitelist: [/^vue-cli-plugin-apollo/]
+        })
+      ]
+    }
   })
 }

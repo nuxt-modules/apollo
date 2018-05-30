@@ -2,8 +2,11 @@ import 'isomorphic-fetch'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
+import Cookies from 'universal-cookie'
 
 Vue.use(VueApollo)
+
+const cookies = new Cookies()
 
 const AUTH_TOKEN = 'apollo-token'
 
@@ -35,7 +38,7 @@ export default (ctx) => {
     // cache: myCache
 
     // Override the way the Authorization header is set
-    // getAuth: (tokenName) => ...
+    getAuth: defaultGetAuth
 
     // Additional ApolloClient options
     // apollo: { ... }
@@ -70,29 +73,12 @@ export default (ctx) => {
     return apolloProvider
   }
 
-  // // Manually call this when user log in
-  // async function onLogin (apolloClient, token) {
-  //   localStorage.setItem(AUTH_TOKEN, token)
-  //   if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
-  //   try {
-  //     await apolloClient.resetStore()
-  //   } catch (e) {
-  //     // eslint-disable-next-line no-console
-  //     console.log('%cError on cache reset (login)', 'color: orange;', e.message)
-  //   }
-  // }
-
-  // // Manually call this when user log out
-  // async function onLogout (apolloClient) {
-  //   localStorage.removeItem(AUTH_TOKEN)
-  //   if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
-  //   try {
-  //     await apolloClient.resetStore()
-  //   } catch (e) {
-  //     // eslint-disable-next-line no-console
-  //     console.log('%cError on cache reset (logout)', 'color: orange;', e.message)
-  //   }
-  // }
+  function defaultGetAuth (tokenName) {
+    // get the authentication token from local storage if it exists
+    const token = cookies.get(tokenName)
+    // return the headers to the context so httpLink can read them
+    return token
+  }
 
   const apolloProvider = createProvider({})
   // Allow access to the provider in the context
@@ -111,5 +97,29 @@ export default (ctx) => {
       await apolloProvider.prefetchAll(ctx, Components)
       nuxtState.apollo = apolloProvider.getStates()
     })
+  }
+
+  // Manually call this when user log in
+  async function onLogin (apolloClient = apolloProvider.defaultClient, token) {
+    cookies.set(AUTH_TOKEN, token)
+    if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+    try {
+      await apolloClient.resetStore()
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('%cError on cache reset (login)', 'color: orange;', e.message)
+    }
+  }
+
+  // Manually call this when user log out
+  async function onLogout (apolloClient = apolloProvider.defaultClient) {
+    cookies.remove(AUTH_TOKEN)
+    if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+    try {
+      await apolloClient.resetStore()
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('%cError on cache reset (logout)', 'color: orange;', e.message)
+    }
   }
 }
