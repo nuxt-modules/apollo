@@ -1,18 +1,23 @@
 import 'isomorphic-fetch'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
-import Cookies from 'universal-cookie'
+import Cookie from 'js-cookie'
 
 Vue.use(VueApollo)
 
-const cookies = new Cookies()
-
 const AUTH_TOKEN = 'apollo-token'
 
-export default (ctx) => {
+export default (ctx, inject) => {
   const providerOptions = { clients: {} }
   const { isDev, app, route, beforeNuxtRender, store } = ctx
+
+  const cache = new InMemoryCache()
+
+  if (!process.server) {
+    cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.defaultClient : null)
+  }
 
   // Config
   const defaultOptions = {
@@ -35,7 +40,7 @@ export default (ctx) => {
     // link: myLink
 
     // Override default cache
-    // cache: myCache
+    cache: cache,
 
     // Override the way the Authorization header is set
     getAuth: defaultGetAuth
@@ -75,7 +80,7 @@ export default (ctx) => {
 
   function defaultGetAuth (tokenName) {
     // get the authentication token from local storage if it exists
-    const token = cookies.get(tokenName)
+    const token = Cookie.get(tokenName)
     // return the headers to the context so httpLink can read them
     return token
   }
@@ -102,9 +107,9 @@ export default (ctx) => {
   // Set token function
   async function setToken (token, apolloClient = apolloProvider.defaultClient) {
     if (token) {
-      cookies.set(AUTH_TOKEN, token)
+      Cookie.set(AUTH_TOKEN, token)
     } else {
-      cookies.remove(AUTH_TOKEN)
+      Cookie.remove(AUTH_TOKEN)
     }
     if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
     try {
@@ -114,4 +119,6 @@ export default (ctx) => {
       console.log('%cError on cache reset (login)', 'color: orange;', e.message)
     }
   }
+
+  // inject('apolloHelpers',)
 }

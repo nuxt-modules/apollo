@@ -25,7 +25,7 @@ module.exports = function nuxtApollo(moduleOptions) {
   })
 
   // Add vue-apollo and apollo-client in common bundle
-  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory', 'universal-cookie'])
+  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory', 'js-cookie'])
  
   // Add graphql loader
   this.extendBuild((config, {isServer}) => {
