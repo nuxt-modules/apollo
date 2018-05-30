@@ -10,9 +10,8 @@ Vue.use(VueApollo)
 const AUTH_TOKEN = 'apollo-token'
 
 export default (ctx, inject) => {
-  const providerOptions = { clients: {} }
   const { isDev, app, route, beforeNuxtRender, store } = ctx
-
+  
   const cache = new InMemoryCache()
 
   if (!process.server) {
