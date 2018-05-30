@@ -99,27 +99,19 @@ export default (ctx) => {
     })
   }
 
-  // Manually call this when user log in
-  async function onLogin (apolloClient = apolloProvider.defaultClient, token) {
-    cookies.set(AUTH_TOKEN, token)
+  // Set token function
+  async function setToken (token, apolloClient = apolloProvider.defaultClient) {
+    if (token) {
+      cookies.set(AUTH_TOKEN, token)
+    } else {
+      cookies.remove(AUTH_TOKEN)
+    }
     if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
     try {
       await apolloClient.resetStore()
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log('%cError on cache reset (login)', 'color: orange;', e.message)
-    }
-  }
-
-  // Manually call this when user log out
-  async function onLogout (apolloClient = apolloProvider.defaultClient) {
-    cookies.remove(AUTH_TOKEN)
-    if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
-    try {
-      await apolloClient.resetStore()
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log('%cError on cache reset (logout)', 'color: orange;', e.message)
     }
   }
 }
