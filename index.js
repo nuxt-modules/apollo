@@ -1,4 +1,5 @@
 const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 module.exports = function nuxtApollo(moduleOptions) {
   // Fetch `apollo` option from `nuxt.config.js`
@@ -27,7 +28,14 @@ module.exports = function nuxtApollo(moduleOptions) {
   this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory'])
  
   // Add graphql loader
-  this.extendBuild((config) => {
+  this.extendBuild((config, {isServer}) => {
+    if (isServer) {
+      config.externals = [
+        nodeExternals({
+          whitelist: [/^vue-cli-plugin-apollo/]
+        })
+      ]
+    }
     config.resolve.extensions = config.resolve.extensions.concat('.graphql', '.gql')
     const gqlRules = {
       test: /\.(graphql|gql)$/,

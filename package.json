@@ -9,9 +9,9 @@
     "access": "public"
   },
   "dependencies": {
-    "apollo-cache-inmemory": "^1.1.10",
-    "apollo-client": "^2.2.6",
     "isomorphic-fetch": "^2.2.1",
-    "vue-apollo": "^3.0.0-beta.14"
+    "vue-apollo": "^3.0.0-beta.15",
+    "vue-cli-plugin-apollo": "^0.13.2",
+    "webpack-node-externals": "^1.7.2"
   }
 }

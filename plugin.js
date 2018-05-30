@@ -1,50 +1,100 @@
 import 'isomorphic-fetch'
 import Vue from 'vue'
-import { ApolloClient } from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueApollo from 'vue-apollo'
+import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
 
 Vue.use(VueApollo)
+
+const AUTH_TOKEN = 'apollo-token'
 
 export default (ctx) => {
   const providerOptions = { clients: {} }
   const { isDev, app, route, beforeNuxtRender, store } = ctx
 
-  <% Object.keys(options.clientConfigs).forEach((key) => { %>
-    // *** <%= key %> Apollo client ***
-    <% let clientConfig = `${key}ClientConfig` %>
-    let <%= clientConfig %> = require('<%= options.clientConfigs[key] %>')
-    // es6 module default export or not
-    <%= clientConfig %> = <%= clientConfig %>.default(ctx) || <%= clientConfig %>(ctx)
+  // Config
+  const defaultOptions = {
+    // You can use `https` for secure connection (recommended in production)
+    httpEndpoint: 'http://localhost:4000',
+    // You can use `wss` for secure connection (recommended in production)
+    // Use `null` to disable subscriptions
+    wsEndpoint:'ws://localhost:4000',
+    // LocalStorage token
+    tokenName: AUTH_TOKEN,
+    // Enable Automatic Query persisting with Apollo Engine
+    persisting: false,
+    // Use websockets for everything (no HTTP)
+    // You need to pass a `wsEndpoint` for this to work
+    websocketsOnly: false,
+    // Is being rendered on the server?
+    ssr: process.server ? true : false,
 
-    <% let cache = `${key}Cache` %>
-    const <%= cache %> = <%= clientConfig %>.cache || new InMemoryCache()
+    // Override default http link
+    // link: myLink
 
-    <% let opts = `${key}Opts` %>
-    const <%= opts %> = process.server ? {
-      ssrMode: true
-    } : {
-      ssrForceFetchDelay: 100,
-      connectToDevTools: isDev
-    }
+    // Override default cache
+    // cache: myCache
 
-    // hydrate client cache from the server
-    if (!process.server) {
-      <%= cache %>.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
-    }
+    // Override the way the Authorization header is set
+    // getAuth: (tokenName) => ...
 
-    <% let finalOptions = `${key}FinalOpts` %>
-    const <%= finalOptions %> = Object.assign({}, <%= opts %>, <%= clientConfig %>, { <%= cache %> })
-    const <%= key %>Client = new ApolloClient(<%= finalOptions %>)
+    // Additional ApolloClient options
+    // apollo: { ... }
 
-    <% if (key === 'default') { %>
-      providerOptions.<%= key %>Client = <%= key %>Client
-    <% } else { %>
-      providerOptions.clients.<%= key %> = <%= key %>Client
-    <% } %>
-  <% }) %>
+    // Client local data (see apollo-link-state)
+    // clientState: { resolvers: { ... }, defaults: { ... } }
+  }
 
-  const apolloProvider = new VueApollo(providerOptions)
+  // Call this in the Vue app file
+  function createProvider (options = {}) {
+    // Create apollo client
+    const { apolloClient, wsClient } = createApolloClient({
+      ...defaultOptions,
+      ...options,
+    })
+    apolloClient.wsClient = wsClient
+
+    // Create vue apollo provider
+    const apolloProvider = new VueApollo({
+      defaultClient: apolloClient,
+      defaultOptions: {
+        $query: {
+          // fetchPolicy: 'cache-and-network',
+        },
+      },
+      errorHandler (error) {
+        // eslint-disable-next-line no-console
+        console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
+      },
+    })
+
+    return apolloProvider
+  }
+
+  // // Manually call this when user log in
+  // async function onLogin (apolloClient, token) {
+  //   localStorage.setItem(AUTH_TOKEN, token)
+  //   if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+  //   try {
+  //     await apolloClient.resetStore()
+  //   } catch (e) {
+  //     // eslint-disable-next-line no-console
+  //     console.log('%cError on cache reset (login)', 'color: orange;', e.message)
+  //   }
+  // }
+
+  // // Manually call this when user log out
+  // async function onLogout (apolloClient) {
+  //   localStorage.removeItem(AUTH_TOKEN)
+  //   if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+  //   try {
+  //     await apolloClient.resetStore()
+  //   } catch (e) {
+  //     // eslint-disable-next-line no-console
+  //     console.log('%cError on cache reset (logout)', 'color: orange;', e.message)
+  //   }
+  // }
+
+  const apolloProvider = createProvider({})
   // Allow access to the provider in the context
   app.apolloProvider = apolloProvider
   // Install the provider into the app
