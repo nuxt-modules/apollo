@@ -8,10 +8,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
+  "peerDependencies": {
     "apollo-cache-inmemory": "^1.1.10",
     "apollo-client": "^2.2.6",
-    "isomorphic-fetch": "^2.2.1",
     "vue-apollo": "^3.0.0-beta.14"
+  },
+  "dependencies": {
+    "universal-isomorphic-fetch": "^0.0.1"
   }
 }

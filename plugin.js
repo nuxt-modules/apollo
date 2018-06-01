@@ -1,4 +1,4 @@
-import 'isomorphic-fetch'
+import 'universal-isomorphic-fetch'
 import Vue from 'vue'
 import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
