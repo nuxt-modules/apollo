@@ -11,7 +11,7 @@
 Install apollo module:
 
 ```bash
-npm install --save @nuxtjs/apollo
+$ npm install --save @nuxtjs/apollo vue-apollo apollo-client apollo-cache-inmemory node-fetch whatwg-fetch
 ```
 
 Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
