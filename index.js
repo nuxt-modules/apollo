@@ -13,8 +13,10 @@ module.exports = function nuxtApollo(moduleOptions) {
 
   // Sanitize clientConfigs option
   Object.keys(clientConfigs).forEach((key) => {
-    if (typeof clientConfigs[key] !== 'string' || (typeof clientConfigs[key] === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
-      throw new Error(`[Apollo module] Client configuration "${key}" should be a path to an exported Apollo Client config object.`)
+    if (typeof clientConfigs[key] !== 'object') {
+      throw new Error(`[Apollo module] Client configuration "${key}" should be an object.`)
+    } else if (typeof clientConfigs[key].httpEndpoint !== 'string' || (typeof clientConfigs[key].httpEndpoint === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
+        throw new Error(`[Apollo module] Client endpoint configuration "${key}" should be a path to an exported Apollo Client config object.`)
     }
   })
 

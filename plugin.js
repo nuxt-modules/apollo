@@ -10,62 +10,71 @@ Vue.use(VueApollo)
 const AUTH_TOKEN = 'apollo-token'
 
 export default (ctx, inject) => {
+  const providerOptions = { clients: {} }
   const { isDev, app, route, beforeNuxtRender, store } = ctx
   
-  const cache = new InMemoryCache()
-
-  if (!process.server) {
-    cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.defaultClient : null)
-  }
-
   // Config
-  const defaultOptions = {
-    // You can use `https` for secure connection (recommended in production)
-    httpEndpoint: 'http://localhost:4000',
-    // You can use `wss` for secure connection (recommended in production)
-    // Use `null` to disable subscriptions
-    wsEndpoint:'ws://localhost:4000',
-    // LocalStorage token
-    tokenName: AUTH_TOKEN,
-    // Enable Automatic Query persisting with Apollo Engine
-    persisting: false,
-    // Use websockets for everything (no HTTP)
-    // You need to pass a `wsEndpoint` for this to work
-    websocketsOnly: false,
-    // Is being rendered on the server?
-    ssr: process.server ? true : false,
+  <% Object.keys(options.clientConfigs).forEach((key, index) => { %>
+    const <%= key %>Cache = '<%= options.clientConfigs[key].cache %>'  || new InMemoryCache()
+  
+    if (!process.server) {
+      <%= key %>Cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
+    }
 
-    // Override default http link
-    // link: myLink
+    const <%= key %>ClientConfig = {
+      // You can use `https` for secure connection (recommended in production)
+      httpEndpoint: '<%= options.clientConfigs[key].httpEndpoint %>',
+      // You can use `wss` for secure connection (recommended in production)
+      // Use `null` to disable subscriptions
+      wsEndpoint: '<%= options.clientConfigs[key].wsEndpoint %>',
+      // LocalStorage token
+      tokenName: '<%= options.clientConfigs[key].tokenName %>' || AUTH_TOKEN,
+      // Enable Automatic Query persisting with Apollo Engine
+      persisting: '<%= options.clientConfigs[key].persisting %>' || false,
+      // Use websockets for everything (no HTTP)
+      // You need to pass a `wsEndpoint` for this to work
+      websocketsOnly: '<%= options.clientConfigs[key].websocketsOnly %>' || false,
+      // Is being rendered on the server?
+      ssr: process.server ? true : false,
+  
+      // Override default http link
+      // link: myLink,
+  
+      // Override default cache
+      cache: <%= key %>Cache,
+  
+      // Override the way the Authorization header is set
+      getAuth: defaultGetAuth
+  
+      // Additional ApolloClient options
+      // apollo: { ... },
+  
+      // Client local data (see apollo-link-state)
+      // clientState: { resolvers: { ... }, defaults: { ... } }
+    }
 
-    // Override default cache
-    cache: cache,
+    // Create apollo client
+    let <%= key %>ApolloCreation = createApolloClient({
+      ...<%= key %>ClientConfig
+    })
+    <%= key %>ApolloCreation.apolloClient.wsClient = <%= key %>ApolloCreation.wsClient
 
-    // Override the way the Authorization header is set
-    getAuth: defaultGetAuth
-
-    // Additional ApolloClient options
-    // apollo: { ... }
-
-    // Client local data (see apollo-link-state)
-    // clientState: { resolvers: { ... }, defaults: { ... } }
-  }
+    <% if (key === 'default') { %>
+      providerOptions.<%= key %>Client = <%= key %>ApolloCreation.apolloClient
+    <% } else { %>
+      providerOptions.clients.<%= key %> = <%= key %>ApolloCreation.apolloClient
+    <% } %>
+  <% }) %>
 
   // Call this in the Vue app file
-  function createProvider (options = {}) {
-    // Create apollo client
-    const { apolloClient, wsClient } = createApolloClient({
-      ...defaultOptions,
-      ...options,
-    })
-    apolloClient.wsClient = wsClient
+  function createProvider () {
 
     // Create vue apollo provider
     const apolloProvider = new VueApollo({
-      defaultClient: apolloClient,
+      ...providerOptions,
       defaultOptions: {
         $query: {
-          // fetchPolicy: 'cache-and-network',
+          fetchPolicy: 'cache-and-network',
         },
       },
       errorHandler (error) {
@@ -84,7 +93,7 @@ export default (ctx, inject) => {
     return token
   }
 
-  const apolloProvider = createProvider({})
+  const apolloProvider = createProvider()
   // Allow access to the provider in the context
   app.apolloProvider = apolloProvider
   // Install the provider into the app
