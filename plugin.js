@@ -124,7 +124,7 @@ export default (ctx, inject) => {
         await apolloClient.resetStore()
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.log('%cError on cache reset (login)', 'color: orange;', e.message)
+        console.log('%cError on cache reset (setToken)', 'color: orange;', e.message)
       }
     }
   })
