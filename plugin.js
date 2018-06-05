@@ -44,7 +44,7 @@ export default (ctx, inject) => {
       cache: <%= key %>Cache,
   
       // Override the way the Authorization header is set
-      getAuth: defaultGetAuth
+      getAuth: (tokenName) => defaultGetAuth(tokenName)
   
       // Additional ApolloClient options
       // apollo: { ... },
@@ -89,7 +89,7 @@ export default (ctx, inject) => {
     // get the authentication token from local storage if it exists
     const token = Cookie.get(tokenName)
     // return the headers to the context so httpLink can read them
-    return token ? `Bearer ${token}` : ''
+    return token ? 'Bearer ' + token : ''
   }
 
   const apolloProvider = createProvider()
