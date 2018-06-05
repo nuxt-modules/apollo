@@ -89,7 +89,7 @@ export default (ctx, inject) => {
     // get the authentication token from local storage if it exists
     const token = Cookie.get(tokenName)
     // return the headers to the context so httpLink can read them
-    return token
+    return token ? `Bearer ${token}` : ''
   }
 
   const apolloProvider = createProvider()
