@@ -34,7 +34,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
         // Use `null` to disable subscriptions
         wsEndpoint: 'http://localhost:4000',
         // LocalStorage token
-        tokenName: 'apollo-token' || AUTH_TOKEN,
+        tokenName: 'apollo-token',
         // Enable Automatic Query persisting with Apollo Engine
         persisting: false, // Optional
         // Use websockets for everything (no HTTP)
@@ -47,7 +47,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
         // Use `null` to disable subscriptions
         wsEndpoint: 'http://localhost:5000',
         // LocalStorage token
-        tokenName: 'apollo-token' || AUTH_TOKEN
+        tokenName: 'apollo-token'
       }
     }
   }
