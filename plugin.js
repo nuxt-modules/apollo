@@ -73,7 +73,7 @@ export default (ctx, inject) => {
       ...providerOptions,
       defaultOptions: {
         $query: {
-          fetchPolicy: 'cache-and-network',
+          // fetchPolicy: 'cache-and-network',
         },
       },
       errorHandler (error) {
