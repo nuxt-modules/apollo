@@ -68,7 +68,6 @@ export default (ctx, inject) => {
 
   // Call this in the Vue app file
   function createProvider () {
-
     // Create vue apollo provider
     const apolloProvider = new VueApollo({
       ...providerOptions,
