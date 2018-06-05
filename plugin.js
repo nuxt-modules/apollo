@@ -111,21 +111,21 @@ export default (ctx, inject) => {
     })
   }
 
-  // Set token function
-  async function setToken (token, apolloClient = apolloProvider.defaultClient) {
-    if (token) {
-      Cookie.set(AUTH_TOKEN, token)
-    } else {
-      Cookie.remove(AUTH_TOKEN)
+  inject('apolloHelpers', {
+    // Set token function
+    setToken: async (token, apolloClient = apolloProvider.defaultClient) => {
+      if (token) {
+        Cookie.set(AUTH_TOKEN, token)
+      } else {
+        Cookie.remove(AUTH_TOKEN)
+      }
+      if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
+      try {
+        await apolloClient.resetStore()
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log('%cError on cache reset (login)', 'color: orange;', e.message)
+      }
     }
-    if (apolloClient.wsClient) restartWebsockets(apolloClient.wsClient)
-    try {
-      await apolloClient.resetStore()
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log('%cError on cache reset (login)', 'color: orange;', e.message)
-    }
-  }
-
-  // inject('apolloHelpers',)
+  })
 }
