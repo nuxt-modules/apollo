@@ -1,176 +1,11 @@
 import 'isomorphic-fetch'
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import { ApolloClient } from 'apollo-client'
-import { split, from } from 'apollo-link'
-import { HttpLink } from 'apollo-link-http'
-import { createUploadLink } from 'apollo-upload-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { SubscriptionClient } from 'subscriptions-transport-ws'
-import MessageTypes from 'subscriptions-transport-ws/dist/message-types'
-import { WebSocketLink } from 'apollo-link-ws'
-import { getMainDefinition } from 'apollo-utilities'
-import { createPersistedQueryLink } from 'apollo-link-persisted-queries'
-import { setContext } from 'apollo-link-context'
-import { withClientState } from 'apollo-link-state'
+import { createApolloClient, restartWebsockets } from 'vue-cli-plugin-apollo/graphql-client'
 import Cookie from 'js-cookie'
 
 Vue.use(VueApollo)
-
-function createApolloClient ({
-  httpEndpoint,
-  wsEndpoint = null,
-  uploadEndpoint = null,
-  tokenName = 'apollo-token',
-  persisting = false,
-  ssr = false,
-  websocketsOnly = false,
-  link = null,
-  cache = null,
-  apollo = {},
-  clientState = null,
-  getAuth = defaultGetAuth,
-}) {
-  let wsClient, authLink, stateLink
-  const disableHttp = websocketsOnly && !ssr && wsEndpoint
-
-  // Apollo cache
-  if (!cache) {
-    cache = new InMemoryCache()
-  }
-
-  if (!disableHttp) {
-    if (!link) {
-      link = new HttpLink({
-        // You should use an absolute URL here
-        uri: httpEndpoint,
-      })
-    }
-
-    // HTTP Auth header injection
-    authLink = setContext((_, { headers }) => ({
-      headers: {
-        ...headers,
-        authorization: getAuth(tokenName),
-      },
-    }))
-
-    // Concat all the http link parts
-    link = authLink.concat(link)
-  }
-
-  // On the server, we don't want WebSockets and Upload links
-  if (!ssr) {
-    if (!disableHttp) {
-      if (persisting) {
-        link = createPersistedQueryLink().concat(link)
-      }
-
-      // File upload
-      const uploadLink = authLink.concat(createUploadLink({
-        uri: uploadEndpoint || httpEndpoint,
-      }))
-
-      // using the ability to split links, you can send data to each link
-      // depending on what kind of operation is being sent
-      link = split(
-        operation => operation.getContext().upload,
-        uploadLink,
-        link
-      )
-    }
-
-    // Web socket
-    if (wsEndpoint) {
-      wsClient = new SubscriptionClient(wsEndpoint, {
-        reconnect: true,
-        connectionParams: () => ({
-          authorization: getAuth(tokenName),
-        }),
-      })
-
-      // Create the subscription websocket link
-      const wsLink = new WebSocketLink(wsClient)
-
-      if (disableHttp) {
-        link = wsLink
-      } else {
-        link = split(
-          // split based on operation type
-          ({ query }) => {
-            const { kind, operation } = getMainDefinition(query)
-            return kind === 'OperationDefinition' &&
-              operation === 'subscription'
-          },
-          wsLink,
-          link
-        )
-      }
-    }
-  }
-
-  if (clientState) {
-    stateLink = withClientState({
-      cache,
-      ...clientState,
-    })
-    link = from([stateLink, link])
-  }
-
-  const apolloClient = new ApolloClient({
-    link,
-    cache,
-    // Additional options
-    ...(ssr ? {
-      // Set this on the server to optimize queries when SSR
-      ssrMode: true,
-    } : {
-      // This will temporary disable query force-fetching
-      ssrForceFetchDelay: 100,
-      // Apollo devtools
-      connectToDevTools: process.env.NODE_ENV !== 'production',
-    }),
-    ...apollo,
-  })
-
-  // Re-write the client state defaults on cache reset
-  if (stateLink) {
-    apolloClient.onResetStore(stateLink.writeDefaults)
-  }
-
-  return {
-    apolloClient,
-    wsClient,
-    stateLink,
-  }
-}
-
-function restartWebsockets (wsClient) {
-  // Copy current operations
-  const operations = Object.assign({}, wsClient.operations)
-
-  // Close connection
-  wsClient.close(true)
-
-  // Open a new one
-  wsClient.connect()
-
-  // Push all current operations to the new connection
-  Object.keys(operations).forEach(id => {
-    wsClient.sendMessage(
-      id,
-      MessageTypes.GQL_START,
-      operations[id].options
-    )
-  })
-}
-
-function defaultGetAuth (tokenName) {
-  // get the authentication token from local storage if it exists
-  const token = Cookie.get(tokenName)
-  // return the headers to the context so httpLink can read them
-  return token ? 'Bearer ' + token : ''
-}
 
 const AUTH_TOKEN = 'apollo-token'
 
@@ -183,9 +18,7 @@ export default (ctx, inject) => {
     const <%= key %>Cache = '<%= options.clientConfigs[key].cache %>'  || new InMemoryCache()
   
     if (!process.server) {
-      if (typeof window !== 'undefined') {
-        <%= key %>Cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
-      }
+      <%= key %>Cache.restore(window.__NUXT__ ? window.__NUXT__.apollo.<%= key === 'default' ? 'defaultClient' : key %> : null)
     }
 
     const <%= key %>ClientConfig = {
@@ -195,31 +28,29 @@ export default (ctx, inject) => {
       // Use `null` to disable subscriptions
       wsEndpoint: '<%= options.clientConfigs[key].wsEndpoint %>',
       // LocalStorage token
-      tokenName: '<%= options.clientConfigs[key].tokenName %>',
+      tokenName: '<%= options.clientConfigs[key].tokenName %>' || AUTH_TOKEN,
       // Enable Automatic Query persisting with Apollo Engine
-      persisting: '<%= options.clientConfigs[key].persisting %>',
+      persisting: '<%= options.clientConfigs[key].persisting %>' || false,
       // Use websockets for everything (no HTTP)
       // You need to pass a `wsEndpoint` for this to work
-      websocketsOnly: '<%= options.clientConfigs[key].websocketsOnly %>',
+      websocketsOnly: '<%= options.clientConfigs[key].websocketsOnly %>' || false,
       // Is being rendered on the server?
       ssr: process.server ? true : false,
   
       // Override default http link
-      link: '<%= options.clientConfigs[key].link %>',
+      // link: myLink,
   
       // Override default cache
       cache: <%= key %>Cache,
   
       // Override the way the Authorization header is set
-      getAuth: '<%= options.clientConfigs[key].getAuth %>'
+      getAuth: (tokenName) => defaultGetAuth(tokenName)
   
       // Additional ApolloClient options
       // apollo: { ... },
-      apollo: '<%= options.clientConfigs[key].apollo %>',
   
       // Client local data (see apollo-link-state)
       // clientState: { resolvers: { ... }, defaults: { ... } }
-      clientState: '<%= options.clientConfigs[key].clientState %>'
     }
 
     // Create apollo client
@@ -252,6 +83,13 @@ export default (ctx, inject) => {
     })
 
     return apolloProvider
+  }
+
+  function defaultGetAuth (tokenName) {
+    // get the authentication token from local storage if it exists
+    const token = Cookie.get(tokenName)
+    // return the headers to the context so httpLink can read them
+    return token ? 'Bearer ' + token : ''
   }
 
   const apolloProvider = createProvider()
