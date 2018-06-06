@@ -28,29 +28,31 @@ export default (ctx, inject) => {
       // Use `null` to disable subscriptions
       wsEndpoint: '<%= options.clientConfigs[key].wsEndpoint %>',
       // LocalStorage token
-      tokenName: '<%= options.clientConfigs[key].tokenName %>' || AUTH_TOKEN,
+      tokenName: '<%= options.clientConfigs[key].tokenName %>',
       // Enable Automatic Query persisting with Apollo Engine
-      persisting: '<%= options.clientConfigs[key].persisting %>' || false,
+      persisting: '<%= options.clientConfigs[key].persisting %>',
       // Use websockets for everything (no HTTP)
       // You need to pass a `wsEndpoint` for this to work
-      websocketsOnly: '<%= options.clientConfigs[key].websocketsOnly %>' || false,
+      websocketsOnly: '<%= options.clientConfigs[key].websocketsOnly %>',
       // Is being rendered on the server?
       ssr: process.server ? true : false,
   
       // Override default http link
-      // link: myLink,
+      link: '<%= options.clientConfigs[key].link %>',
   
       // Override default cache
       cache: <%= key %>Cache,
   
       // Override the way the Authorization header is set
-      getAuth: (tokenName) => defaultGetAuth(tokenName)
+      getAuth: '<%= options.clientConfigs[key].getAuth %>' || defaultGetAuth
   
       // Additional ApolloClient options
       // apollo: { ... },
+      apollo: '<%= options.clientConfigs[key].apollo %>',
   
       // Client local data (see apollo-link-state)
-      // clientState: { resolvers: { ... }, defaults: { ... } }
+      // clientState: { resolvers: { ... }, defaults: { ... } }\
+      clientState: '<%= options.clientConfigs[key].clientState %>'
     }
 
     // Create apollo client
