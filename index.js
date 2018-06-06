@@ -1,5 +1,4 @@
 const path = require('path')
-const nodeExternals = require('webpack-node-externals')
 
 module.exports = function nuxtApollo(moduleOptions) {
   // Fetch `apollo` option from `nuxt.config.js`
@@ -41,12 +40,5 @@ module.exports = function nuxtApollo(moduleOptions) {
       delete gqlRules.exclude
     }
     config.module.rules.push(gqlRules)
-    if (isServer) {
-      config.externals = [
-        nodeExternals({
-          whitelist: [/^vue-cli-plugin-apollo/]
-        })
-      ]
-    }
   })
 }

@@ -12,7 +12,6 @@
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.0",
     "vue-apollo": "^3.0.0-beta.16",
-    "vue-cli-plugin-apollo": "^0.13.6",
-    "webpack-node-externals": "^1.7.2"
+    "vue-cli-plugin-apollo": "^0.13.6"
   }
 }
