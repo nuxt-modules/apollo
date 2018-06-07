@@ -29,12 +29,13 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
   apollo: {
     clientConfigs: {
       default: {
+        // required  
         httpEndpoint: 'http://localhost:4000',
         // You can use `wss` for secure connection (recommended in production)
         // Use `null` to disable subscriptions
         wsEndpoint: 'http://localhost:4000',
         // LocalStorage token
-        tokenName: 'apollo-token',
+        tokenName: 'apollo-token', // optional
         // Enable Automatic Query persisting with Apollo Engine
         persisting: false, // Optional
         // Use websockets for everything (no HTTP)

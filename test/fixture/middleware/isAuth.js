@@ -1,5 +1,3 @@
-import Cookie from 'js-cookie'
-
 export default function ({app, error}) {
     const hasToken = !!app.$apolloHelpers.getToken()
     if (!hasToken) {
