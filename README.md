@@ -68,7 +68,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
   }
 ```
 
-Then in `~/apollo/client-configs/default.js`:
+Then in `~/apollo/client-configs/anotherClient.js`:
 
 ```js	
 export default (ctx) => {	
@@ -105,6 +105,13 @@ export default (ctx) => {
     // clientState: { resolvers: { ... }, defaults: { ... } }
   }	
 }	
+```
+
+If you don't want to use default getAuth token, you do this on the getAuth config
+```
+...
+getAuth: () => undefined
+...
 ```
 
 ## Usage
