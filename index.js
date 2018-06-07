@@ -36,7 +36,7 @@ module.exports = function nuxtApollo(moduleOptions) {
   this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory', 'js-cookie'])
  
   // Add graphql loader
-  this.extendBuild((config) => {
+  this.extendBuild((config, {isServer}) => {
     config.resolve.extensions = config.resolve.extensions.concat('.graphql', '.gql')
     const gqlRules = {
       test: /\.(graphql|gql)$/,
