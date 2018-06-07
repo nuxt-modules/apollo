@@ -56,7 +56,10 @@ export default (ctx, inject) => {
         clientState: '<%= options.clientConfigs[key].clientState %>'
       }
     <% } else if (typeof options.clientConfigs[key] === 'string') { %>
-      const <%= key %>ClientConfig = require('<%= options.clientConfigs[key] %>').default(ctx) || require('<%= options.clientConfigs[key] %>')(ctx)
+      let <%= key %>ClientConfig = require('<%= options.clientConfigs[key] %>').default(ctx) || require('<%= options.clientConfigs[key] %>')(ctx)
+      if (!<%= key %>ClientConfig.getAuth) {
+        <%= key %>ClientConfig.getAuth = defaultGetAuth
+      }
     <% } %>
 
     // Create apollo client
