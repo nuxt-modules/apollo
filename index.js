@@ -12,8 +12,10 @@ module.exports = function nuxtApollo(moduleOptions) {
 
   // Sanitize clientConfigs option
   Object.keys(clientConfigs).forEach((key) => {
-    if (typeof clientConfigs[key] !== 'string' || (typeof clientConfigs[key] === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
-      throw new Error(`[Apollo module] Client configuration "${key}" should be a path to an exported Apollo Client config object.`)
+    if (typeof clientConfigs[key] !== 'object') {
+      throw new Error(`[Apollo module] Client configuration "${key}" should be an object.`)
+    } else if (typeof clientConfigs[key].httpEndpoint !== 'string' || (typeof clientConfigs[key].httpEndpoint === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
+        throw new Error(`[Apollo module] Client endpoint configuration "${key}" should be a path to an exported Apollo Client config object.`)
     }
   })
 
@@ -24,7 +26,7 @@ module.exports = function nuxtApollo(moduleOptions) {
   })
 
   // Add vue-apollo and apollo-client in common bundle
-  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory'])
+  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory', 'vue-cli-plugin-apollo', 'js-cookie'])
  
   // Add graphql loader
   this.extendBuild((config) => {

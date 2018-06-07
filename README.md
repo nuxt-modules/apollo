@@ -16,6 +16,10 @@ npm install --save @nuxtjs/apollo
 
 Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
+- clientConfig: `Object` Config passed to ApolloClient
+  - default: `Object`
+  - otherClient: `Object` (Optional)
+
 ```js
 {
   // Add apollo module
@@ -24,26 +28,24 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
   // Give apollo module options
   apollo: {
     clientConfigs: {
-      default: '~/apollo/client-configs/default.js'
-    }
-  }
-}
-```
-
-## Options
-
-- clientConfig: `Object` Config passed to ApolloClient
-  - default: `String`
-  - [otherClient]: `String` or `Object`
-
-Example (`nuxt.config.js`):
-```js
-module.exports = {
-  modules: ['@nuxtjs/apollo'],
-  apollo: {
-    clientConfigs: {
-      default: '~/apollo/client-configs/default.js',
-      test: '~/apollo/client-configs/test.js'
+      default: {
+        httpEndpoint: 'http://localhost:4000',
+        // You can use `wss` for secure connection (recommended in production)
+        // Use `null` to disable subscriptions
+        wsEndpoint: 'http://localhost:4000',
+        // LocalStorage token
+        tokenName: 'apollo-token',
+        // Enable Automatic Query persisting with Apollo Engine
+        persisting: false, // Optional
+        // Use websockets for everything (no HTTP)
+        // You need to pass a `wsEndpoint` for this to work
+        websocketsOnly: false // Optional
+      },
+      test: {
+        httpEndpoint: 'http://localhost:5000',
+        wsEndpoint: 'http://localhost:5000',
+        tokenName: 'apollo-token'
+      }
     }
   }
 }
@@ -51,88 +53,6 @@ module.exports = {
 
 Then in `~/apollo/client-configs/default.js`:
 
-#### Example without subscription
-
-```js
-import { ApolloLink } from 'apollo-link'
-import { HttpLink } from 'apollo-link-http'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-
-export default (ctx) => {
-  const httpLink = new HttpLink({ uri: 'http://localhost:8000/graphql' })
-
-
-  // middleware
-  const middlewareLink = new ApolloLink((operation, forward) => {
-    //This function is called before every request. Update ctx.req.session and window.__NUXT__.state.session
-    //To point to wherever you store your token
-    const token = process.server ? ctx.req.session : window.__NUXT__.state.session
-
-    operation.setContext({
-      headers: { authorization: `Bearer ${token}` }
-    })
-    return forward(operation)
-  })
-  const link = middlewareLink.concat(httpLink)
-  return {
-    link,
-    cache: new InMemoryCache()
-  }
-}
-```
-
-#### Example with subscription (graph.cool as example)
-
-```js
-import { ApolloLink, concat, split } from 'apollo-link'
-import { HttpLink } from 'apollo-link-http'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { WebSocketLink } from 'apollo-link-ws'
-import { getMainDefinition } from 'apollo-utilities'
-import 'subscriptions-transport-ws' // this is the default of apollo-link-ws
-
-export default (ctx) => {
-  const httpLink = new HttpLink({uri: 'https://api.graph.cool/simple/v1/' + process.env.GRAPHQL_ALIAS})
-  const authMiddleware = new ApolloLink((operation, forward) => {
-    //This function is called before every request. Update ctx.req.session and window.__NUXT__.state.session
-    //To point to wherever you store your token
-    const token = process.server ? ctx.req.session : window.__NUXT__.state.session
-    operation.setContext({
-      headers: {
-        Authorization: token ? `Bearer ${token}` : null
-      }
-    })
-    return forward(operation)
-  })
-  // Set up subscription
-  const wsLink = new WebSocketLink({
-    uri: `wss://subscriptions.graph.cool/v1/${process.env.GRAPHQL_ALIAS}`,
-    options: {
-      reconnect: true,
-      connectionParams: () => {
-        const token = process.server ? ctx.req.session : window.__NUXT__.state.session
-        return {
-          Authorization: token ? `Bearer ${token}` : null
-        }
-      }
-    }
-  })
-  
-  const link = split(
-    ({query}) => {
-      const {kind, operation} = getMainDefinition(query)
-      return kind === 'OperationDefinition' && operation === 'subscription'
-    },
-    wsLink,
-    httpLink
-  )
-
-  return {
-    link: concat(authMiddleware, link),
-    cache: new InMemoryCache()
-  }
-}
-```
 
 ## Usage
 
