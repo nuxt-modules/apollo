@@ -1,4 +1,5 @@
 const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 module.exports = function nuxtApollo(moduleOptions) {
   // Fetch `apollo` option from `nuxt.config.js`
@@ -13,9 +14,13 @@ module.exports = function nuxtApollo(moduleOptions) {
   // Sanitize clientConfigs option
   Object.keys(clientConfigs).forEach((key) => {
     if (typeof clientConfigs[key] !== 'object') {
-      throw new Error(`[Apollo module] Client configuration "${key}" should be an object.`)
-    } else if (typeof clientConfigs[key].httpEndpoint !== 'string' || (typeof clientConfigs[key].httpEndpoint === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
-        throw new Error(`[Apollo module] Client endpoint configuration "${key}" should be a path to an exported Apollo Client config object.`)
+      if (typeof clientConfigs[key] !== 'string' || (typeof clientConfigs[key] === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
+        throw new Error(`[Apollo module] Client configuration "${key}" should be an object or a path to an exported Apollo Client config.`)
+      }
+    } else {
+      if (typeof clientConfigs[key].httpEndpoint !== 'string' || (typeof clientConfigs[key].httpEndpoint === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
+        throw new Error(`[Apollo module] Client configuration "${key}" must define httpEndpoint.`)
+      }
     }
   })
 
@@ -26,7 +31,7 @@ module.exports = function nuxtApollo(moduleOptions) {
   })
 
   // Add vue-apollo and apollo-client in common bundle
-  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory', 'vue-cli-plugin-apollo', 'js-cookie'])
+  this.addVendor(['vue-apollo', 'apollo-client', 'apollo-cache-inmemory', 'js-cookie'])
  
   // Add graphql loader
   this.extendBuild((config) => {
@@ -40,5 +45,12 @@ module.exports = function nuxtApollo(moduleOptions) {
       delete gqlRules.exclude
     }
     config.module.rules.push(gqlRules)
+    if (isServer) {
+      config.externals = [
+        nodeExternals({
+          whitelist: [/^vue-cli-plugin-apollo/]
+        })
+      ]
+    }
   })
 }
