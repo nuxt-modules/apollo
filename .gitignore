@@ -1,11 +1,11 @@
 # dependencies
 node_modules
-
-# logs
-*.log
-
-# VS Code
+*.iml
+*.log*
 .idea
-
-# Macos
+.vscode
 .DS_Store
+dist
+coverage
+.nuxt
+.env
