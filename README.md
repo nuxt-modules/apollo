@@ -31,28 +31,88 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
       default: {
         httpEndpoint: 'http://localhost:4000',
         // You can use `wss` for secure connection (recommended in production)
+
         // Use `null` to disable subscriptions
-        wsEndpoint: 'http://localhost:4000',
-        // LocalStorage token
-        tokenName: 'apollo-token',
+        // wsEndpoint: 'ws://localhost:4000',
+
+        // CookieStorage token
+        // tokenName: 'your-token-name',
+
         // Enable Automatic Query persisting with Apollo Engine
-        persisting: false, // Optional
+        // persisting: false,
+
         // Use websockets for everything (no HTTP)
         // You need to pass a `wsEndpoint` for this to work
-        websocketsOnly: false // Optional
+        // websocketsOnly: false,
+    
+        // Override default http link
+        // link: yourLink,
+    
+        // Override default cache
+        // cache: yourCache,
+    
+        // Override the way the Authorization header is set
+        // getAuth: yourFunction
+    
+        // Additional ApolloClient options
+        // apollo: { ... },
+    
+        // Client local data (see apollo-link-state)
+        // clientState: { resolvers: { ... }, defaults: { ... } }
       },
-      test: {
-        httpEndpoint: 'http://localhost:5000',
-        wsEndpoint: 'http://localhost:5000',
-        tokenName: 'apollo-token'
+      anotherone: '~/apollo/client-configs/anotherClient.js',
+      anothertwo: {
+        httpEndpoint: 'http://localhost:5000'
       }
     }
   }
-}
 ```
 
-Then in `~/apollo/client-configs/default.js`:
+Then in `~/apollo/client-configs/anotherClient.js`:
 
+```js	
+export default (ctx) => {	
+  return {	
+    httpEndpoint: 'http://localhost:4000',
+    // You can use `wss` for secure connection (recommended in production)
+
+    // Use `null` to disable subscriptions
+    // wsEndpoint: 'ws://localhost:4000',
+
+    // CookieStorage token
+    // tokenName: 'your-token-name',
+
+    // Enable Automatic Query persisting with Apollo Engine
+    // persisting: false,
+
+    // Use websockets for everything (no HTTP)
+    // You need to pass a `wsEndpoint` for this to work
+    // websocketsOnly: false,
+
+    // Override default http link
+    // link: yourLink,
+
+    // Override default cache
+    // cache: yourCache,
+
+    // Override the way the Authorization header is set
+    // getAuth: yourFunction
+
+    // Additional ApolloClient options
+    // apollo: { ... },
+
+    // Client local data (see apollo-link-state)
+    // clientState: { resolvers: { ... }, defaults: { ... } }
+  }	
+}	
+```
+
+If you don't want to use default getAuth token, you do this on the getAuth config
+```
+...
+getAuth: () => undefined
+...
+```
 
 ## Usage
 
