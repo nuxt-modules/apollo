@@ -19,7 +19,9 @@ module.exports = function nuxtApollo(moduleOptions) {
       }
     } else {
       if (typeof clientConfigs[key].httpEndpoint !== 'string' || (typeof clientConfigs[key].httpEndpoint === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
-        throw new Error(`[Apollo module] Client configuration "${key}" must define httpEndpoint.`)
+        if (typeof clientConfigs[key].link !== 'string' || (typeof clientConfigs[key].link === 'string' && /^https?:\/\//.test(clientConfigs[key]))) {
+          throw new Error(`[Apollo module] Client configuration "${key}" must define httpEndpoint or link option.`)
+        }
       }
     }
   })
