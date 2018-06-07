@@ -1,6 +1,7 @@
-# Apollo
+# Apollo inside of NuxtJS
 
-> Nuxt.js module to use [vue-apollo](https://github.com/Akryum/vue-apollo) (integrates graphql-tag loader to parse `.gql` & `.graphql` files)
+* Nuxt.js module to use [vue-apollo](https://github.com/Akryum/vue-apollo) (integrates graphql-tag loader to parse `.gql` & `.graphql` files)
+* uses internally same approach as `vue-cli-plugin-apollo`
 
 [![npm version](https://img.shields.io/npm/v/@nuxtjs/apollo.svg)](https://www.npmjs.com/package/@nuxtjs/apollo)
 [![license](https://img.shields.io/github/license/nuxt-community/apollo-module.svg)](https://github.com/nuxt-community/apollo-module/blob/master/LICENSE)
@@ -16,7 +17,7 @@ npm install --save @nuxtjs/apollo
 
 Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
-- clientConfig: `Object` Config passed to ApolloClient
+- clientConfigs: `Object` Config passed to ApolloClient
   - default: `Object`
   - otherClient: `Object` (Optional)
 
@@ -33,7 +34,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
         httpEndpoint: 'http://localhost:4000',
         // You can use `wss` for secure connection (recommended in production)
         // Use `null` to disable subscriptions
-        wsEndpoint: 'http://localhost:4000',
+        wsEndpoint: 'http://localhost:4000', // optional
         // LocalStorage token
         tokenName: 'apollo-token', // optional
         // Enable Automatic Query persisting with Apollo Engine
@@ -52,12 +53,62 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 }
 ```
 
-Then in `~/apollo/client-configs/default.js`:
+All available options you find [here](https://github.com/Akryum/vue-cli-plugin-apollo/blob/master/graphql-client/src/index.js#L15)
 
+## Configuration possibilities
+
+Check out [official vue-apollo-cli](https://github.com/Akryum/vue-cli-plugin-apollo) where possible usecases are presented.
 
 ## Usage
 
 See [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo).
+
+## Build in methods
+
+On top of auto-configuration of apollo-module you have following methods available
+```js
+ this.$apolloHelpers.onLogin(token, /* if not default you can pass in client as second argument */)
+ this.$apolloHelpers.onLogout(/* if not default you can pass in client as second argument */)
+ this.$apolloHelpers.getToken(/* you can provide named tokenName if not 'apollo-token' */)
+```
+Check out the [full example](https://github.com/nuxt-community/apollo-module/tree/master/test/fixture)
+
+#### User login
+```js
+methods:{
+  async onSubmit () {
+    const credentials = this.credentials
+    try {
+        const res = await this.$apollo.mutate({
+            mutation: authenticateUserGql,
+            variables: credentials
+        }).then(({data}) => data && data.authenticateUser)
+        await this.$apolloHelpers.onLogin(res.token)
+    } catch (e) {
+        console.error(e)
+    }
+  },
+}
+```
+#### User logout
+```js
+methods:{
+  async onLogout () {
+    await this.$apolloHelpers.onLogout()
+  },
+}
+```
+
+#### getToken
+```js
+// middleware/isAuth.js
+  export default function ({app, error}) {
+    const hasToken = !!app.$apolloHelpers.getToken()
+    if (!hasToken) {
+        error({errorCode:503, message:'You are not allowed to see this'})
+    }
+}
+```
 
 #### Examples to access the defaultClient of your apolloProvider
 ##### Vuex actions
@@ -132,25 +183,27 @@ export default {
 ```
 
 ## Upgrade
+
+### Upgrade Guide apollo-module v3 => v4
+
+Version 4 of this module leaves you with zero configuration. This means we use the best possible approach available from `vue-cli-plugin-apollo` and the same configuration behaviour. This means you don't need to wire up your own configuration, simply pass 
+
+Edit your configuration as following:
+```js
+// nuxt.config.js
+apollo:{
+ clientConfigs:{
+  default:{
+    httpEndpoint: YOUR_ENDPOINT,
+    wsEndpoint: YOUR_WS_ENDPOINT
+  }
+ }
+}
+```
+
 ### Upgrade Guide apollo-client v1 => v2
 
 Version 3 of this module is using apollo-client 2.x. You need to make sure to update all your middle/afterware according to the upgrade guide of apollo-client. Check this source for a reference: https://github.com/apollographql/apollo-client/blob/master/Upgrade.md
-
-### Adjust dependencies of package.json
-As this package is not taking care of your apollo-link endpoints. Please make sure you add these to your package.json. Most of you will end up adding these packages:
-* apollo-link-http
-* graphql
-* graphql-tag (important if you use *.gql files)
-
-In case of subscriptions:
-* apollo-link-ws
-* apollo-utilities
-* subscriptions-transport-ws
-
-You can add them with one command:
-```
-npm install --save apollo-link-http graphql graphql-tag apollo-link-ws apollo-utilities subscriptions-transport-ws
-```
 
 ## Troubleshooting 
 
