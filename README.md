@@ -28,6 +28,9 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
   // Give apollo module options
   apollo: {
+    tokenName: 'yourApolloTokenName', // optional, default: apollo-token
+    includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
+    // required
     clientConfigs: {
       default: {
         // required  
@@ -215,3 +218,28 @@ CORS errors are most often resolved with proxies.  If you see a Cross-Origin-Req
 
 This is just a placeholder.  You'll want to replace it with whatever storage mechanism you choose to store your token.
 Here is an example using local storage : https://github.com/Akryum/vue-apollo/issues/144
+
+## Contribute and wire up setup
+
+Setup the required fields in .env file in root folder
+```
+// .env
+HTTP_ENDPOINT=https://your-endpoint
+WS_ENDPOINT=wss://your-endpoint
+```
+
+In `index.vue` the login process requires that the gql endpoint enables a mutation which returns a valid token:
+```gql
+mutation authenticateUser($email:String!,$password:String!){
+    authenticateUser(email: $email, password: $password) {
+        token
+        id
+    }
+}
+```
+
+If your gql backend is prepared start running nuxt as follow
+```
+# npm install
+# npm run dev
+```
