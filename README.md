@@ -56,15 +56,28 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 }
 ```
 
-All available options you find [here](https://github.com/Akryum/vue-cli-plugin-apollo/blob/master/graphql-client/src/index.js#L15)
+## Options
 
-## Configuration possibilities
+### clientConfigs `Option`: required
+Sets up the apollo client endpoints. All available options for each endpoint you find [here](https://github.com/Akryum/vue-cli-plugin-apollo/blob/master/graphql-client/src/index.js#L15)
 
 Check out [official vue-apollo-cli](https://github.com/Akryum/vue-cli-plugin-apollo) where possible usecases are presented.
 
+#### clientConfigs.default `Option`: required
+
+#### clientConfigs.<your-additional-client-key> `Option`: optional
+
+### tokenName `String`: optional, default: 'apollo-token'
+
+Token name for the cookie which will be set in case of authentication. You can also provide an option `tokenName` in each of your `clientConfigs` to overwrite the default.
+
+### includeNodeModules `Boolean`: optional, default: false
+
+In case you use `*.gql` files inside of `node_module` folder you can enable the `graphql-tag/loader` to parse the files for you.
+
 ## Usage
 
-See [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo).
+Once the setup is completed you have a successfully enabled `vue-apollo` in your project. Checkout [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo) how to use `vue-apollo` inside your application code
 
 ## Build in methods
 
