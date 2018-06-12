@@ -30,6 +30,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
   apollo: {
     tokenName: 'yourApolloTokenName', // optional, default: apollo-token
     includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
+    authScheme: 'Basic', // optional, default: 'Bearer'
     // required
     clientConfigs: {
       default: {
