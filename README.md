@@ -30,7 +30,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
   apollo: {
     tokenName: 'yourApolloTokenName', // optional, default: apollo-token
     includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
-    authScheme: 'Basic', // optional, default: 'Bearer'
+    authenticationType: 'Basic', // optional, default: 'Bearer'
     // required
     clientConfigs: {
       default: {
@@ -71,6 +71,10 @@ Check out [official vue-apollo-cli](https://github.com/Akryum/vue-cli-plugin-apo
 ### tokenName `String`: optional, default: 'apollo-token'
 
 Token name for the cookie which will be set in case of authentication. You can also provide an option `tokenName` in each of your `clientConfigs` to overwrite the default.
+
+### authenticationType `String`: optional, default: 'Bearer'
+
+Sets the authentication type for any authorized request. Modify this if its not `Bearer`.
 
 ### includeNodeModules `Boolean`: optional, default: false
 
