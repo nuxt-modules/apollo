@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=production nuxt test/fixture",
+    "dev2": "NODE_ENV=production nuxt test/fixture-static-auth",
     "lint": "eslint lib test",
     "test": "npm run lint && jest",
     "release": "standard-version && git push --follow-tags && npm publish"
