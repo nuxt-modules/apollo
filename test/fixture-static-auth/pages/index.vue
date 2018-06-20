@@ -6,11 +6,18 @@
         Please log in to get credentials to visit secret page "Page A"
       </em>
     </div>
-    <strong>Current token:</strong>{{token}}
+    <div>
+      <button @click="triggerBasicFunction">Basic mutation</button>
+    </div>
+    <div>
+      <strong v-if="showMessage">Open Network panel and see if "Request Headers => authorization" are set correctly with "Bearer 1234"</strong>
+    </div>
   </div>
 </template>
 
 <script>
+  import authenticateUserGql from '../gql/authenticateUser.gql'
+
   export default {
     head () {
       return {
@@ -26,11 +33,22 @@
           email: '',
           password: ''
         },
-        successfulData: null
+        showMessage: false
       }
     },
-    mounted () {
-      this.token = this.$apolloHelpers.getToken()
+    methods: {
+      async triggerBasicFunction () {
+        try {
+          await this.$apollo.mutate({
+            mutation: authenticateUserGql,
+            variables: this.credentials
+          })
+        } catch (e) {
+          // as we dont make a valid request this will fail permanently. just check network panel is authorization header is set
+          console.log(e)
+        }
+        this.showMessage = true
+      }
     }
   }
 </script>

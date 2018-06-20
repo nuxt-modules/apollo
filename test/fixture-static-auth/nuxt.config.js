@@ -16,7 +16,7 @@ module.exports = {
       default: {
         httpEndpoint: process.env.HTTP_ENDPOINT,
         wsEndpoint: process.env.WS_ENDPOINT,
-        getAuth: () => 'static-token'
+        getAuth: () => 'Bearer 1234'
       }
     }
   }]]
