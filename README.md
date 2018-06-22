@@ -97,7 +97,7 @@ You have following methods for authentication available:
 ```
 Check out the [full example](https://github.com/nuxt-community/apollo-module/tree/master/test/fixture)
 
-For permanent cookies the setup is very simple:
+For permanent authorization tokens the setup just provide `getAuth` function for each of your endpoint configurations:
 ```js
   apollo: {
     clientConfigs: {
