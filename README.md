@@ -84,15 +84,30 @@ In case you use `*.gql` files inside of `node_module` folder you can enable the 
 
 Once the setup is completed you have a successfully enabled `vue-apollo` in your project. Checkout [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo) how to use `vue-apollo` inside your application code
 
-## Build in methods
+## Authentication
 
-On top of auto-configuration of apollo-module you have following methods available
+You have following methods for authentication available:
 ```js
+ // set your graphql-token
  this.$apolloHelpers.onLogin(token, /* if not default you can pass in client as second argument */)
+ // unset your graphql-token
  this.$apolloHelpers.onLogout(/* if not default you can pass in client as second argument */)
+ // get your current token (we persist token in a cookie)
  this.$apolloHelpers.getToken(/* you can provide named tokenName if not 'apollo-token' */)
 ```
 Check out the [full example](https://github.com/nuxt-community/apollo-module/tree/master/test/fixture)
+
+For permanent authorization tokens the setup just provide `getAuth` function for each of your endpoint configurations:
+```js
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'https://graphql.datocms.com',
+        getAuth: () => 'Bearer your_token_string'
+      },
+    }
+  },
+```
 
 #### User login
 ```js
