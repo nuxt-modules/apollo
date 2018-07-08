@@ -21,7 +21,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 - clientConfigs: `Object` Config passed to ApolloClient
   - default: `Object`
   # alternative
-  - default: `Path`
+  - default: `Path` // use this to have more control over the options
   - otherClient: `Object` (Optional)
 ```
 ```js
