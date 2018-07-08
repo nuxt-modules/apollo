@@ -258,6 +258,15 @@ Version 3 of this module is using apollo-client 2.x. You need to make sure to up
 
 ## Troubleshooting 
 
+### Use of *.gql files
+
+To use *gql|graphql files you need to add following dependency to your project:
+```
+  yarn add graphql-tag
+  # alternative
+  npm install graphql-tag
+```
+
 ### Proxies
 
 CORS errors are most often resolved with proxies.  If you see a Cross-Origin-Request error in your client side console look into setting up a proxy.  Check out https://github.com/nuxt-community/proxy-module for quick and straight forward setup.
