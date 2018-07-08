@@ -17,10 +17,13 @@ npm install --save @nuxtjs/apollo
 
 Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
+```bash
 - clientConfigs: `Object` Config passed to ApolloClient
   - default: `Object`
+  # alternative
+  - default: `Path` // use this to have more control over the options
   - otherClient: `Object` (Optional)
-
+```
 ```js
 {
   // Add apollo module
@@ -51,14 +54,26 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
         httpEndpoint: 'http://localhost:5000',
         wsEndpoint: 'http://localhost:5000',
         tokenName: 'apollo-token'
-      }
+      },
+      // alternative: user path to config which returns exact same config options
+      test2: '~/plugins/my-alternative-apollo-config.js'
     }
   }
 }
 ```
 
-## Options
+```js
+// plugins/my-alternative-apollo-config.js
+export default function(context){
+  return {
+    httpEndpoint: 'http://localhost:4000/graphql-alt'
+    getAuth:() => 'Bearer my-static-token' // use this method to overwrite functions
+  }
+}
+```
 
+## Options
+You can either (in a simple setup) just add an object as described above. If you need to overwrite cache or the default `getAuth()` function then use a path to your config file which returns the client config options.
 ### clientConfigs `Option`: required
 Sets up the apollo client endpoints. All available options for each endpoint you find [here](https://github.com/Akryum/vue-cli-plugin-apollo/blob/master/graphql-client/src/index.js#L15)
 
