@@ -1,6 +1,6 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "4.0.0-beta.5",
+  "version": "4.0.0-beta.6",
   "license": "MIT",
   "main": "lib/module.js",
   "repository": "https://github.com/nuxt-community/apollo-module",
