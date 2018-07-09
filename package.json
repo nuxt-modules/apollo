@@ -1,6 +1,6 @@
 {
   "name": "apollo-module-absinthe",
-  "version": "4.0.0-beta.6",
+  "version": "4.0.0-beta.7",
   "license": "MIT",
   "main": "lib/module.js",
   "repository": "https://github.com/e-lam/apollo-module-absinthe",
