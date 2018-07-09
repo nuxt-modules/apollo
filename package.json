@@ -1,10 +1,10 @@
 {
-  "name": "@nuxtjs/apollo",
+  "name": "apollo-module-absinthe",
   "version": "4.0.0-beta.6",
   "license": "MIT",
   "main": "lib/module.js",
-  "repository": "https://github.com/nuxt-community/apollo-module",
-  "homepage": "https://github.com/nuxt-community/apollo-module",
+  "repository": "https://github.com/e-lam/apollo-module-absinthe",
+  "homepage": "https://github.com/e-lam/apollo-module-absinthe",
   "publishConfig": {
     "access": "public"
   },
@@ -27,8 +27,7 @@
     "cookie": "^0.3.1",
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.0",
-    "vue-apollo": "^3.0.0-beta.16",
-    "vue-cli-plugin-apollo": "^0.13.6"
+    "vue-apollo": "^3.0.0-beta.16"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.2.2"
