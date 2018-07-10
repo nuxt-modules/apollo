@@ -1,6 +1,6 @@
 # Apollo inside of NuxtJS
 
-* Nuxt.js module to use [vue-apollo](https://github.com/Akryum/vue-apollo) (integrates graphql-tag loader to parse `.gql` & `.graphql` files)
+* Nuxt.js module to use [vue-apollo](https://github.com/Akryum/vue-apollo)
 * uses internally same approach as `vue-cli-plugin-apollo`
 
 [![npm version](https://img.shields.io/npm/v/@nuxtjs/apollo.svg)](https://www.npmjs.com/package/@nuxtjs/apollo)
@@ -13,6 +13,8 @@ Install apollo module:
 
 ```bash
 npm install --save @nuxtjs/apollo
+# if you are using *.gql or *.graphql files add graphql-tag to your dependencies
+npm install --save graphql-tag
 ```
 
 Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
