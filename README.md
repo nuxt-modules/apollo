@@ -1,7 +1,7 @@
 # Apollo inside of NuxtJS
 
 * Nuxt.js module to use [vue-apollo](https://github.com/Akryum/vue-apollo)
-* uses internally same approach as `vue-cli-plugin-apollo`
+* uses internally same approach as [vue-cli-plugin-apollo]((https://github.com/Akryum/vue-cli-plugin-apollo))
 
 [![npm version](https://img.shields.io/npm/v/@nuxtjs/apollo.svg)](https://www.npmjs.com/package/@nuxtjs/apollo)
 [![license](https://img.shields.io/github/license/nuxt-community/apollo-module.svg)](https://github.com/nuxt-community/apollo-module/blob/master/LICENSE)
