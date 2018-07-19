@@ -81,9 +81,9 @@ Sets up the apollo client endpoints. All available options for each endpoint you
 
 Check out [official vue-apollo-cli](https://github.com/Akryum/vue-cli-plugin-apollo) where possible usecases are presented.
 
-#### clientConfigs.default `Option`: required
+#### clientConfigs.default `Object`: required
 
-#### clientConfigs.<your-additional-client-key> `Option`: optional
+#### clientConfigs.<your-additional-client-key> `Object|Path`: optional
 
 ### tokenName `String`: optional, default: 'apollo-token'
 
