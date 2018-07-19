@@ -4,6 +4,12 @@ This is a fork of [apollo-module](https://github.com/nuxt-community/apollo-modul
 Since **apollo-module** uses `vue-cli-plugin-apollo` under the hood and it doesn't work with phoenix channels, this implementation doesn't rely on it.
 
 - Nuxt.js module to use [vue-apollo](https://github.com/Akryum/vue-apollo)
+- uses internally same approach as [vue-cli-plugin-apollo](https://github.com/Akryum/vue-cli-plugin-apollo)
+
+[![npm version](https://img.shields.io/npm/v/@nuxtjs/apollo.svg)](https://www.npmjs.com/package/@nuxtjs/apollo)
+[![license](https://img.shields.io/github/license/nuxt-community/apollo-module.svg)](https://github.com/nuxt-community/apollo-module/blob/master/LICENSE)
+
+- Nuxt.js module to use [vue-apollo](https://github.com/Akryum/vue-apollo)
 - uses [absinthe-socket/socket-apollo-link](https://github.com/absinthe-graphql/absinthe-socket/tree/master/packages/socket-apollo-link)internally
 
 ## Setup
@@ -45,7 +51,7 @@ Add `apollo-module-absinthe` to `modules` section of `nuxt.config.js`
 // apollo/client-configs/default.js
 export default ctx => {
   return {
-    wsEndpoint: "ws://localhost:4000/socket",
+    wsEndpoint: "ws://localhost:4000/socket"
   };
 };
 ```
@@ -60,9 +66,9 @@ Sets up the apollo client endpoints. All available options for each endpoint you
 
 Check out [official vue-apollo-cli](https://github.com/Akryum/vue-cli-plugin-apollo) where possible usecases are presented.
 
-#### clientConfigs.default `Option`: required
+#### clientConfigs.default `Object`: required
 
-#### clientConfigs.<your-additional-client-key> `Option`: optional
+#### clientConfigs.<your-additional-client-key> `Object|Path`: optional
 
 ### tokenName `String`: optional, default: 'apollo-token'
 
@@ -156,8 +162,8 @@ export default {
   actions: {
     foo(store, payload) {
       let client = this.app.apolloProvider.defaultClient;
-    },
-  },
+    }
+  }
 };
 ```
 
@@ -167,7 +173,7 @@ export default {
 export default {
   asyncData(context) {
     let client = context.app.apolloProvider.defaultClient;
-  },
+  }
 };
 ```
 
@@ -177,7 +183,7 @@ export default {
 export default {
   nuxtServerInit(store, context) {
     let client = context.app.apolloProvider.defaultClient;
-  },
+  }
 };
 ```
 
@@ -192,8 +198,8 @@ export default {
 
       // most likely you would call mutations like following:
       this.$apollo.mutate({ mutation, variables });
-    },
-  },
+    }
+  }
 };
 ```
 
@@ -206,11 +212,11 @@ export default {
       query: fooGql,
       variables() {
         return {
-          myVar: this.myVar,
+          myVar: this.myVar
         };
-      },
-    },
-  },
+      }
+    }
+  }
 };
 ```
 

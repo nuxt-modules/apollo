@@ -1,6 +1,6 @@
 {
-  "name": "apollo-module-absinthe",
-  "version": "4.0.0-beta.7",
+  "name": "@nuxtjs/apollo",
+  "version": "4.0.0-rc0",
   "license": "MIT",
   "main": "lib/module.js",
   "repository": "https://github.com/e-lam/apollo-module-absinthe",
@@ -27,10 +27,11 @@
     "cookie": "^0.3.1",
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.0",
-    "vue-apollo": "^3.0.0-beta.16"
+    "vue-apollo": "^3.0.0-beta.19",
+    "vue-cli-plugin-apollo": "^0.15.0"
   },
   "peerDependencies": {
-    "apollo-cache-inmemory": "^1.2.2"
+    "apollo-cache-inmemory": "^1.2.5"
   },
   "devDependencies": {
     "codecov": "latest",
