@@ -1,5 +1,5 @@
 {
-  "name": "@nuxtjs/apollo",
+  "name": "apollo-module-absinthe",
   "version": "4.0.0-rc0",
   "license": "MIT",
   "main": "lib/module.js",
