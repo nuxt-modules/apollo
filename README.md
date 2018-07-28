@@ -41,6 +41,11 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
       default: {
         // required  
         httpEndpoint: 'http://localhost:4000',
+        // optional
+        // See https://www.apollographql.com/docs/link/links/http.html#options
+        httpLinkOptions: {
+          credentials: 'same-origin'
+        },
         // You can use `wss` for secure connection (recommended in production)
         // Use `null` to disable subscriptions
         wsEndpoint: 'http://localhost:4000', // optional
