@@ -112,7 +112,7 @@ Once the setup is completed you have a successfully enabled `vue-apollo` in your
 You have following methods for authentication available:
 ```js
  // set your graphql-token
- this.$apolloHelpers.onLogin(token /* you can set custom token expiration on second argument, and if not default you can pass in client as third argument */)
+ this.$apolloHelpers.onLogin(token /* if not default you can pass in client as second argument, and you can set custom token expiration on third argument */)
  // unset your graphql-token
  this.$apolloHelpers.onLogout(/* if not default you can pass in client as second argument */)
  // get your current token (we persist token in a cookie)
