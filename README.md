@@ -49,7 +49,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
         },
         // You can use `wss` for secure connection (recommended in production)
         // Use `null` to disable subscriptions
-        wsEndpoint: 'http://localhost:4000', // optional
+        wsEndpoint: 'ws://localhost:4000', // optional
         // LocalStorage token
         tokenName: 'apollo-token', // optional
         // Enable Automatic Query persisting with Apollo Engine
@@ -60,7 +60,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
       },
       test: {
         httpEndpoint: 'http://localhost:5000',
-        wsEndpoint: 'http://localhost:5000',
+        wsEndpoint: 'ws://localhost:5000',
         tokenName: 'apollo-token'
       },
       // alternative: user path to config which returns exact same config options
