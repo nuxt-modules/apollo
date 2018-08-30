@@ -37,6 +37,10 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
     tokenExpires: 10, // optional, default: 7
     includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
     authenticationType: 'Basic', // optional, default: 'Bearer'
+    // optional
+    errorHandler (error) {
+      console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
+    },
     // required
     clientConfigs: {
       default: {
