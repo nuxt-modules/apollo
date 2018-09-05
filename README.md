@@ -97,11 +97,13 @@ Check out [official vue-apollo-cli](https://github.com/Akryum/vue-cli-plugin-apo
 
 ### tokenName `String`: optional, default: 'apollo-token'
 
-Token name for the cookie which will be set in case of authentication. You can also provide an option `tokenName` in each of your `clientConfigs` to overwrite the default.
+Token name for the cookie which will be set in case of authentication. You can also provide an option `tokenName` in each of your `clientConfigs` to overwrite the default. When each request is made, the value of whatever is in this cooke will be sent in an "Authorization" HTTP header as specified by `authenticationType` below.
 
 ### authenticationType `String`: optional, default: 'Bearer'
 
-Sets the authentication type for any authorized request. Modify this if its not `Bearer`.
+Sets the authentication type for any authorized request. Modify this if the authentication type your GraphQL API requires is not the default `Bearer`. All requests will then be sent with the appropriate HTTP header in the format: "Authorization: <authenticationType> <your token taken from user cookies>" (Eg. `Authorization: Bearer abc123`). 
+  
+If your backend requires an Authorization header in the format "Authorization: <your token>", without any prefix, then you should set this value to an empty string.
 
 ### includeNodeModules `Boolean`: optional, default: false
 
