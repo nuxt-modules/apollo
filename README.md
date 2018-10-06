@@ -34,7 +34,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
   // Give apollo module options
   apollo: {
     tokenName: 'yourApolloTokenName', // optional, default: apollo-token
-    tokenExpires: 10, // optional, default: 7
+    tokenExpires: 10, // optional, default: 7 (days)
     includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
     authenticationType: 'Basic', // optional, default: 'Bearer'
     // optional
@@ -196,7 +196,7 @@ export default {
 }
 ```
 
-##### onServerInit
+##### nuxtServerInit
 ```js
 export default {
   nuxtServerInit (store, context) {
@@ -206,7 +206,7 @@ export default {
 ```
 
 
-##### access client or call mutations of any method inside of component
+##### access client or call mutations and queries of any method inside of component
 ```js
 export default {
   methods:{
@@ -216,12 +216,20 @@ export default {
 
       // most likely you would call mutations like following:
       this.$apollo.mutate({mutation, variables})
+      
+      // but you could also call queries like this:
+      this.$apollo.query({query, variables})
+        .then(({ data }) => {
+          // do what you want with data
+        })
     }
   }
 }
 ```
 
-##### query on any component
+Once you get the client, you can access its methods and properties. See [API Reference](https://akryum.github.io/vue-apollo/api/dollar-apollo.html)
+
+#### Smart queries on any component
 ```js
 export default {
   apollo: {
@@ -236,6 +244,8 @@ export default {
   }
 }
 ```
+See [vue-apollo documentation](https://akryum.github.io/vue-apollo/guide/apollo/queries.html) for more information on smart queries
+
 
 #### Add GQL file recognition on node_modules
 ```js
