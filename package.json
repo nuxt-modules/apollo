@@ -28,7 +28,7 @@
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.0",
     "vue-apollo": "^3.0.0-beta.25",
-    "vue-cli-plugin-apollo": "^0.16.4"
+    "vue-cli-plugin-apollo": "^0.17.0"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.2.5"
@@ -36,19 +36,19 @@
   "devDependencies": {
     "codecov": "latest",
     "dotenv": "latest",
-    "eslint": "latest",
+    "eslint": "^5.6.1",
     "eslint-config-standard": "^12.0.0",
     "eslint-loader": "latest",
     "eslint-plugin-import": "latest",
-    "eslint-plugin-jest": "latest",
+    "eslint-plugin-jest": "^21.24.1",
     "eslint-plugin-node": "latest",
-    "eslint-plugin-promise": "^4.0.0",
+    "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "latest",
-    "graphql-tag": "^2.9.2",
+    "graphql-tag": "^2.10.0",
     "jest": "latest",
-    "jsdom": "latest",
-    "nuxt": "latest",
+    "jsdom": "^12.1.0",
+    "nuxt": "^2.1.0",
     "standard-version": "latest"
   }
 }
