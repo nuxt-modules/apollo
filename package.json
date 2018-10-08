@@ -1,6 +1,6 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "4.0.0-rc1",
+  "version": "4.0.0-rc2.1",
   "license": "MIT",
   "main": "lib/module.js",
   "repository": "https://github.com/nuxt-community/apollo-module",
@@ -28,7 +28,7 @@
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.0",
     "vue-apollo": "3.0.0-beta.19",
-    "vue-cli-plugin-apollo": "^0.16.0"
+    "vue-cli-plugin-apollo": "0.17.0"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.2.5"
