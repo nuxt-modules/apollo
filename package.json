@@ -16,6 +16,9 @@
     "test": "npm run lint && jest",
     "release": "standard-version && git push --follow-tags && npm publish"
   },
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "eslintIgnore": [
     "lib/templates/*.*"
   ],
