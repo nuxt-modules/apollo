@@ -1,4 +1,4 @@
-const {resolve} = require('path')
+const { resolve } = require('path')
 require('dotenv').config()
 
 module.exports = {
