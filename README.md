@@ -78,7 +78,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 // plugins/my-alternative-apollo-config.js
 export default function(context){
   return {
-    httpEndpoint: 'http://localhost:4000/graphql-alt'
+    httpEndpoint: 'http://localhost:4000/graphql-alt',
     getAuth:() => 'Bearer my-static-token' // use this method to overwrite functions
   }
 }
