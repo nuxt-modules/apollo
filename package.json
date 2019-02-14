@@ -55,6 +55,8 @@
     "jest": "latest",
     "jsdom": "^13.2.0",
     "nuxt": "^2.4.3",
-    "standard-version": "latest"
+    "standard-version": "latest",
+    "vue": "^2.6.6",
+    "vue-server-renderer": "^2.6.6"
   }
 }
