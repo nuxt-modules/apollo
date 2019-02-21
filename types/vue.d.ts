@@ -12,7 +12,7 @@ declare module 'vue/types/vue' {
       onLogin(
         token: string,
         apolloClient?: ApolloClient<{}>,
-        attributes?: CookieAttributes
+        cookieAttributes?: CookieAttributes
       ): Promise<void>;
       onLogout(apolloClient?: ApolloClient<{}>): Promise<void>;
       getToken(tokenName?: string): string;
