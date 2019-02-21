@@ -3,6 +3,7 @@
   "version": "4.0.0-rc3",
   "license": "MIT",
   "main": "lib/module.js",
+  "typings": "types/index.d.ts",
   "repository": "https://github.com/nuxt-community/apollo-module",
   "homepage": "https://github.com/nuxt-community/apollo-module",
   "publishConfig": {
@@ -13,7 +14,9 @@
     "dev2": "NODE_ENV=production nuxt test/fixture-static-auth",
     "dev3": "NODE_ENV=production nuxt test/fixture-multi-endpoints",
     "lint": "eslint lib test",
-    "test": "npm run lint && jest",
+    "test": "yarn test:fixtures && yarn test:types",
+    "test:fixtures": "jest",
+    "test:types": "tsc -p types/test",
     "release": "standard-version && git push --follow-tags && npm publish"
   },
   "engines": {
@@ -21,6 +24,10 @@
   },
   "eslintIgnore": [
     "lib/templates/*.*"
+  ],
+  "files": [
+    "lib",
+    "types/*.d.ts"
   ],
   "jest": {
     "testEnvironment": "node",
@@ -39,6 +46,7 @@
   "devDependencies": {
     "@babel/core": "latest",
     "@babel/preset-env": "latest",
+    "@types/graphql": "^14.0.7",
     "codecov": "latest",
     "core-js": "^2.6.4",
     "dotenv": "latest",
@@ -56,6 +64,7 @@
     "jsdom": "^13.2.0",
     "nuxt": "^2.4.3",
     "standard-version": "latest",
+    "typescript": "^3.3.3",
     "vue": "^2.6.6",
     "vue-server-renderer": "^2.6.6"
   }
