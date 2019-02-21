@@ -47,6 +47,7 @@
     "@babel/core": "latest",
     "@babel/preset-env": "latest",
     "@types/graphql": "^14.0.7",
+    "@types/js-cookie": "^2.2.1",
     "codecov": "latest",
     "core-js": "^2.6.4",
     "dotenv": "latest",

@@ -11,15 +11,15 @@ const apolloClient = new ApolloClient({
 
 const tokenName = 'foo'
 const token = 'bar'
-const tokenExpires = 1
+const cookieAttributes = { expires: 2, path: '/', secure: false }
 
 // onLogin
 
 async () => {
   await vm.$apolloHelpers.onLogin(token)
   await vm.$apolloHelpers.onLogin(token, apolloClient)
-  await vm.$apolloHelpers.onLogin(token, apolloClient, tokenExpires)
-  await vm.$apolloHelpers.onLogin(token, undefined, tokenExpires)
+  await vm.$apolloHelpers.onLogin(token, apolloClient, cookieAttributes)
+  await vm.$apolloHelpers.onLogin(token, undefined, cookieAttributes)
 }
 
 // onLogout
