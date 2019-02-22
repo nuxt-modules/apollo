@@ -69,7 +69,7 @@
                         mutation: authenticateUserGql,
                         variables: credentials
                     }).then(({data}) => data && data.authenticateUser)
-                    await this.$apolloHelpers.onLogin(res.token, undefined, 7)
+                    await this.$apolloHelpers.onLogin(res.token, undefined, { expires: 7 })
                     this.successfulData = res
                     this.isAuthenticated = true
                 } catch (e) {
