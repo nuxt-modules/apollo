@@ -38,7 +38,7 @@
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.0",
     "vue-apollo": "^3.0.0-beta.28",
-    "vue-cli-plugin-apollo": "^0.19.1"
+    "vue-cli-plugin-apollo": "^0.19.2"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.4.2"

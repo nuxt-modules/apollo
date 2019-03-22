@@ -10157,7 +10157,7 @@ vue-apollo@^3.0.0-beta.28:
     chalk "^2.4.1"
     throttle-debounce "^2.0.0"
 
-vue-cli-plugin-apollo@^0.19.1:
+vue-cli-plugin-apollo@^0.19.2:
   version "0.19.2"
   resolved "https://registry.yarnpkg.com/vue-cli-plugin-apollo/-/vue-cli-plugin-apollo-0.19.2.tgz#ec6a6bdc98fcfa886a616e3a64eaaff71bbeb911"
   integrity sha512-gWZsSbfHR2CmMLgpHxj6viwLczUdZ3zdwkXPoEUa7yn34Z8mZJW/fokwhPONgQNTrs3KNcq+zNQA7ED09+fP4A==
