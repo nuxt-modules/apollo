@@ -37,8 +37,6 @@
     "cookie": "^0.3.1",
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.0",
-    "vue-apollo": "^3.0.0-beta.26",
-    "vue-cli-plugin-apollo": "^0.18.0"
     "vue-apollo": "^3.0.0-beta.29",
     "vue-cli-plugin-apollo": "^0.20.0",
     "webpack-node-externals": "^1.7.2"
