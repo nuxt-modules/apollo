@@ -7,6 +7,15 @@
 [![license](https://img.shields.io/github/license/nuxt-community/apollo-module.svg)](https://github.com/nuxt-community/apollo-module/blob/master/LICENSE)
 
 
+## Warning
+
+This version requires Vue 2.6+ with serverPrefetch support. For example:
+
+```bash
+npm install --save vue@2.6.6 vue-template-compiler@2.6.6 vue-server-renderer@2.6.6
+```
+Sometime you may need to remove/rebuild package-lock.json/yarn.lock to make it work.
+
 ## Setup
 
 Install apollo module:
@@ -21,7 +30,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 
 ```bash
 - clientConfigs: `Object` Config passed to ApolloClient
-  - default: `Object`
+  - default: `Object` // keep in mind that the object will be stringified!
   # alternative
   - default: `Path` // use this to have more control over the options
   - otherClient: `Object` (Optional)
