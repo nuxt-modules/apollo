@@ -34,7 +34,7 @@
     "collectCoverage": true
   },
   "dependencies": {
-    "cookie": "^0.3.1",
+    "cookie": "^0.4.0",
     "isomorphic-fetch": "^2.2.1",
     "js-cookie": "^2.2.0",
     "vue-apollo": "^3.0.0-beta.29",
@@ -42,29 +42,29 @@
     "webpack-node-externals": "^1.7.2"
   },
   "peerDependencies": {
-    "apollo-cache-inmemory": "^1.4.2"
+    "apollo-cache-inmemory": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "latest",
     "@babel/preset-env": "latest",
-    "@types/graphql": "^14.0.7",
+    "@types/graphql": "^14.2.0",
     "codecov": "latest",
-    "core-js": "^2.6.4",
+    "core-js": "^2.6.5",
     "dotenv": "latest",
     "eslint": "^5.13.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-loader": "latest",
     "eslint-plugin-import": "latest",
-    "eslint-plugin-jest": "^22.2.2",
+    "eslint-plugin-jest": "^22.5.1",
     "eslint-plugin-node": "latest",
-    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "latest",
     "graphql-tag": "^2.10.1",
     "jest": "latest",
-    "jsdom": "^13.2.0",
-    "nuxt": "^2.5.1",
+    "jsdom": "^15.1.0",
+    "nuxt": "^2.7.1",
     "standard-version": "latest",
-    "typescript": "^3.3.3"
+    "typescript": "^3.4.5"
   }
 }
