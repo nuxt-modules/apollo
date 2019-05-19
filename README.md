@@ -56,7 +56,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
       },
     },
     // optional
-    errorHandler '~/plugins/apollo-error-handler.js',
+    errorHandler: '~/plugins/apollo-error-handler.js',
     // required
     clientConfigs: {
       default: {
