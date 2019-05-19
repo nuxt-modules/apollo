@@ -49,7 +49,7 @@
     "@babel/preset-env": "latest",
     "@types/graphql": "^14.2.0",
     "codecov": "latest",
-    "core-js": "^2.6.5",
+    "core-js": "^2.6.6",
     "dotenv": "latest",
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
