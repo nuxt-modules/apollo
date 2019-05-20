@@ -23,4 +23,10 @@ describe('basic', () => {
     let html = await get('/')
     expect(html).toContain('This is the landing page')
   })
+
+  test('render', async () => {
+    await get('/error-page').catch(e =>
+      expect(e.statusCode).toEqual(304)
+    )
+  })
 })

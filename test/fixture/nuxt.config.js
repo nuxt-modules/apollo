@@ -12,6 +12,7 @@ module.exports = {
     title: 'Demo Page of apollo module'
   },
   modules: [['@@', {
+    errorHandler: '~/apollo/customErrorHandler.js',
     clientConfigs: {
       default: {
         httpEndpoint: process.env.HTTP_ENDPOINT,

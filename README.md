@@ -56,9 +56,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
       },
     },
     // optional
-    errorHandler (error) {
-      console.log('%cError', 'background: red; color: white; padding: 2px 4px; border-radius: 3px; font-weight: bold;', error.message)
-    },
+    errorHandler: '~/plugins/apollo-error-handler.js',
     // required
     clientConfigs: {
       default: {
@@ -90,6 +88,15 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
     }
   }
 }
+```
+
+```js
+// plugins/apollo-error-handler.js
+export default (error, context) => {
+  console.log(error)
+  context.error({ statusCode: 304, message: 'Server error' })
+}
+
 ```
 
 ```js
