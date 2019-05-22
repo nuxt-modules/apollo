@@ -1,6 +1,6 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "4.0.0-rc5",
+  "version": "4.0.0-rc6",
   "license": "MIT",
   "main": "lib/module.js",
   "typings": "types/index.d.ts",
@@ -10,7 +10,7 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "nuxt test/fixture",
+    "dev": "NODE_ENV=production nuxt test/fixture",
     "dev2": "NODE_ENV=production nuxt test/fixture-static-auth",
     "dev3": "NODE_ENV=production nuxt test/fixture-multi-endpoints",
     "lint": "eslint lib test",
