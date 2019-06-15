@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { ApolloClient } from 'apollo-client'
 import NuxtConfiguration from '@nuxt/config'
+import { Middleware } from '@nuxt/vue-app'
 import * as types from '../index'
 
 const vm = new Vue()
@@ -48,6 +49,11 @@ const config: NuxtConfiguration = {
       test2: '~/plugins/my-alternative-apollo-config.js'
     }
   }
+}
+
+// Nuxt Context
+const middleware: Middleware = ({ app }): void => {
+  app.$apolloHelpers.getToken()
 }
 
 // onLogin
