@@ -8,6 +8,7 @@
       "esnext",
       "esnext.asynciterable",
       "dom"
-    ]
+    ],
+    "types": ["vue-cli-plugin-apollo"]
   }
 }
