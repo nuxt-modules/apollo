@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import { ApolloClient } from 'apollo-client'
+import NuxtConfiguration from '@nuxt/config'
+import { Middleware } from '@nuxt/vue-app'
 import * as types from '../index'
 
 const vm = new Vue()
@@ -12,6 +14,47 @@ const apolloClient = new ApolloClient({
 const tokenName = 'foo'
 const token = 'bar'
 const tokenExpires = 1
+
+// Nuxt config
+
+const config: NuxtConfiguration = {
+  apollo: {
+    tokenName: 'yourApolloTokenName',
+    tokenExpires: 10,
+    includeNodeModules: true,
+    authenticationType: 'Basic',
+    defaultOptions: {
+      $query: {
+        loadingKey: 'loading',
+        fetchPolicy: 'cache-and-network'
+      }
+    },
+    errorHandler: '~/plugins/apollo-error-handler.js',
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://localhost:4000',
+        httpLinkOptions: {
+          credentials: 'same-origin'
+        },
+        wsEndpoint: 'ws://localhost:4000',
+        tokenName: 'apollo-token',
+        persisting: false,
+        websocketsOnly: false
+      },
+      test: {
+        httpEndpoint: 'http://localhost:5000',
+        wsEndpoint: 'ws://localhost:5000',
+        tokenName: 'apollo-token'
+      },
+      test2: '~/plugins/my-alternative-apollo-config.js'
+    }
+  }
+}
+
+// Nuxt Context
+const middleware: Middleware = ({ app }): void => {
+  app.$apolloHelpers.getToken()
+}
 
 // onLogin
 

@@ -10348,12 +10348,13 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-apollo@^3.0.0-beta.30:
-  version "3.0.0-beta.30"
-  resolved "https://registry.yarnpkg.com/vue-apollo/-/vue-apollo-3.0.0-beta.30.tgz#081bc2b8c8f9d2ffd508675c17dc1017da5ba3f4"
-  integrity sha512-uRv5JXGXCxMVyfThBtqeJVwHd7+XI/RmGjZY5kU6Ad8MGT6Da9M8T2wRmcvN4fa4fydRJuy4PheSEXS83WFUhg==
+vue-apollo@^3.0.0-rc.1:
+  version "3.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/vue-apollo/-/vue-apollo-3.0.0-rc.1.tgz#fed79fab2b77d6dfe6c5f0940ace80b0202d63e6"
+  integrity sha512-OlJMVQ9cvk75EXE2sCcFTNflAwFQsguKD7duJrC2IOEGcYQriumiNExH8FKYgmxhLF+dkykh+DLTG6YvOC+S2g==
   dependencies:
     chalk "^2.4.2"
+    serialize-javascript "^1.7.0"
     throttle-debounce "^2.1.0"
 
 vue-cli-plugin-apollo@^0.20.0:
