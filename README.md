@@ -252,7 +252,7 @@ export default {
 }
 ```
 
-Once you get the client, you can access its methods and properties. See [API Reference](https://akryum.github.io/vue-apollo/api/dollar-apollo.html)
+Once you get the client, you can access its methods and properties. See [API Reference](https://vue-apollo.netlify.com/api/dollar-apollo.html)
 
 #### Smart queries on any component
 ```js
@@ -269,8 +269,8 @@ export default {
   }
 }
 ```
-See [vue-apollo documentation](https://akryum.github.io/vue-apollo/guide/apollo/queries.html) for more information on smart queries
 
+See [vue-apollo documentation](https://vue-apollo.netlify.com/guide/apollo/queries.html) for more information on smart queries
 
 #### Add GQL file recognition on node_modules
 ```js
@@ -303,7 +303,7 @@ apollo:{
 
 ### Upgrade Guide apollo-client v1 => v2
 
-Version 3 of this module is using apollo-client 2.x. You need to make sure to update all your middle/afterware according to the upgrade guide of apollo-client. Check this source for a reference: https://github.com/apollographql/apollo-client/blob/master/Upgrade.md
+Version 3 of this module is using apollo-client 2.x. You need to make sure to update all your middle/afterware according to the upgrade guide of apollo-client. Check this source for a reference: https://www.apollographql.com/docs/apollo-server/migration-two-dot/
 
 ## Troubleshooting 
 
