@@ -1,8 +1,8 @@
-import ApolloClient from 'apollo-client';
-import { CookieAttributes } from 'js-cookie';
+import ApolloClient from 'apollo-client'
+import { CookieAttributes } from 'js-cookie'
 
-import './vue';
-import './nuxt';
+import './vue'
+import './nuxt'
 
 export interface ApolloHelpers {
   onLogin(
