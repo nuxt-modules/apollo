@@ -4,18 +4,10 @@
 
 import Vue from 'vue';
 import { ApolloClient } from 'apollo-client';
-import { CookieAttributes } from 'js-cookie';
+import { ApolloHelpers } from '.';
 
 declare module 'vue/types/vue' {
   interface Vue {
-    $apolloHelpers: {
-      onLogin(
-        token: string,
-        apolloClient?: ApolloClient<{}>,
-        cookieAttributes?: CookieAttributes
-      ): Promise<void>;
-      onLogout(apolloClient?: ApolloClient<{}>): Promise<void>;
-      getToken(tokenName?: string): string;
-    };
+    $apolloHelpers: ApolloHelpers;
   }
 }

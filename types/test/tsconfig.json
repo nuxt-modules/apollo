@@ -4,10 +4,14 @@
     "moduleResolution": "node",
     "strict": true,
     "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
     "lib": [
       "esnext",
       "esnext.asynciterable",
       "dom"
-    ]
-  }
+    ],
+    "types": ["vue-cli-plugin-apollo"]
+  },
+  "exclude": ["node_modules"]
 }

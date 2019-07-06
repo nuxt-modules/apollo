@@ -1,0 +1,36 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node
+    steps:
+      # Checkout repository
+      - checkout
+
+      # Restore cache
+      - restore_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+
+      # Install dependencies
+      - run:
+          name: Install Dependencies
+          command: yarn
+
+      # Keep cache
+      - save_cache:
+          key: yarn-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - "node_modules"
+
+      # Lint
+      - run:
+          name: Lint
+          command: yarn lint
+
+      # Tests
+      - run:
+          name: Tests
+          command: yarn test
+          environment:
+            HTTP_ENDPOINT: https://api.graph.cool/simple/v1/cjvqu5trs23l90138hm4t8uof
+            WS_ENDPOINT: wss://subscriptions.us-west-2.graph.cool/v1/cjvqu5trs23l90138hm4t8uof
