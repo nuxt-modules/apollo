@@ -8,8 +8,7 @@ export interface ApolloHelpers {
   onLogin(
     token: string,
     apolloClient?: ApolloClient<any>,
-    tokenExpires?: number,
-    cookieAttributes?: CookieAttributes
+    cookieAttributes?: number | CookieAttributes
   ): Promise<void>;
   onLogout(apolloClient?: ApolloClient<any>): Promise<void>;
   getToken(tokenName?: string): string;
