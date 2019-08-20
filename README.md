@@ -166,9 +166,9 @@ Once the setup is completed you have a successfully enabled `vue-apollo` in your
 You have following methods for authentication available:
 ```js
  // set your graphql-token
- this.$apolloHelpers.onLogin(token /* if not default you can pass in client as second argument, and you can set custom cookies attributes object as the third argument */)
+ this.$apolloHelpers.onLogin(token /* if not default you can pass in client as second argument, you can set custom cookies attributes object as the third argument, and you can skip reset store as the fourth argument */)
  // unset your graphql-token
- this.$apolloHelpers.onLogout(/* if not default you can pass in client as second argument */)
+ this.$apolloHelpers.onLogout(/* if not default you can pass in client as first argument, and you can skip reset store as the second argument */)
  // get your current token (we persist token in a cookie)
  this.$apolloHelpers.getToken(/* you can provide named tokenName if not 'apollo-token' */)
 ```

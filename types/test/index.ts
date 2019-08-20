@@ -14,6 +14,7 @@ const apolloClient = new ApolloClient({
 const tokenName = 'foo'
 const token = 'bar'
 const cookieAttributes = { expires: 2, path: '/', secure: false }
+const skipResetStore = true
 
 // Nuxt config
 
@@ -62,6 +63,7 @@ async () => {
   await vm.$apolloHelpers.onLogin(token)
   await vm.$apolloHelpers.onLogin(token, apolloClient)
   await vm.$apolloHelpers.onLogin(token, apolloClient, cookieAttributes)
+  await vm.$apolloHelpers.onLogin(token, apolloClient, cookieAttributes, skipResetStore)
   await vm.$apolloHelpers.onLogin(token, undefined, cookieAttributes)
 }
 
