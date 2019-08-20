@@ -34,8 +34,8 @@
     "collectCoverage": true
   },
   "dependencies": {
-    "cookie-universal": "^2.0.16",
     "isomorphic-fetch": "^2.2.1",
+    "universal-cookie": "^4.0.2",
     "vue-apollo": "^3.0.0-rc.2",
     "vue-cli-plugin-apollo": "^0.21.0",
     "webpack-node-externals": "^1.7.2"
@@ -47,7 +47,7 @@
     "@babel/core": "latest",
     "@babel/preset-env": "latest",
     "@types/graphql": "^14.2.2",
-    "@types/js-cookie": "^2.2.2",
+    "@types/universal-cookie": "^2.2.0",
     "codecov": "latest",
     "core-js": "^2.6.9",
     "dotenv": "latest",

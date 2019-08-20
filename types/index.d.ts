@@ -1,8 +1,12 @@
 import ApolloClient from 'apollo-client'
-import { CookieAttributes } from 'js-cookie'
+import { CookieSetOptions } from 'universal-cookie'
 
 import './vue'
 import './nuxt'
+
+interface CookieAttributes extends Omit<CookieSetOptions, 'expires'> {
+  expires?: number | Date
+}
 
 export interface ApolloHelpers {
   onLogin(
