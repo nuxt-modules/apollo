@@ -2,34 +2,45 @@
  * Extends interfaces in Nuxt
  */
 
-import NuxtConfiguration from '@nuxt/config'
 import { VueApolloOptions } from 'vue-apollo/types/options'
 import { ApolloClientClientConfig } from 'vue-cli-plugin-apollo/graphql-client'
 import Vue, { ComponentOptions } from 'vue'
 import { ApolloHelpers } from '.'
 
-declare module '@nuxt/config/types/index' {
-  interface ApolloClientConfig extends ApolloClientClientConfig<any> {
-    httpEndpoint: string
-  }
+interface ApolloClientConfig extends ApolloClientClientConfig<any> {
+  httpEndpoint: string
+}
 
-  export default interface NuxtConfiguration {
-    apollo: {
-      tokenName?: string
-      tokenExpires?: number
-      includeNodeModules?: boolean
-      authenticationType?: string
-      errorHandler?: string
-      defaultOptions?: VueApolloOptions<any>
-      clientConfigs: {
-        default: ApolloClientConfig | string
-        [key: string]: ApolloClientConfig | string
-      }
-    }
+interface NuxtApolloConfiguration {
+  tokenName?: string
+  tokenExpires?: number
+  includeNodeModules?: boolean
+  authenticationType?: string
+  errorHandler?: string
+  defaultOptions?: VueApolloOptions<any>
+  clientConfigs: {
+    default: ApolloClientConfig | string
+    [key: string]: ApolloClientConfig | string
   }
 }
 
-declare module '@nuxt/vue-app/types/index' {
+declare module '@nuxt/config' {
+  interface NuxtConfiguration {
+    apollo?: NuxtApolloConfiguration
+  }
+}
+
+declare module '@nuxt/vue-app' {
+  interface NuxtAppOptions extends ComponentOptions<Vue> {
+    $apolloHelpers: ApolloHelpers
+  }
+}
+
+// Nuxt 2.9+
+declare module '@nuxt/types' {
+  interface Configuration {
+    apollo?: NuxtApolloConfiguration
+  }
   interface NuxtAppOptions extends ComponentOptions<Vue> {
     $apolloHelpers: ApolloHelpers
   }
