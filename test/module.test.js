@@ -24,9 +24,53 @@ describe('basic', () => {
     expect(html).toContain('This is the landing page')
   })
 
-  test('render', async () => {
-    await get('/error-page').catch(e =>
-      expect(e.statusCode).toEqual(304)
-    )
+  test('normalQuery', async () => {
+    let html = await get('/normalQuery')
+    expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
   })
+
+  test('asyncData', async () => {
+    let html = await get('/asyncData')
+    expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
+  })
+
+  // Not sure why onNuxtReady doesn't work
+  // test('mounted & smart query', async () => {
+  //   const window = await nuxt.renderAndGetWindow(url('/mounted'))
+  //   window.onNuxtReady(() => {
+  //     const html = window.document.body.innerHTML
+  //     expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
+  //   })
+  // })
+
+  test('onLogin', async () => {
+    const window = await nuxt.renderAndGetWindow(url('/'))
+    const token = 'this-is-the-token'
+    window.$nuxt.$apolloHelpers.onLogin(token)
+    expect(window.$nuxt.$apolloHelpers.getToken()).toContain(token)
+  })
+
+  test('onLogout', async () => {
+    const window = await nuxt.renderAndGetWindow(url('/'))
+    const token = 'this-is-the-token'
+    window.$nuxt.$apolloHelpers.onLogin(token)
+    window.$nuxt.$apolloHelpers.onLogout()
+    expect(window.$nuxt.$apolloHelpers.getToken()).toBeUndefined()
+  })
+
+  test('repeat onLogin onLogout', async () => {
+    const window = await nuxt.renderAndGetWindow(url('/'))
+    const token = 'this-is-the-token'
+    window.$nuxt.$apolloHelpers.onLogin(token)
+    window.$nuxt.$apolloHelpers.onLogout()
+    window.$nuxt.$apolloHelpers.onLogin(token)
+    expect(window.$nuxt.$apolloHelpers.getToken()).toContain(token)
+  })
+
+  // test('errorHandler', async () => {
+  //   const window = await nuxt.renderAndGetWindow(url('/errorPage'))
+  //   window.onNuxtReady(() => {
+  //     expect(window.console.log).toContain('error: /errorPage')
+  //   })
+  // })
 })
