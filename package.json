@@ -52,7 +52,7 @@
     "core-js": "^2.6.9",
     "dotenv": "latest",
     "eslint": "^5.16.0",
-    "eslint-config-standard": "^12.0.0",
+    "eslint-config-standard": "^14.0.1",
     "eslint-loader": "latest",
     "eslint-plugin-import": "latest",
     "eslint-plugin-jest": "^22.13.0",
