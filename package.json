@@ -34,7 +34,7 @@
     "collectCoverage": true
   },
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1",
+    "cross-fetch": "^3.0.4",
     "universal-cookie": "^4.0.2",
     "vue-apollo": "^3.0.0-rc.2",
     "vue-cli-plugin-apollo": "^0.21.0",
