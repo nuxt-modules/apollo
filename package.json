@@ -46,6 +46,7 @@
   "devDependencies": {
     "@babel/core": "latest",
     "@babel/preset-env": "latest",
+    "@nuxt/types": "^0.2.5",
     "@types/graphql": "^14.2.2",
     "@types/universal-cookie": "^2.2.0",
     "codecov": "latest",
