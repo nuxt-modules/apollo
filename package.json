@@ -1,6 +1,6 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "4.0.0-rc11",
+  "version": "4.0.0-rc12",
   "license": "MIT",
   "main": "lib/module.js",
   "typings": "types/index.d.ts",
