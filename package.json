@@ -41,7 +41,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "peerDependencies": {
-    "apollo-cache-inmemory": "^1.6.2"
+    "apollo-cache-inmemory": "^1.6.3"
   },
   "devDependencies": {
     "@babel/core": "latest",
