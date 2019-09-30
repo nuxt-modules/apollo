@@ -12109,13 +12109,13 @@ vscode-uri@^1.0.6:
   resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-1.0.8.tgz#9769aaececae4026fb6e22359cb38946580ded59"
   integrity sha512-obtSWTlbJ+a+TFRYGaUumtVwb+InIUVI0Lu0VBUAPmj2cU5JutEXg3xUE0c2J5Tcy7h2DEKVJBFi+Y9ZSFzzPQ==
 
-vue-apollo@^3.0.0-rc.6:
-  version "3.0.0-rc.6"
-  resolved "https://registry.yarnpkg.com/vue-apollo/-/vue-apollo-3.0.0-rc.6.tgz#ac5257cf0845d4290b9dd6dc491ee62eb1bc588a"
-  integrity sha512-P/U4akCOt59WojX5SSsg0K6yHWs04SO2ULEe6vXeCBpBkASRm3BybQIMY6DEIzMyp+y1QkhMLjVdGm+bx3Rurg==
+vue-apollo@^3.0.0-rc.7:
+  version "3.0.0-rc.7"
+  resolved "https://registry.yarnpkg.com/vue-apollo/-/vue-apollo-3.0.0-rc.7.tgz#4b603a9080acddf79d41d130609b5c66b7ded2eb"
+  integrity sha512-YbE4cVKuIOowhOVhMOLrvReELXZc1l7bKGNKQXYv3H1xRMYaz5U0KhXjgO16UCnYvygAG1jRKbkgSoHwaXmlDA==
   dependencies:
     chalk "^2.4.2"
-    serialize-javascript "^1.7.0"
+    serialize-javascript "^2.1.0"
     throttle-debounce "^2.1.0"
 
 vue-cli-plugin-apollo@^0.21.0:
