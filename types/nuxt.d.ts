@@ -9,6 +9,7 @@ import { ApolloHelpers } from '.'
 
 interface ApolloClientConfig extends ApolloClientClientConfig<any> {
   httpEndpoint: string
+  websocketsOnly?: boolean
 }
 
 interface NuxtApolloConfiguration {
