@@ -13,6 +13,7 @@
     "dev": "nuxt test/fixture",
     "dev2": "nuxt test/fixture-static-auth",
     "dev3": "nuxt test/fixture-multi-endpoints",
+    "dev4": "nuxt test/fixture-local-state",
     "lint": "eslint lib test",
     "test": "yarn test:fixtures && yarn test:types",
     "test:fixtures": "jest",
