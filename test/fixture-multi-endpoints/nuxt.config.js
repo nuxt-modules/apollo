@@ -16,12 +16,15 @@ module.exports = {
       default: {
         httpEndpoint: process.env.HTTP_ENDPOINT,
         wsEndpoint: process.env.WS_ENDPOINT,
-        getAuth: () => 'Bearer 1234'
       },
       second: {
         httpEndpoint: process.env.HTTP_ENDPOINT,
         wsEndpoint: null
-      }
+      },
+      custom: (context) => ({
+        httpEndpoint: process.env.HTTP_ENDPOINT,
+        getAuth: () => 'Bearer 5678'
+      })
     }
   }]]
 }

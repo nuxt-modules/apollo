@@ -107,7 +107,13 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
         tokenName: 'apollo-token'
       },
       // alternative: user path to config which returns exact same config options
-      test2: '~/plugins/my-alternative-apollo-config.js'
+      test2: '~/plugins/my-alternative-apollo-config.js',
+      // also you can define config as a function, needed for module setup where you want to pass custom 
+      // dynamic parameters to http connection
+      custom: (context) => ({
+        httpEndpoint: 'http://localhost:4000/graphql-alt',
+        getAuth:() => 'Bearer my-dynamic-token' 
+      })
     }
   }
 }
