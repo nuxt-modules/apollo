@@ -2,13 +2,14 @@
  * Extends interfaces in Nuxt
  */
 
-import { VueApolloOptions } from 'vue-apollo/types/options'
+import { VueApolloComponentOptions } from 'vue-apollo/types/options'
 import { ApolloClientClientConfig } from 'vue-cli-plugin-apollo/graphql-client'
 import Vue, { ComponentOptions } from 'vue'
 import { ApolloHelpers } from '.'
 
 interface ApolloClientConfig extends ApolloClientClientConfig<any> {
   httpEndpoint: string
+  websocketsOnly?: boolean
 }
 
 interface NuxtApolloConfiguration {
@@ -17,7 +18,7 @@ interface NuxtApolloConfiguration {
   includeNodeModules?: boolean
   authenticationType?: string
   errorHandler?: string
-  defaultOptions?: VueApolloOptions<any>
+  defaultOptions?: VueApolloComponentOptions<any>
   clientConfigs: {
     default: ApolloClientConfig | string
     [key: string]: ApolloClientConfig | string

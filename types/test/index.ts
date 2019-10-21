@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import { ApolloClient } from 'apollo-client'
-import NuxtConfiguration from '@nuxt/config'
-import { Middleware } from '@nuxt/vue-app'
+import { Configuration, Middleware } from '@nuxt/types'
 import * as types from '../index'
 
 const vm = new Vue()
@@ -18,7 +17,7 @@ const skipResetStore = true
 
 // Nuxt config
 
-const config: NuxtConfiguration = {
+const config: Configuration = {
   apollo: {
     tokenName: 'yourApolloTokenName',
     tokenExpires: 10,

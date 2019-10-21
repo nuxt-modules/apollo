@@ -1,4 +1,4 @@
-const { Nuxt, Builder } = require('nuxt')
+const { Nuxt, Builder } = require('nuxt-edge')
 const request = require('request-promise-native')
 
 const config = require('./fixture/nuxt.config')
@@ -20,7 +20,7 @@ describe('basic', () => {
   })
 
   test('render', async () => {
-    let html = await get('/')
+    const html = await get('/')
     expect(html).toContain('This is the landing page')
   })
 
