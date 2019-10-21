@@ -16,7 +16,7 @@
     "dev4": "nuxt test/fixture-local-state",
     "lint": "eslint lib test",
     "test": "yarn test:fixtures && yarn test:types",
-    "test:fixtures": "jest",
+    "test:fixtures": "jest --forceExit",
     "test:types": "tsc -p types/test",
     "release": "standard-version && git push --follow-tags && npm publish"
   },
