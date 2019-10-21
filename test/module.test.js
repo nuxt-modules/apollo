@@ -25,23 +25,22 @@ describe('basic', () => {
   })
 
   test('normalQuery', async () => {
-    let html = await get('/normalQuery')
+    const html = await get('/normalQuery')
     expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
   })
 
   test('asyncData', async () => {
-    let html = await get('/asyncData')
+    const html = await get('/asyncData')
     expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
   })
 
-  // Not sure why onNuxtReady doesn't work
-  // test('mounted & smart query', async () => {
-  //   const window = await nuxt.renderAndGetWindow(url('/mounted'))
-  //   window.onNuxtReady(() => {
-  //     const html = window.document.body.innerHTML
-  //     expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
-  //   })
-  // })
+  test('mounted & smart query', async () => {
+    const window = await nuxt.renderAndGetWindow(url('/mounted'))
+    window.onNuxtReady(() => {
+      const html = window.document.body.innerHTML
+      expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
+    })
+  })
 
   test('onLogin', async () => {
     const window = await nuxt.renderAndGetWindow(url('/'))
