@@ -1,4 +1,4 @@
-export default (err, { error }) => {
-  console.log(err)
-  error({ statusCode: 304, message: 'Server error!' })
+export default (apolloError, { route }) => {
+  // console.log(apolloError)
+  console.log('error: ' + route.path)
 }
