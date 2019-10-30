@@ -86,6 +86,9 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
         // required  
         httpEndpoint: 'http://localhost:4000',
         // optional
+        // override HTTP endpoint in browser only
+        browserHttpEndpoint: '/graphql',
+        // optional
         // See https://www.apollographql.com/docs/link/links/http.html#options
         httpLinkOptions: {
           credentials: 'same-origin'
