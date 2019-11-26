@@ -37,7 +37,7 @@
   "dependencies": {
     "cross-fetch": "^3.0.4",
     "universal-cookie": "^4.0.2",
-    "vue-apollo": "^3.0.0",
+    "vue-apollo": "^3.0.1",
     "vue-cli-plugin-apollo": "^0.21.3",
     "webpack-node-externals": "^1.7.2"
   },
