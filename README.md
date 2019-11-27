@@ -79,6 +79,8 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
       },
     },
     // optional
+    errorHandler: '~/plugins/apollo-watch-loading-handler.js',
+    // optional
     errorHandler: '~/plugins/apollo-error-handler.js',
     // required
     clientConfigs: {
@@ -117,10 +119,19 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
 ```
 
 ```js
+// plugins/apollo-watch-loading-handler.js
+export default (isLoading, countModifier, nuxtContext) => {
+  loading += countModifier
+  console.log('Global loading', loading, countModifier)
+}
+
+```
+
+```js
 // plugins/apollo-error-handler.js
-export default (error, context) => {
-  console.log(error)
-  context.error({ statusCode: 304, message: 'Server error' })
+export default (error, nuxtContext) => {
+  console.log('Global error handler')
+  console.error(error)
 }
 
 ```
