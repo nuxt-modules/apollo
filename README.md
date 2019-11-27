@@ -79,7 +79,7 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
       },
     },
     // optional
-    errorHandler: '~/plugins/apollo-watch-loading-handler.js',
+    watchLoading: '~/plugins/apollo-watch-loading-handler.js',
     // optional
     errorHandler: '~/plugins/apollo-error-handler.js',
     // required
