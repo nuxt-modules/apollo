@@ -36,13 +36,13 @@
   },
   "dependencies": {
     "cross-fetch": "^3.0.4",
-    "universal-cookie": "^4.0.2",
-    "vue-apollo": "^3.0.2",
+    "universal-cookie": "^4.0.3",
+    "vue-apollo": "^3.0.3",
     "vue-cli-plugin-apollo": "^0.21.3",
     "webpack-node-externals": "^1.7.2"
   },
   "peerDependencies": {
-    "apollo-cache-inmemory": "^1.6.3"
+    "apollo-cache-inmemory": "^1.6.5"
   },
   "devDependencies": {
     "@babel/core": "latest",
