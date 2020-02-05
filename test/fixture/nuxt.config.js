@@ -2,6 +2,7 @@ const { resolve } = require('path')
 require('dotenv').config()
 
 module.exports = {
+  globalName: 'uniquename',
   rootDir: resolve(__dirname, '../..'),
   srcDir: __dirname,
   dev: false,
