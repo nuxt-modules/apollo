@@ -5,7 +5,7 @@
 import { VueApolloComponentOptions } from 'vue-apollo/types/options'
 import { ApolloClientClientConfig } from 'vue-cli-plugin-apollo/graphql-client'
 import Vue, { ComponentOptions } from 'vue'
-import { ApolloHelpers } from '.'
+import { ApolloHelpers, CookieAttributes } from '.'
 
 interface ApolloClientConfig extends ApolloClientClientConfig<any> {
   httpEndpoint: string
@@ -14,6 +14,7 @@ interface ApolloClientConfig extends ApolloClientClientConfig<any> {
 
 interface NuxtApolloConfiguration {
   tokenName?: string
+  cookieAttributes? : CookieAttributes
   tokenExpires?: number
   includeNodeModules?: boolean
   authenticationType?: string
