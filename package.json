@@ -1,6 +1,6 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "4.0.0-rc19",
+  "version": "4.0.1-rc.0",
   "license": "MIT",
   "main": "lib/module.js",
   "typings": "types/index.d.ts",
@@ -18,7 +18,7 @@
     "test": "yarn test:fixtures && yarn test:types",
     "test:fixtures": "jest --forceExit",
     "test:types": "tsc -p types/test",
-    "release": "standard-version && git push --follow-tags && npm publish"
+    "release": "standard-version --prerelease rc && git push --follow-tags && npm publish"
   },
   "engines": {
     "node": ">=6.0.0"
