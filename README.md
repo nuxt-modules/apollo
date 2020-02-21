@@ -129,9 +129,9 @@ export default (isLoading, countModifier, nuxtContext) => {
 
 ```js
 // plugins/apollo-error-handler.js
-export default (error, nuxtContext) => {
+export default ({ graphQLErrors, networkError, operation, forward }, nuxtContext) => {
   console.log('Global error handler')
-  console.error(error)
+  console.log(graphQLErrors, networkError, operation, forward)
 }
 
 ```
