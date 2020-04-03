@@ -7,7 +7,7 @@ import { ApolloClientClientConfig } from 'vue-cli-plugin-apollo/graphql-client'
 import Vue, { ComponentOptions } from 'vue'
 import { ApolloHelpers, CookieAttributes } from '.'
 
-interface ApolloClientConfig extends ApolloClientClientConfig<any> {
+export interface ApolloClientConfig extends ApolloClientClientConfig<any> {
   httpEndpoint: string
   websocketsOnly?: boolean
 }
