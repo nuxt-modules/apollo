@@ -19,6 +19,7 @@ interface NuxtApolloConfiguration {
   includeNodeModules?: boolean
   authenticationType?: string
   errorHandler?: string
+  watchLoading?: string
   defaultOptions?: VueApolloComponentOptions<any>
   clientConfigs: {
     default: ApolloClientConfig | string
