@@ -237,7 +237,48 @@ methods:{
 }
 ```
 
-#### Examples to access the defaultClient of your apolloProvider
+### Example with Vue composition API
+#### Provide client
+```ts
+// plugins/apollo-provide-client.ts
+import { provide, reactive } from "nuxt-composition-api";
+import { Context, Plugin } from "@nuxt/types";
+import { ApolloClients, DefaultApolloClient } from "@vue/apollo-composable";
+
+const provideApollo: Plugin = ({ app }: Context) => {
+  app.setup = () => {
+    const clients = reactive(app.apolloProvider?.clients);
+    provide(DefaultApolloClient, clients?.defaultClient);
+    return { [ApolloClients]: clients }; // not req'd but need to return data
+  };
+};
+
+export default provideApollo;
+```
+
+#### Use composition API in component
+```vue
+<template>
+    {{ result.company.name }}
+</template>
+<script lang="ts">
+  import { Component, Vue } from "nuxt-property-decorator";
+  import { useCompanyQuery } from "@/generated/graphql-codegen";
+
+  @Component({
+    setup: () => {
+      const { result, loading, error } = useCompanyQuery({
+        where: { name: "GitHub" }
+      });
+
+      return { result, loading, error };
+    }
+  })
+  export default class ComposedComponent extends Vue {}
+</script>
+```
+
+### Examples to access the defaultClient of your apolloProvider
 ##### Vuex actions
 ```js
 export default {
