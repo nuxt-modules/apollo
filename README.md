@@ -175,7 +175,7 @@ In case you use `*.gql` files inside of `node_module` folder you can enable the 
 
 Once the setup is completed you have a successfully enabled `vue-apollo` in your project. Checkout [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo) how to use `vue-apollo` inside your application code
 
-## Authentication
+### Authentication
 
 You have following methods for authentication available:
 ```js
