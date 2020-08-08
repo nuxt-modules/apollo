@@ -37,9 +37,9 @@
   "dependencies": {
     "cross-fetch": "^3.0.4",
     "universal-cookie": "^4.0.3",
-    "vue-apollo": "^3.0.3",
+    "vue-apollo": "^3.0.4",
     "vue-cli-plugin-apollo": "^0.21.3",
-    "webpack-node-externals": "^1.7.2"
+    "webpack-node-externals": "^2.5.0"
   },
   "peerDependencies": {
     "apollo-cache-inmemory": "^1.6.5"

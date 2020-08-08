@@ -18,58 +18,122 @@ Sometime you may need to remove/rebuild package-lock.json/yarn.lock to make it w
 
 ## Setup
 
-Install apollo module:
+### 1- Install apollo module
 
 ```bash
 npm install --save @nuxtjs/apollo
-# if you are using *.gql or *.graphql files add graphql-tag to your dependencies
+```
+
+or 
+
+```bash
+yarn add @nuxtjs/apollo
+```
+
+### 2- Load `@nuxtjs/apollo` module
+
+```js
+// nuxt.config.js
+
+export default {
+  modules: [
+    '@nuxtjs/apollo',
+  ],
+
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://localhost:4000',
+      }
+    }
+  }
+}
+```
+
+### 3- Loading `*.gql` or `*.graphql` files _(optional)_
+
+Install `graphql-tag`
+   
+```bash
 npm install --save graphql-tag
 ```
 
-Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
+or 
 
 ```bash
-- clientConfigs: `Object` Config passed to ApolloClient
-  - default: `Object` // keep in mind that the object will be stringified!
-  # alternative
-  - default: `Path` // use this to have more control over the options
-  - otherClient: `Object` (Optional)
+yarn add graphql-tag
 ```
+
+#### :warning: Typescript users
+
+Add a `gql.d.ts` file in your sources folder with the following content:
+```typescript
+declare module '*.gql' {
+  import { DocumentNode } from 'graphql'
+
+  const content: DocumentNode
+  export default content
+}
+
+declare module '*.graphql' {
+  import { DocumentNode } from 'graphql'
+
+  const content: DocumentNode
+  export default content
+}
+```
+
+## Usage
+
+You have a successfully enabled `vue-apollo` in your project. 
+
+Checkout [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://apollo.vuejs.org/guide/apollo) official documentation for how to use `vue-apollo` inside your application
+
+## Advanced configuration
+
 ```js
 {
   // Add apollo module
   modules: ['@nuxtjs/apollo'],
 
-  // Give apollo module options
   apollo: {
-    tokenName: 'yourApolloTokenName', // optional, default: apollo-token
-    cookieAttributes: {
-      /**
-        * Define when the cookie will be removed. Value can be a Number
-        * which will be interpreted as days from time of creation or a
-        * Date instance. If omitted, the cookie becomes a session cookie.
-        */
-      expires: 7, // optional, default: 7 (days)
+    // Sets up the apollo client endpoints
+    clientConfigs: {
+      // recommended: use a file to declare the client configuration (see below for example)
+      default: '~/plugins/my-alternative-apollo-config.js'
 
-      /**
-        * Define the path where the cookie is available. Defaults to '/'
-        */
-      path: '/', // optional
-      /**
-        * Define the domain where the cookie is available. Defaults to
-        * the domain of the page where the cookie was created.
-        */
-      domain: 'example.com', // optional
+      // you can setup multiple clients
+      alternativeClient: {
+        // required
+        httpEndpoint: 'http://localhost:4000',
 
-      /**
-        * A Boolean indicating if the cookie transmission requires a
-        * secure protocol (https). Defaults to false.
-        */
-      secure: false,
+        // override HTTP endpoint in browser only
+        browserHttpEndpoint: '/graphql',
+
+        // See https://www.apollographql.com/docs/link/links/http.html#options
+        httpLinkOptions: {
+          credentials: 'same-origin'
+        },
+
+        // You can use `wss` for secure connection (recommended in production)
+        // Use `null` to disable subscriptions
+        wsEndpoint: 'ws://localhost:4000',
+
+        // LocalStorage token
+        tokenName: 'apollo-token',
+
+        // Enable Automatic Query persisting with Apollo Engine
+        persisting: false,
+
+        // Use websockets for everything (no HTTP)
+        // You need to pass a `wsEndpoint` for this to work
+        websocketsOnly: false
+      },
     },
-    includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
-    authenticationType: 'Basic', // optional, default: 'Bearer'
-    // (Optional) Default 'apollo' definition
+    
+    /**
+     * default 'apollo' definition
+     */
     defaultOptions: {
       // See 'apollo' definition
       // For example: default query options
@@ -78,48 +142,79 @@ Add `@nuxtjs/apollo` to `modules` section of `nuxt.config.js`
         fetchPolicy: 'cache-and-network',
       },
     },
-    // optional
+    
+    // setup a global query loader observer (see below for example)
     watchLoading: '~/plugins/apollo-watch-loading-handler.js',
-    // optional
+    
+    // setup a global error handler (see below for example)
     errorHandler: '~/plugins/apollo-error-handler.js',
-    // required
-    clientConfigs: {
-      default: {
-        // required  
-        httpEndpoint: 'http://localhost:4000',
-        // optional
-        // override HTTP endpoint in browser only
-        browserHttpEndpoint: '/graphql',
-        // optional
-        // See https://www.apollographql.com/docs/link/links/http.html#options
-        httpLinkOptions: {
-          credentials: 'same-origin'
-        },
-        // You can use `wss` for secure connection (recommended in production)
-        // Use `null` to disable subscriptions
-        wsEndpoint: 'ws://localhost:4000', // optional
-        // LocalStorage token
-        tokenName: 'apollo-token', // optional
-        // Enable Automatic Query persisting with Apollo Engine
-        persisting: false, // Optional
-        // Use websockets for everything (no HTTP)
-        // You need to pass a `wsEndpoint` for this to work
-        websocketsOnly: false // Optional
-      },
-      test: {
-        httpEndpoint: 'http://localhost:5000',
-        wsEndpoint: 'ws://localhost:5000',
-        tokenName: 'apollo-token'
-      },
-      // alternative: user path to config which returns exact same config options
-      test2: '~/plugins/my-alternative-apollo-config.js'
-    }
+
+    // Sets the authentication type for any authorized request.
+    authenticationType: 'Bearer', 
+
+    // Token name for the cookie which will be set in case of authentication
+    tokenName: 'apollo-token',
+
+    // [deprecated] Enable the graphql-tag/loader to parse *.gql/*.graphql files
+    includeNodeModules: true,
+
+    // Cookie parameters used to store authentication token
+    cookieAttributes: {
+      /**
+        * Define when the cookie will be removed. Value can be a Number
+        * which will be interpreted as days from time of creation or a
+        * Date instance. If omitted, the cookie becomes a session cookie.
+        */
+      expires: 7,
+
+      /**
+        * Define the path where the cookie is available. Defaults to '/'
+        */
+      path: '/',
+
+      /**
+        * Define the domain where the cookie is available. Defaults to
+        * the domain of the page where the cookie was created.
+        */
+      domain: 'example.com',
+
+      /**
+        * A Boolean indicating if the cookie transmission requires a
+        * secure protocol (https). Defaults to false.
+        */
+      secure: false,
+    },
+  }
+}
+
+```
+
+#### Apollo `clientOptions` using file configuration
+
+:warning: In case you need to declare functions (like `getAuth` or `inMemoryCacheOptions.fragmentMatcher`) inside apollo configuration, you **MUST** define your `clientOptions` using an external file
+
+```js
+// ~/plugins/my-alternative-apollo-config.js
+
+export default (context) => {
+  return {
+    httpEndpoint: 'http://localhost:4000/graphql-alt',
+
+    /*
+     * For permanent authentication provide `getAuth` function.
+     * The string returned will be used in all requests as authorization header
+     */
+    getAuth: () => 'Bearer my-static-token',
   }
 }
 ```
 
+
+#### `watchLoading` example
+
 ```js
-// plugins/apollo-watch-loading-handler.js
+// ~/plugins/apollo-watch-loading-handler.js
+
 export default (isLoading, countModifier, nuxtContext) => {
   loading += countModifier
   console.log('Global loading', loading, countModifier)
@@ -127,23 +222,16 @@ export default (isLoading, countModifier, nuxtContext) => {
 
 ```
 
+#### `errorHandler` example
+
 ```js
-// plugins/apollo-error-handler.js
+// ~/plugins/apollo-error-handler.js
+
 export default ({ graphQLErrors, networkError, operation, forward }, nuxtContext) => {
   console.log('Global error handler')
   console.log(graphQLErrors, networkError, operation, forward)
 }
 
-```
-
-```js
-// plugins/my-alternative-apollo-config.js
-export default function(context){
-  return {
-    httpEndpoint: 'http://localhost:4000/graphql-alt',
-    getAuth:() => 'Bearer my-static-token' // use this method to overwrite functions
-  }
-}
 ```
 
 ## Options
@@ -171,9 +259,6 @@ If your backend requires an Authorization header in the format "Authorization: <
 
 In case you use `*.gql` files inside of `node_module` folder you can enable the `graphql-tag/loader` to parse the files for you.
 
-## Usage
-
-Once the setup is completed you have a successfully enabled `vue-apollo` in your project. Checkout [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vue-apollo) and [vue-apollo](https://github.com/Akryum/vue-apollo) how to use `vue-apollo` inside your application code
 
 ## Authentication
 
@@ -188,58 +273,62 @@ You have following methods for authentication available:
 ```
 Check out the [full example](https://github.com/nuxt-community/apollo-module/tree/master/test/fixture)
 
-For permanent authorization tokens the setup just provide `getAuth` function for each of your endpoint configurations:
-```js
-  apollo: {
-    clientConfigs: {
-      default: {
-        httpEndpoint: 'https://graphql.datocms.com',
-        getAuth: () => 'Bearer your_token_string'
-      },
-    }
-  },
-```
 
 #### User login
 ```js
-methods:{
-  async onSubmit () {
-    const credentials = this.credentials
-    try {
-        const res = await this.$apollo.mutate({
-            mutation: authenticateUserGql,
-            variables: credentials
-        }).then(({data}) => data && data.authenticateUser)
-        await this.$apolloHelpers.onLogin(res.token)
-    } catch (e) {
-        console.error(e)
-    }
-  },
+// ~/components/my-component.js
+
+export default {
+  methods: {
+    async onSubmit () {
+      const credentials = this.credentials
+      try {
+          const res = await this.$apollo.mutate({
+              mutation: authenticateUserGql,
+              variables: credentials
+          }).then(({data}) => data && data.authenticateUser)
+          await this.$apolloHelpers.onLogin(res.token)
+      } catch (e) {
+          console.error(e)
+      }
+    },
+  }
 }
 ```
+
 #### User logout
 ```js
-methods:{
-  async onLogout () {
-    await this.$apolloHelpers.onLogout()
-  },
+// ~/components/my-component.js
+
+export default {
+  methods: {
+    async onLogout () {
+      await this.$apolloHelpers.onLogout()
+    },
+  }
 }
 ```
 
 #### getToken
 ```js
-// middleware/isAuth.js
-  export default function ({app, error}) {
-    const hasToken = !!app.$apolloHelpers.getToken()
-    if (!hasToken) {
-        error({errorCode:503, message:'You are not allowed to see this'})
-    }
+// ~/middleware/isAuth.js
+
+export default ({app, error}) => {
+  const hasToken = !!app.$apolloHelpers.getToken()
+  if (!hasToken) {
+    error({
+      errorCode:503, 
+      message:'You are not allowed to see this'
+    })
+  }
 }
 ```
 
 #### Examples to access the defaultClient of your apolloProvider
 ##### Vuex actions
 ```js
+// ~/store/my-store.js
+
 export default {
   actions: {
     foo (store, payload) {
@@ -251,6 +340,8 @@ export default {
 
 ##### asyncData/fetch method of page component
 ```js
+// ~/components/my-component.js
+
 export default {
   asyncData (context) {
     let client = context.app.apolloProvider.defaultClient
@@ -270,9 +361,11 @@ export default {
 
 ##### access client or call mutations and queries of any method inside of component
 ```js
+// ~/components/my-component.js
+
 export default {
-  methods:{
-    foo(){
+  methods: {
+    foo () {
       // receive the associated Apollo client 
       const client = this.$apollo.getClient()
 
@@ -293,6 +386,8 @@ Once you get the client, you can access its methods and properties. See [API Ref
 
 #### Smart queries on any component
 ```js
+// nuxt.config.js
+
 export default {
   apollo: {
     foo: {
@@ -311,12 +406,16 @@ See [vue-apollo documentation](https://vue-apollo.netlify.com/guide/apollo/queri
 
 #### Add GQL file recognition on node_modules
 ```js
+// nuxt.config.js
+
+export default {
   apollo: {
     clientConfigs: {
       default: '~/apollo/client-configs/default.js'
     },
     includeNodeModules: true
   }
+}
 ```
 
 ## Upgrade
@@ -328,14 +427,18 @@ Version 4 of this module leaves you with zero configuration. This means we use t
 Edit your configuration as following:
 ```js
 // nuxt.config.js
-apollo:{
- clientConfigs:{
-  default:{
-    httpEndpoint: YOUR_ENDPOINT,
-    wsEndpoint: YOUR_WS_ENDPOINT
+
+export default {
+  apollo: {
+    clientConfigs: {
+      default:{
+        httpEndpoint: YOUR_ENDPOINT,
+        wsEndpoint: YOUR_WS_ENDPOINT
+      }
+    }
   }
- }
 }
+
 ```
 
 ### Upgrade Guide apollo-client v1 => v2
@@ -343,15 +446,6 @@ apollo:{
 Version 3 of this module is using apollo-client 2.x. You need to make sure to update all your middle/afterware according to the upgrade guide of apollo-client. Check this source for a reference: https://www.apollographql.com/docs/apollo-server/migration-two-dot/
 
 ## Troubleshooting 
-
-### Use of *.gql files
-
-To use *gql|graphql files you need to add following dependency to your project:
-```
-  yarn add graphql-tag
-  # alternative
-  npm install graphql-tag
-```
 
 ### Proxies
 
@@ -364,9 +458,10 @@ Here is an example using local storage : https://github.com/Akryum/vue-apollo/is
 
 ## Contribute and wire up setup
 
-Setup the required fields in .env file in root folder
-```
-// .env
+Setup the required fields in `.env` file in root folder
+
+```bash
+# cat .env
 HTTP_ENDPOINT=https://your-endpoint
 WS_ENDPOINT=wss://your-endpoint
 ```
@@ -382,7 +477,7 @@ mutation authenticateUser($email:String!,$password:String!){
 ```
 
 If your gql backend is prepared start running nuxt as follow
-```
-# npm install
-# npm run dev
+```bash
+npm install
+npm run dev
 ```
