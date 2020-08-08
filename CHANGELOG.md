@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [4.0.1-rc.2](https://github.com/nuxt-community/apollo-module/compare/v4.0.1-rc.1...v4.0.1-rc.2) (2020-08-08)
+
+
+### Bug Fixes
+
+* break reference to state object ([6641b68](https://github.com/nuxt-community/apollo-module/commit/6641b68628a4b5803a4da40f6e726dbd993d80a2))
+
 ### [4.0.1-rc.1](https://github.com/nuxt-community/apollo-module/compare/v4.0.1-rc.0...v4.0.1-rc.1) (2020-05-15)
 
 
