@@ -3,6 +3,7 @@
  */
 
 import { VueApolloComponentOptions } from 'vue-apollo/types/options'
+import { ApolloProvider } from 'vue-apollo/types/apollo-provider'
 import { ApolloClientClientConfig } from 'vue-cli-plugin-apollo/graphql-client'
 import Vue, { ComponentOptions } from 'vue'
 import { ApolloHelpers, CookieAttributes } from '.'
@@ -14,7 +15,7 @@ export interface ApolloClientConfig extends ApolloClientClientConfig<any> {
 
 interface NuxtApolloConfiguration {
   tokenName?: string
-  cookieAttributes? : CookieAttributes
+  cookieAttributes?: CookieAttributes
   tokenExpires?: number
   includeNodeModules?: boolean
   authenticationType?: string
@@ -45,6 +46,10 @@ declare module '@nuxt/types' {
     apollo?: NuxtApolloConfiguration
   }
   interface NuxtAppOptions extends ComponentOptions<Vue> {
+    $apolloHelpers: ApolloHelpers
+    apolloProvider: ApolloProvider
+  }
+  interface Context {
     $apolloHelpers: ApolloHelpers
   }
 }
