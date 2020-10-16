@@ -100,9 +100,9 @@ Checkout [Official example](https://github.com/nuxt/nuxt.js/tree/dev/examples/vu
     // Sets up the apollo client endpoints
     clientConfigs: {
       // recommended: use a file to declare the client configuration (see below for example)
-      default: '~/plugins/my-alternative-apollo-config.js'
+      default: '~/plugins/my-alternative-apollo-config.js',
 
-      // you can setup multiple clients
+      // you can setup multiple clients with arbitrary names
       alternativeClient: {
         // required
         httpEndpoint: 'http://localhost:4000',
