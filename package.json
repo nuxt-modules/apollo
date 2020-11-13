@@ -9,6 +9,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "lib",
+    "types/*.d.ts"
+  ],
   "scripts": {
     "dev": "nuxt test/fixture",
     "dev2": "nuxt test/fixture-static-auth",
@@ -20,48 +24,28 @@
     "test:types": "tsc -p types/test",
     "release": "standard-version --prerelease rc && git push --follow-tags && npm publish"
   },
-  "engines": {
-    "node": ">=6.0.0"
-  },
-  "eslintIgnore": [
-    "lib/templates/*.*"
-  ],
-  "files": [
-    "lib",
-    "types/*.d.ts"
-  ],
-  "jest": {
-    "testEnvironment": "node",
-    "collectCoverage": true
-  },
   "dependencies": {
-    "cross-fetch": "^3.0.4",
-    "universal-cookie": "^4.0.3",
-    "vue-apollo": "^3.0.4",
-    "vue-cli-plugin-apollo": "^0.21.3",
-    "webpack-node-externals": "^2.5.0"
+    "cross-fetch": "^3.0.6",
+    "universal-cookie": "^4.0.4",
+    "vue-apollo": "^3.0.5",
+    "vue-cli-plugin-apollo": "^0.22.1",
+    "webpack-node-externals": "^2.5.2"
   },
   "peerDependencies": {
-    "apollo-cache-inmemory": "^1.6.5"
+    "apollo-cache-inmemory": "^1.6.6"
   },
   "devDependencies": {
     "@babel/core": "latest",
     "@babel/preset-env": "latest",
     "@nuxt/types": "latest",
+    "@nuxtjs/eslint-config": "latest",
     "@types/graphql": "latest",
     "@types/universal-cookie": "latest",
+    "babel-eslint": "latest",
+    "babel-jest": "latest",
     "codecov": "latest",
-    "core-js": "^2.6.11",
     "dotenv": "latest",
     "eslint": "latest",
-    "eslint-config-standard": "latest",
-    "eslint-loader": "latest",
-    "eslint-plugin-import": "latest",
-    "eslint-plugin-jest": "latest",
-    "eslint-plugin-node": "latest",
-    "eslint-plugin-promise": "latest",
-    "eslint-plugin-standard": "latest",
-    "eslint-plugin-vue": "latest",
     "graphql-tag": "latest",
     "jest": "latest",
     "jsdom": "latest",
