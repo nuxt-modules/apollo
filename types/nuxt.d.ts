@@ -52,4 +52,8 @@ declare module '@nuxt/types' {
   interface Context {
     $apolloHelpers: ApolloHelpers
   }
+  // Nuxt 2.14.12+
+  interface NuxtConfig {
+    apollo?: NuxtApolloConfiguration
+  }
 }
