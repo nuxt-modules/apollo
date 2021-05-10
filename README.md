@@ -478,6 +478,6 @@ mutation authenticateUser($email:String!,$password:String!){
 
 If your gql backend is prepared start running nuxt as follow
 ```bash
-npm install
-npm run dev
+yarn install
+yarn dev
 ```
