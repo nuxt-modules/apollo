@@ -15,6 +15,9 @@ export interface ApolloHelpers {
     cookieAttributes?: number | CookieAttributes,
     skipResetStore?: boolean
   ): Promise<void>;
-  onLogout(apolloClient?: ApolloClient<any>): Promise<void>;
+  onLogout(
+    apolloClient?: ApolloClient<any>,
+    skipResetStore?: boolean
+  ): Promise<void>;
   getToken(tokenName?: string): string;
 }

@@ -17,7 +17,7 @@ export default function (ctx) {
         }
       }
     },
-    onCacheInit: cache => {
+    onCacheInit: (cache) => {
       const data = {
         connected: false
       }
