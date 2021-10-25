@@ -26,12 +26,12 @@ describe('basic', () => {
 
   test('normalQuery', async () => {
     const html = await get('/normalQuery')
-    expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
+    expect(html).toContain('Pilot')
   })
 
   test('asyncData', async () => {
     const html = await get('/asyncData')
-    expect(html).toContain('cjw1jhoxi1f4g0112ayaq3pyz')
+    expect(html).toContain('Pilot')
   })
 
   test('mounted & smart query', async () => {
