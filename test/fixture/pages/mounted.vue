@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="post in allPosts" :key="post.id">{{ post.id }}</div>
+        <div v-for="episode in episodesByIds" :key="episode.name">{{ episode.name }}</div>
     </div>
 </template>
 
@@ -15,17 +15,17 @@ export default {
     },
     data () {
         return {
-            allPosts: []
+            episodesByIds: []
         }
     },
     async mounted() {
-        this.allPosts = await this.$apollo.query({
+        this.episodesByIds = await this.$apollo.query({
             query: gql`{
-                allPosts {
-                    id
+                episodesByIds(ids: [1]) {
+                    name
                 }
             }`
-        }).then(({ data }) => data && data.allPosts)
+        }).then(({ data }) => data && data.episodesByIds)
     }
 }
 </script>

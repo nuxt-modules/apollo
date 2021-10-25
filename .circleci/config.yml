@@ -32,5 +32,5 @@ jobs:
           name: Tests
           command: yarn test
           environment:
-            HTTP_ENDPOINT: https://api.graph.cool/simple/v1/cjvqu5trs23l90138hm4t8uof
+            HTTP_ENDPOINT: https://rickandmortyapi.com/graphql
             WS_ENDPOINT: wss://subscriptions.us-west-2.graph.cool/v1/cjvqu5trs23l90138hm4t8uof
