@@ -1,0 +1,17 @@
+query launches($sort: String = "launch_year", $order: String = "desc", $limit: Int = 10) {
+  launches(sort: $sort, order: $order, find: { mission_name: "Starlink" }, limit: $limit) {
+    id
+    details
+    mission_name
+    launch_year
+    launch_success
+    links {
+      article_link
+      flickr_images
+    }
+    rocket {
+      rocket_name
+      rocket_type
+    }
+  }
+}
