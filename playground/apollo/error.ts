@@ -1,6 +1,6 @@
-import { defineApolloErrorHandler } from '../../dist/runtime'
+// @ts-ignore
+// import { defineApolloError } from '@nuxtjs/apollo/define'
 
-export default defineApolloErrorHandler((err) => {
-  console.log('🟥 Global error handler')
-  console.log(err)
-})
+export default (err) => {
+  console.log('🟥 Global error handler', err)
+}

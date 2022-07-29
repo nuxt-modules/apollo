@@ -1,0 +1,48 @@
+<template>
+  <div flex flex-col gap-4>
+    <NCard p-4>
+      <div class="n-header-upper">
+        StarLink Example
+      </div>
+
+      <div class="flex flex-wrap gap-3 items-center">
+        <NButton @click="getShips">
+          Load Ships
+        </NButton>
+
+        <NButton @click="getLaunches">
+          Load Launches
+        </NButton>
+      </div>
+    </NCard>
+
+    <NCard p-4>
+      <div class="n-header-upper">
+        Raw Output
+      </div>
+
+      <p v-if="loading">
+        loading...
+      </p>
+      <pre v-else>{{ result }}</pre>
+    </NCard>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import gql from 'graphql-tag'
+// @ts-ignore
+import queryLaunches from '~/queries/launches.gql'
+
+const queryShips = gql`query ships { ships { id name } }`
+
+const { result, restart, loading } = useQuery(queryShips, null, { fetchPolicy: 'cache-and-network' })
+
+const getShips = () => restart()
+
+const { onResult, load } = useLazyQuery(queryLaunches, null, { fetchPolicy: 'no-cache' })
+onResult(({ data }) => (result.value = data))
+
+const getLaunches = () => load()
+
+</script>

@@ -3,6 +3,6 @@
     "version": "0.0.0",
     "name": "nuxt-apollo-playground",
     "dependencies": {
-      "@nuxtjs/apollo": "latest"
+      "@nuxtjs/apollo": "workspace:*"
     }
   }

@@ -1,52 +1,45 @@
 {
-  "private": true,
   "name": "@nuxtjs/apollo",
   "version": "4.0.1-rc.5",
   "license": "MIT",
   "repository": "https://github.com/nuxt-community/apollo-module",
   "homepage": "https://github.com/nuxt-community/apollo-module",
   "type": "module",
-  "workspaces": [
-    "playground"
-  ],
   "exports": {
-    ".": {
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
-    },
-    "./runtime": "./dist/runtime/index.mjs"
+    ".": "./dist/module.mjs",
+    "./define": "./dist/define.mjs"
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "main": "./dist/module.mjs",
+  "types": "./dist/module.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "nuxt-module-build",
-    "prepack": "yarn build",
+    "prepack": "pnpm build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "prepare": "nuxt-module-build --stub && nuxi prepare playground",
-    "release": "standard-version --prerelease rc && git push --follow-tags && npm publish"
+    "release": "standard-version --prerelease rc && git push --follow-tags && pnpm publish"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@nuxt/kit": "^3.0.0-rc.5",
+    "@nuxt/kit": "^3.0.0-rc.6",
     "@nuxt/module-builder": "^0.1.7",
     "@rollup/plugin-graphql": "^1.1.0",
-    "@vue/apollo-composable": "^4.0.0-alpha.18",
+    "@vue/apollo-composable": "^4.0.0-alpha.19",
     "cookie-es": "^0.5.0",
+    "destr": "^1.1.1",
     "graphql": "^16.5.0",
-    "graphql-ws": "^5.9.1"
-  },
-  "peerDependencies": {
-    "apollo-cache-inmemory": "^1.6.6"
+    "graphql-ws": "^5.9.1",
+    "jiti": "^1.14.0"
   },
   "devDependencies": {
+    "@nuxt/ui": "^0.3.0",
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
     "graphql-tag": "latest",
-    "nuxt": "^3.0.0-rc.5",
+    "nuxt": "^3.0.0-rc.6",
     "standard-version": "latest"
   },
   "publishConfig": {
@@ -54,5 +47,6 @@
   },
   "resolutions": {
     "@nuxtjs/apollo": "link:."
-  }
+  },
+  "packageManager": "pnpm@7.6.0"
 }

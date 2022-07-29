@@ -1,18 +1,17 @@
 import { existsSync } from 'fs'
-import { useLogger, addPlugin, addAutoImport, createResolver, addAutoImportDir, defineNuxtModule, addTemplate, extendWebpackConfig, extendViteConfig } from '@nuxt/kit'
+import jiti from 'jiti'
+import { useLogger, addPlugin, addAutoImport, createResolver, defineNuxtModule, addTemplate, extendWebpackConfig, extendViteConfig } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
 import { name, version } from '../package.json'
-import type { ClientConfig, ModuleOptions } from './runtime/types'
+import type { ClientConfig, NuxtApolloConfig } from './types'
 
 const logger = useLogger(name)
 
-async function readConfigFile (path: string): Promise<ClientConfig | undefined> {
-  try {
-    return (await import(path))?.default
-  } catch {}
+function readConfigFile (path: string): ClientConfig {
+  return jiti(import.meta.url, { interopDefault: true })(path)
 }
 
-export default defineNuxtModule<ModuleOptions>({
+export default defineNuxtModule<NuxtApolloConfig<any>>({
   meta: {
     name,
     version,
@@ -21,15 +20,15 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     components: true,
     autoImports: true,
-    tokenName: 'apollo-token',
-    authenticationType: 'Bearer',
+    authType: 'Bearer',
+    authHeader: 'Authorization',
     cookieAttributes: {
       path: '/',
       maxAge: 60 * 60 * 24 * 7,
       secure: process.env.NODE_ENV === 'production'
     }
   },
-  async setup (options, nuxt) {
+  setup (options, nuxt) {
     if (!options.clientConfigs || !Object.keys(options.clientConfigs).length) {
       throw new Error('[@nuxtjs/apollo] Atleast one client must be configured.')
     }
@@ -39,11 +38,10 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.build.transpile = nuxt.options.build.transpile || []
     nuxt.options.build.transpile.push(
+      resolve('runtime'),
       '@apollo/client',
-      '@vue/apollo-option',
       '@vue/apollo-composable',
-      'ts-invariant/process',
-      resolve('runtime'))
+      'ts-invariant/process')
 
     const configPaths: string[] = []
 
@@ -51,7 +49,7 @@ export default defineNuxtModule<ModuleOptions>({
     for (let [k, v] of Object.entries(options.clientConfigs)) {
       if (typeof v === 'string') {
         const path = rootResolver.resolve(v)
-        const resolvedConfig = existsSync(path) && await readConfigFile(path)
+        const resolvedConfig = existsSync(path) && readConfigFile(path)
 
         if (!resolvedConfig) {
           logger.warn(`Unable to resolve Apollo config for client: ${k}`)
@@ -62,7 +60,9 @@ export default defineNuxtModule<ModuleOptions>({
         configPaths.push(path)
       }
 
-      v.tokenName = v?.tokenName || options.tokenName
+      v.tokenName = v?.tokenName || `apollo:${k}.token`
+
+      v.authHeader = v?.authHeader || options.authHeader
 
       if (typeof v?.getAuth === 'function') {
         v.getAuth = v.getAuth()
@@ -74,6 +74,9 @@ export default defineNuxtModule<ModuleOptions>({
 
       options.clientConfigs[k] = v
     }
+
+    // @ts-ignore
+    nuxt.options.runtimeConfig.public.apollo = options
 
     const errHandler = options.errorHandler && rootResolver.resolve(options.errorHandler)
 
@@ -91,15 +94,16 @@ export default defineNuxtModule<ModuleOptions>({
         ].join('\n')
       }).dst as string
 
-    // @ts-ignore
-    nuxt.options.runtimeConfig.public.apollo = options
-
     addPlugin(resolve('runtime/plugin'))
 
     // TODO: Integrate @vue/apollo-components?
 
     addAutoImport([
-      ...['useAsyncQuery', 'useLazyAsyncQuery'].map(n => ({ name: n, from: resolve('runtime/composables') })),
+      ...[
+        'useApollo',
+        'useAsyncQuery',
+        'useLazyAsyncQuery'
+      ].map(n => ({ name: n, from: resolve('runtime/composables') })),
       ...(!options?.autoImports
         ? []
         : [
@@ -134,7 +138,6 @@ export default defineNuxtModule<ModuleOptions>({
       config.plugins.push(GraphQLPlugin())
     })
 
-    // TODO: Test WebPack
     extendWebpackConfig((config) => {
       // @ts-ignore
       const hasGqlLoader = config.module.rules.some((rule: any) => rule?.use === 'graphql-tag/loader')
@@ -151,16 +154,14 @@ export default defineNuxtModule<ModuleOptions>({
   }
 })
 
-export * from './runtime/define'
-
 declare module '@nuxt/schema' {
   interface RuntimeConfig {
     // @ts-ignore
-    apollo: ModuleOptions
+    apollo: NuxtApolloConfig<any>
 
     // @ts-ignore
     public:{
-      apollo: ModuleOptions
+      apollo: NuxtApolloConfig<any>
     }
   }
 }

@@ -1,5 +1,5 @@
-
-import { defineApolloClient } from '../../dist/runtime'
+// @ts-ignore
+import { defineApolloClient } from '@nuxtjs/apollo/define'
 
 export default defineApolloClient({
   httpEndpoint: 'https://api.spacex.land/graphql',
@@ -14,7 +14,7 @@ export default defineApolloClient({
 
   // You can use `wss` for secure connection (recommended in production)
   // Use `null` to disable subscriptions
-  wsEndpoint: 'ws://localhost:4000',
+  // wsEndpoint: 'ws://localhost:4000',
 
   // LocalStorage token
   tokenName: 'apollo-token',

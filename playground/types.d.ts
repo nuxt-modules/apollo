@@ -21,3 +21,18 @@ export type ViewerT = {
     login: string
   }
 }
+
+export type DiscussionT = {
+  repository?: {
+    discussions?: {
+      nodes?: {
+        id?: number
+        author?: {
+          login?: string
+          avatarUrl?: string
+        }
+        body?: string
+      }[]
+    }
+  }
+}
