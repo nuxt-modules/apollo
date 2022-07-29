@@ -17,13 +17,6 @@
         <NButton :disabled="subscribe" @click="todoAdded">
           Subscribe
         </NButton>
-        <NButton @click="useApollo().onLogin('yowyow', 'todos')">
-          Login
-        </NButton>
-
-        <NButton @click="useApollo().onLogout('todos')">
-          Signout
-        </NButton>
       </div>
     </NCard>
 
