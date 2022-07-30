@@ -81,8 +81,6 @@ export default defineNuxtPlugin((nuxtApp) => {
     const errorLink = onError((err) => {
       if (process.env.NODE_ENV === 'production') { return }
 
-      // console.log('X', ApolloErrorHandler(err))
-
       return ApolloErrorHandler(err)
     })
 

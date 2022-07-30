@@ -1,6 +1,6 @@
 import type { OperationVariables, QueryOptions } from '@apollo/client'
 import type { AsyncData } from 'nuxt/dist/app/composables'
-import { ModuleOptions, NuxtAppApollo } from '../types'
+import { NuxtApolloConfig, NuxtAppApollo } from '../types'
 import { useCookie, useNuxtApp, useAsyncData, useLazyAsyncData, useRuntimeConfig } from '#imports'
 
 type TQuery<T> = QueryOptions<OperationVariables, T>['query']
@@ -52,7 +52,7 @@ const prep = (...args: any) => {
 
 export const useApollo = () => {
   const nuxtApp = useNuxtApp() as NuxtAppApollo
-  const apolloConfig = useRuntimeConfig()?.public?.apollo as ModuleOptions<true>
+  const apolloConfig = useRuntimeConfig()?.public?.apollo as NuxtApolloConfig
 
   const getToken = (tokenName?: string, client?: string) => {
     if (!tokenName) {
@@ -78,7 +78,7 @@ export const useApollo = () => {
 
     if (skipResetStore) { return }
 
-    await nuxtApp?._apolloClients?.[client].resetStore().catch(e => console.log('%cError on cache reset (onLogin)', 'color: orange;', e.message))
+    await nuxtApp?._apolloClients?.[client].resetStore().catch(e => console.log('%cError on cache reset', 'color: orange;', e.message))
   }
 
   return {

@@ -17,7 +17,7 @@ export default defineApolloClient({
   // wsEndpoint: 'ws://localhost:4000',
 
   // LocalStorage token
-  tokenName: 'apollo-token',
+  tokenName: 'spacex-token',
 
   // Enable Automatic Query persisting with Apollo Engine
   persisting: false,
