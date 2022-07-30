@@ -1,5 +1,6 @@
 import { existsSync } from 'fs'
 import jiti from 'jiti'
+import { defu } from 'defu'
 import { useLogger, addPlugin, addAutoImport, createResolver, defineNuxtModule, addTemplate, extendWebpackConfig, extendViteConfig } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
 import { name, version } from '../package.json'
@@ -68,6 +69,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
         v.authHeader = v?.authHeader || options.authHeader
         v.tokenName = v?.tokenName || `apollo:${k}.token`
         v.tokenStorage = v?.tokenStorage || options.tokenStorage
+        if (v.cookieAttributes) { v.cookieAttributes = defu(v?.cookieAttributes, options.cookieAttributes) }
 
         // TODO: Rework `getAuth` implementation
         // if (typeof v?.getAuth === 'function') {

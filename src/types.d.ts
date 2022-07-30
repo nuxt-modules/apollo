@@ -1,7 +1,7 @@
 import type { ClientOptions } from 'graphql-ws'
 import type { ApolloClient, HttpOptions, DefaultOptions, InMemoryCacheConfig } from '@apollo/client'
 import type { CookieOptions } from 'nuxt/dist/app/composables'
-import type { RestartableClient } from './runtime/utils/ws'
+import type { RestartableClient } from './runtime/ws'
 
 type CookieAttributes = Omit< CookieOptions, 'encode' | 'decode' | 'expires' | 'default'>;
 

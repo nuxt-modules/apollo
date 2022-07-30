@@ -7,7 +7,7 @@
 
       <div class="flex flex-wrap gap-3 items-center">
         <NTextInput
-          v-model="githubToken"
+          v-model="input"
           icon="carbon-logo-github"
           placeholder="Your Github Token"
         />
@@ -52,21 +52,22 @@ import discussions from '~/queries/discussions.gql'
 
 const { getToken, onLogin, onLogout } = useApollo()
 
+const input = ref(null)
 const githubToken = ref(null)
 
 const token = computed(() => getToken(null, 'github'))
 
-if (token.value) { githubToken.value = token.value }
+if (token.value) { input.value = token.value }
 
 const queryViewer = gql`query viwer { viewer { login } }`
 
 const data = ref()
 
 if (token.value) {
-  const authOnly = await useAsyncQuery({ query: queryViewer, clientId: 'github' })
+  const whoAmI = await useAsyncQuery({ query: queryViewer, clientId: 'github' })
 
-  if (authOnly?.data.value) {
-    data.value = authOnly.data.value
+  if (whoAmI?.data.value) {
+    data.value = whoAmI.data.value
   }
 }
 
@@ -84,7 +85,13 @@ const getNuxtDiscussions = () => {
   onError(err => console.error(err))
 }
 
-const setToken = () => onLogin(githubToken.value, 'github')
-const clearToken = () => onLogout('github').then(() => (githubToken.value = null))
+const setToken = () => {
+  githubToken.value = input.value
+  onLogin(input.value, 'github')
+}
+const clearToken = () => onLogout('github').then(() => {
+  input.value = null
+  githubToken.value = null
+})
 
 </script>

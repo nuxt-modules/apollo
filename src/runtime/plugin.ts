@@ -5,7 +5,7 @@ import { ApolloClients, provideApolloClients } from '@vue/apollo-composable'
 import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, split } from '@apollo/client/core'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { setContext } from '@apollo/client/link/context'
-import createRestartableClient from '../runtime/utils/ws'
+import createRestartableClient from './ws'
 import { useApollo } from './composables'
 import { defineNuxtPlugin, useRequestHeaders } from '#imports'
 

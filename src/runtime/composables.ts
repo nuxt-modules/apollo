@@ -59,7 +59,7 @@ export const useApollo = () => {
 
     if (!tokenName) { tokenName = conf?.tokenName }
 
-    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : process.client && localStorage.getItem(tokenName)
+    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (process.client && localStorage.getItem(tokenName)) || undefined
   }
   type TAuthUpdate = {token?: string, client?: string, mode: 'login' | 'logout', skipResetStore?: boolean}
   const updateAuth = async ({ token, client, mode, skipResetStore }: TAuthUpdate) => {
