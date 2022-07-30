@@ -2,9 +2,10 @@
 import { defineApolloClient } from '@nuxtjs/apollo/define'
 
 export default defineApolloClient({
+  // The GraphQL endpoint.
   httpEndpoint: 'https://api.spacex.land/graphql',
 
-  // override HTTP endpoint in browser only
+  // Provide a GraphQL endpoint to be used client-side. Overrides `httpEndpoint`.
   // browserHttpEndpoint: '/graphql',
 
   // See https://www.apollographql.com/docs/link/links/http.html#options
@@ -12,20 +13,18 @@ export default defineApolloClient({
     credentials: 'same-origin'
   },
 
-  // You can use `wss` for secure connection (recommended in production)
-  // Use `null` to disable subscriptions
+  // Specify a websocket endpoint to be used for subscriptions.
+  // The `wss` protocol is recommended in production.
   // wsEndpoint: 'ws://localhost:4000',
 
   // LocalStorage token
   tokenName: 'spacex-token',
 
-  // Enable Automatic Query persisting with Apollo Engine
   persisting: false,
 
-  // Use websockets for everything (no HTTP)
-  // You need to pass a `wsEndpoint` for this to work
-  websocketsOnly: false,
+  // Specify if the client should solely use WebSocket.
+  // requires `wsEndpoint`.
+  websocketsOnly: false
 
-  getAuth: () => 'Bearer my_secret'
-
+  // getAuth: () => 'Bearer my_secret'
 })

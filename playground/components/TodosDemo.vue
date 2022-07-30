@@ -37,7 +37,7 @@ const gqlTodos = gql`query todo { todos { id text } }`
 const gqlCreateTodo = gql`mutation createTodo($todo: TodoInput!) { createTodo(todo: $todo) { id } }`
 const gqlTodoAdded = gql`subscription todoAdded { todoAdded { id text } }`
 
-const { data, refresh } = useAsyncQuery(gqlTodos, 'todos')
+const { data, refresh } = await useAsyncQuery(gqlTodos, 'todos')
 
 const { mutate: todoMutation } = useMutation(gqlCreateTodo, { clientId: 'todos' })
 

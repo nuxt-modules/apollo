@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@nuxtjs/apollo'],
 
   apollo: {
-    clientConfigs: {
+    clients: {
       default: './apollo/default.ts',
       github: {
         httpEndpoint: 'https://api.github.com/graphql'

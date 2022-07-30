@@ -1,7 +1,8 @@
 import type { OperationVariables, QueryOptions } from '@apollo/client'
 import type { AsyncData } from 'nuxt/dist/app/composables'
-import { NuxtApolloConfig, NuxtAppApollo } from '../types'
-import { useCookie, useNuxtApp, useAsyncData, useLazyAsyncData, useRuntimeConfig } from '#imports'
+import { NuxtAppApollo } from '../types'
+import { useCookie, useNuxtApp, useAsyncData, useLazyAsyncData } from '#imports'
+import NuxtApollo from '#build/apollo'
 
 type TQuery<T> = QueryOptions<OperationVariables, T>['query']
 type TVariables<T> = QueryOptions<OperationVariables, T>['variables']
@@ -52,27 +53,37 @@ const prep = (...args: any) => {
 
 export const useApollo = () => {
   const nuxtApp = useNuxtApp() as NuxtAppApollo
-  const apolloConfig = useRuntimeConfig()?.public?.apollo as NuxtApolloConfig
 
   const getToken = (tokenName?: string, client?: string) => {
-    if (!tokenName) {
-      tokenName = apolloConfig?.clientConfigs?.[client || 'default']?.tokenName
-    }
+    const conf = NuxtApollo?.clients?.[client || 'default']
 
-    return useCookie(tokenName).value
+    if (!tokenName) { tokenName = conf?.tokenName }
+
+    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : process.client && localStorage.getItem(tokenName)
   }
   type TAuthUpdate = {token?: string, client?: string, mode: 'login' | 'logout', skipResetStore?: boolean}
   const updateAuth = async ({ token, client, mode, skipResetStore }: TAuthUpdate) => {
     client = client || 'default'
 
-    const tokenName = client && apolloConfig.clientConfigs?.[client]?.tokenName
-    const cookieOpts = (client && apolloConfig.clientConfigs?.[client]?.cookieAttributes) || apolloConfig?.cookieAttributes
+    const conf = NuxtApollo?.clients?.[client]
 
-    const cookie = useCookie(tokenName, cookieOpts)
+    const tokenName = client && conf?.tokenName
 
-    if (!cookie.value && mode === 'logout') { return }
+    if (conf?.tokenStorage === 'cookie') {
+      const cookieOpts = (client && conf?.cookieAttributes) || NuxtApollo?.cookieAttributes
 
-    cookie.value = (mode === 'login' && token) || undefined
+      const cookie = useCookie(tokenName, cookieOpts)
+
+      if (!cookie.value && mode === 'logout') { return }
+
+      cookie.value = (mode === 'login' && token) || undefined
+    } else if (process.client && conf?.tokenStorage === 'localStorage') {
+      if (mode === 'login' && token) {
+        localStorage.setItem(tokenName, token)
+      } else if (mode === 'logout') {
+        localStorage.removeItem(tokenName)
+      }
+    }
 
     if (nuxtApp._apolloWsClients[client]) { nuxtApp._apolloWsClients[client].restart() }
 

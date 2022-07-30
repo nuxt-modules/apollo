@@ -6,35 +6,39 @@ import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, split } from '
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { setContext } from '@apollo/client/link/context'
 import createRestartableClient from '../runtime/utils/ws'
-import type { NuxtApolloConfig } from '../types'
 import { useApollo } from './composables'
-import { defineNuxtPlugin, useRuntimeConfig, useRequestHeaders } from '#imports'
+import { defineNuxtPlugin, useRequestHeaders } from '#imports'
 
+import NuxtApollo from '#apollo'
 // @ts-ignore
-import ApolloErrorHandler from '#apollo/error-handler'
+import ApolloErrorHandler from '#apollo-error-handler'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const opts = useRuntimeConfig()?.public?.apollo as NuxtApolloConfig
-
-  const requestCookies = process.server && useRequestHeaders(['cookie'])
+  const requestCookies = (process.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
 
   const clients: { [key: string]: ApolloClient<any> } = {}
 
-  for (const [key, clientConfig] of Object.entries(opts.clientConfigs)) {
+  for (const [key, clientConfig] of Object.entries(NuxtApollo.clients)) {
     const getAuth = () => {
-      const authCookie = ref<string>()
+      // if (typeof clientConfig.getAuth === 'function') { return clientConfig.getAuth() }
 
-      if (process.client) {
-        authCookie.value = useCookie(clientConfig.tokenName).value
-      } else if (requestCookies?.cookie) {
-        authCookie.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+      const authToken = ref<string>()
+
+      if (clientConfig.tokenStorage === 'cookie') {
+        if (process.client) {
+          authToken.value = useCookie(clientConfig.tokenName).value
+        } else if (requestCookies?.cookie) {
+          authToken.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+        }
+      } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
+        authToken.value = localStorage.getItem(clientConfig.tokenName)
       }
 
-      if (!authCookie.value) { return }
+      if (!authToken.value) { return }
 
-      if (clientConfig?.authType === null) { return authCookie.value }
+      if (clientConfig?.authType === null) { return authToken.value }
 
-      return `${clientConfig?.authType || opts.authType} ${authCookie.value}`
+      return `${clientConfig?.authType} ${authToken.value}`
     }
 
     const authLink = setContext((_, { headers }) => {
@@ -88,14 +92,18 @@ export default defineNuxtPlugin((nuxtApp) => {
       errorLink,
       ...(!wsLink
         ? [httpLink]
-        : [split(
-            ({ query }) => {
-              const definition = getMainDefinition(query)
-              return (definition.kind === 'OperationDefinition' && definition.operation === 'subscription')
-            },
-            wsLink,
-            httpLink
-          )])
+        : [
+            ...(clientConfig?.websocketsOnly
+              ? [wsLink]
+              : [
+                  split(({ query }) => {
+                    const definition = getMainDefinition(query)
+                    return (definition.kind === 'OperationDefinition' && definition.operation === 'subscription')
+                  },
+                  wsLink,
+                  httpLink)
+                ])
+          ])
     ])
 
     const cache = new InMemoryCache(clientConfig.inMemoryCacheOptions)
@@ -106,8 +114,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       ...(process.server
         ? { ssrMode: true }
         : { ssrForceFetchDelay: 100 }),
-      connectToDevTools: clientConfig.connectToDevTools,
-      defaultOptions: clientConfig?.defaultOptions || opts.defaultOptions
+      connectToDevTools: clientConfig.connectToDevTools || false,
+      defaultOptions: clientConfig?.defaultOptions
     })
 
     const cacheKey = `_apollo:${key}`
