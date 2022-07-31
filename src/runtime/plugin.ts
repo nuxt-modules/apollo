@@ -17,30 +17,34 @@ export default defineNuxtPlugin((nuxtApp) => {
   const clients: { [key: string]: ApolloClient<any> } = {}
 
   for (const [key, clientConfig] of Object.entries(NuxtApollo.clients)) {
-    const getAuth = () => {
-      // if (typeof clientConfig.getAuth === 'function') { return clientConfig.getAuth() }
-
+    const getAuth = async () => {
       const authToken = ref<string>()
 
-      if (clientConfig.tokenStorage === 'cookie') {
-        if (process.client) {
-          authToken.value = useCookie(clientConfig.tokenName).value
-        } else if (requestCookies?.cookie) {
-          authToken.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+      await nuxtApp.callHook('apollo:auth' as any, { authToken, client: key })
+
+      if (!authToken.value) {
+        if (clientConfig.tokenStorage === 'cookie') {
+          if (process.client) {
+            authToken.value = useCookie(clientConfig.tokenName).value
+          } else if (requestCookies?.cookie) {
+            authToken.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+          }
+        } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
+          authToken.value = localStorage.getItem(clientConfig.tokenName)
         }
-      } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
-        authToken.value = localStorage.getItem(clientConfig.tokenName)
+
+        if (!authToken.value) { return }
       }
 
-      if (!authToken.value) { return }
+      const authScheme = !!authToken.value?.match(/^[a-zA-Z]+\s/)?.[0]
 
-      if (clientConfig?.authType === null) { return authToken.value }
+      if (authScheme || clientConfig?.authType === null) { return authToken.value }
 
       return `${clientConfig?.authType} ${authToken.value}`
     }
 
-    const authLink = setContext((_, { headers }) => {
-      const auth = getAuth()
+    const authLink = setContext(async (_, { headers }) => {
+      const auth = await getAuth()
 
       if (!auth) { return }
 
@@ -65,8 +69,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       const wsClient = createRestartableClient({
         ...clientConfig.wsLinkOptions,
         url: clientConfig.wsEndpoint,
-        connectionParams: () => {
-          const auth = getAuth()
+        connectionParams: async () => {
+          const auth = await getAuth()
 
           if (!auth) { return }
 

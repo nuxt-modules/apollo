@@ -55,8 +55,6 @@ export type ClientConfig = {
    **/
   websocketsOnly?: boolean;
 
-  // getAuth?: string | (() => string)
-
   /**
    * Specify if the client should be able to connect to the Apollo Client Devtools in production mode.
    * @type {boolean}

@@ -15,6 +15,7 @@ function readConfigFile (path: string): ClientConfig {
 }
 
 export interface ModuleHooks {
+  'apollo:auth': (params: { authToken: string, client: string }) => void
   'apollo:error': (error: ErrorResponse) => void
 }
 
@@ -76,11 +77,6 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
         v.tokenName = v?.tokenName || `apollo:${k}.token`
         v.tokenStorage = v?.tokenStorage || options.tokenStorage
         if (v.cookieAttributes) { v.cookieAttributes = defu(v?.cookieAttributes, options.cookieAttributes) }
-
-        // TODO: Rework `getAuth` implementation
-        // if (typeof v?.getAuth === 'function') {
-        //   v.getAuth = v.getAuth()
-        // }
 
         v.defaultOptions = v?.defaultOptions || options.defaultOptions
 
@@ -189,6 +185,7 @@ declare module '@nuxt/schema' {
   }
 
   interface NuxtHooks {
+    'apollo:auth': (params: { authToken: string, client: string }) => void
     'apollo:error': (error: ErrorResponse) => void
   }
 }

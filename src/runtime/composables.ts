@@ -52,10 +52,15 @@ const prep = (...args: any) => {
 }
 
 export const useApollo = () => {
-  const nuxtApp = useNuxtApp() as NuxtAppApollo
+  const nuxtApp = useNuxtApp() as NuxtAppApollo & ReturnType<typeof useNuxtApp>
 
-  const getToken = (tokenName?: string, client?: string) => {
+  const getToken = async (tokenName?: string, client?: string) => {
     const conf = NuxtApollo?.clients?.[client || 'default']
+
+    const authToken = ref<string>()
+    await nuxtApp.callHook('apollo:auth' as any, { authToken, client })
+
+    if (authToken.value) { return authToken.value }
 
     if (!tokenName) { tokenName = conf?.tokenName }
 

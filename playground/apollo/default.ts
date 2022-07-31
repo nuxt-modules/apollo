@@ -25,6 +25,4 @@ export default defineApolloClient({
   // Specify if the client should solely use WebSocket.
   // requires `wsEndpoint`.
   websocketsOnly: false
-
-  // getAuth: () => 'Bearer my_secret'
 })

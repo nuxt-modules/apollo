@@ -7,7 +7,7 @@
 
       <div class="flex flex-wrap gap-3 items-center">
         <NTextInput
-          v-model="input"
+          v-model="githubToken"
           icon="carbon-logo-github"
           placeholder="Your Github Token"
         />
@@ -38,7 +38,7 @@
       </div>
 
       <pre w-100>
-        {{ JSON.stringify(data, null, 2) }}
+        {{ JSON.stringify(output, null, 2) }}
       </pre>
     </NCard>
   </div>
@@ -47,51 +47,50 @@
 <script lang="ts" setup>
 import gql from 'graphql-tag'
 import type { ViewerT, DiscussionT } from '~/types'
-// @ts-ignore
 import discussions from '~/queries/discussions.gql'
 
 const { getToken, onLogin, onLogout } = useApollo()
 
-const input = ref(null)
 const githubToken = ref(null)
 
-const token = computed(() => getToken(null, 'github'))
+// for testing with cookie `tokenStorage`
+if (process.server) { githubToken.value = await getToken(null, 'github') }
 
-if (token.value) { input.value = token.value }
+onMounted(async () => {
+  githubToken.value = await getToken(null, 'github')
+})
 
 const queryViewer = gql`query viwer { viewer { login } }`
 
-const data = ref()
+const output = ref()
 
-if (token.value) {
+if (githubToken.value) {
   const whoAmI = await useAsyncQuery({ query: queryViewer, clientId: 'github' })
 
   if (whoAmI?.data.value) {
-    data.value = whoAmI.data.value
+    output.value = whoAmI.data.value
   }
 }
 
 const getViewer = () => {
   const { onResult, onError } = useQuery<ViewerT>(queryViewer, null, { clientId: 'github', fetchPolicy: 'cache-and-network' })
 
-  onResult(r => (data.value = r.data.viewer))
-  onError(err => console.error(err))
+  onResult(r => (output.value = r.data.viewer))
+  onError(err => (output.value = err))
 }
 
 const getNuxtDiscussions = () => {
   const { onResult, onError } = useQuery<DiscussionT>(discussions, null, { clientId: 'github', fetchPolicy: 'cache-and-network' })
 
-  onResult(r => (data.value = r.data.repository.discussions.nodes))
-  onError(err => console.error(err))
+  onResult(r => (output.value = r.data.repository.discussions.nodes))
+  onError(err => (output.value = err))
 }
 
 const setToken = () => {
-  githubToken.value = input.value
-  onLogin(input.value, 'github')
+  if (!githubToken.value) { return }
+
+  onLogin(githubToken.value, 'github')
 }
-const clearToken = () => onLogout('github').then(() => {
-  input.value = null
-  githubToken.value = null
-})
+const clearToken = () => onLogout('github').then(() => (githubToken.value = null))
 
 </script>
