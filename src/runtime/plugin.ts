@@ -10,8 +10,6 @@ import { useApollo } from './composables'
 import { defineNuxtPlugin, useRequestHeaders } from '#imports'
 
 import NuxtApollo from '#apollo'
-// @ts-ignore
-import ApolloErrorHandler from '#apollo-error-handler'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const requestCookies = (process.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
@@ -85,7 +83,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const errorLink = onError((err) => {
       if (process.env.NODE_ENV === 'production') { return }
 
-      return ApolloErrorHandler(err)
+      nuxtApp.callHook('apollo:error' as any, err)
     })
 
     const link = ApolloLink.from([

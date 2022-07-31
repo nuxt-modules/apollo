@@ -3,6 +3,11 @@ import { defineNuxtConfig } from 'nuxt'
 export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@nuxtjs/apollo'],
 
+  colorMode: {
+    preference: 'light',
+    storageKey: 'na-color-scheme'
+  },
+
   apollo: {
     clients: {
       default: './apollo/default.ts',
@@ -19,7 +24,6 @@ export default defineNuxtConfig({
           }
         }
       }
-    },
-    errorHandler: './apollo/error.ts'
+    }
   }
 })

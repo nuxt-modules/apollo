@@ -2,6 +2,7 @@ import type { ClientOptions } from 'graphql-ws'
 import type { ApolloClient, HttpOptions, DefaultOptions, InMemoryCacheConfig } from '@apollo/client'
 import type { CookieOptions } from 'nuxt/dist/app/composables'
 import type { RestartableClient } from './runtime/ws'
+export type { ErrorResponse } from '@apollo/client/link/error'
 
 type CookieAttributes = Omit< CookieOptions, 'encode' | 'decode' | 'expires' | 'default'>;
 
@@ -162,10 +163,4 @@ export interface NuxtApolloConfig<T = ClientConfig> {
    * Configuration for the auth cookie.
    **/
   cookieAttributes?: CookieAttributes;
-
-  /**
-   * Specify the path of a file that exports an apollo error handler.
-   * @type {string}
-   **/
-  errorHandler?: string;
 }

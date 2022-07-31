@@ -4,15 +4,21 @@ import { defu } from 'defu'
 import { useLogger, addPlugin, addAutoImport, createResolver, defineNuxtModule, addTemplate, extendWebpackConfig, extendViteConfig } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
 import { name, version } from '../package.json'
-import type { ClientConfig, NuxtApolloConfig } from './types'
+import type { ClientConfig, NuxtApolloConfig, ErrorResponse } from './types'
 
-export type { ClientConfig } from './types'
+export type { ClientConfig, ErrorResponse }
 
 const logger = useLogger(name)
 
 function readConfigFile (path: string): ClientConfig {
   return jiti(import.meta.url, { interopDefault: true, requireCache: false })(path)
 }
+
+export interface ModuleHooks {
+  'apollo:error': (error: ErrorResponse) => void
+}
+
+export type ModuleOptions = NuxtApolloConfig
 
 export default defineNuxtModule<NuxtApolloConfig<any>>({
   meta: {
@@ -108,22 +114,6 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       ].join('\n')
     }).dst
 
-    const errHandler = options.errorHandler && rootResolver.resolve(options.errorHandler)
-
-    nuxt.options.alias['#apollo-error-handler'] = (errHandler && existsSync(errHandler))
-      ? errHandler
-      : addTemplate({
-        filename: 'apollo-error-handler.mjs',
-        getContents: () => [
-          'export default (err) => {',
-          // eslint-disable-next-line no-template-curly-in-string
-          'if (err?.graphQLErrors) { err.graphQLErrors.map(({ message, locations, path }) => console.log(`[@nuxtjs/apollo] [GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)) }',
-          // eslint-disable-next-line no-template-curly-in-string
-          'if (err?.networkError) { console.log(`[@nuxtjs/apollo] [Network error]: ${err.networkError}`) }',
-          '}'
-        ].join('\n')
-      }).dst as string
-
     addPlugin(resolve('runtime/plugin'))
 
     // TODO: Integrate @vue/apollo-components?
@@ -196,5 +186,9 @@ declare module '@nuxt/schema' {
     public:{
       apollo: NuxtApolloConfig<any>
     }
+  }
+
+  interface NuxtHooks {
+    'apollo:error': (error: ErrorResponse) => void
   }
 }
