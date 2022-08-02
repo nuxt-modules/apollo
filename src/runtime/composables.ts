@@ -1,6 +1,6 @@
 import type { OperationVariables, QueryOptions } from '@apollo/client'
 import type { AsyncData } from 'nuxt/dist/app/composables'
-import { NuxtAppApollo } from '../types'
+import type { NuxtAppApollo } from '../types'
 import { useCookie, useNuxtApp, useAsyncData, useLazyAsyncData } from '#imports'
 import NuxtApollo from '#build/apollo'
 

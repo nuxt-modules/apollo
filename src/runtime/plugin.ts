@@ -7,7 +7,7 @@ import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { setContext } from '@apollo/client/link/context'
 import createRestartableClient from './ws'
 import { useApollo } from './composables'
-import { defineNuxtPlugin, useRequestHeaders } from '#imports'
+import { useCookie, defineNuxtPlugin, useRequestHeaders } from '#imports'
 
 import NuxtApollo from '#apollo'
 
