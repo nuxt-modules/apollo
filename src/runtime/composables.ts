@@ -54,7 +54,7 @@ const prep = (...args: any) => {
 export const useApollo = () => {
   const nuxtApp = useNuxtApp() as NuxtAppApollo & ReturnType<typeof useNuxtApp>
 
-  const getToken = async (tokenName?: string, client?: string) => {
+  const getToken = async (client?: string) => {
     const conf = NuxtApollo?.clients?.[client || 'default']
 
     const authToken = ref<string>()
@@ -62,7 +62,7 @@ export const useApollo = () => {
 
     if (authToken.value) { return authToken.value }
 
-    if (!tokenName) { tokenName = conf?.tokenName }
+    const tokenName = conf?.tokenName
 
     return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (process.client && localStorage.getItem(tokenName)) || undefined
   }

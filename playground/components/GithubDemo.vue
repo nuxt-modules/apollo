@@ -54,10 +54,10 @@ const { getToken, onLogin, onLogout } = useApollo()
 const githubToken = ref(null)
 
 // for testing with cookie `tokenStorage`
-if (process.server) { githubToken.value = await getToken(null, 'github') }
+if (process.server) { githubToken.value = await getToken('github') }
 
 onMounted(async () => {
-  githubToken.value = await getToken(null, 'github')
+  githubToken.value = await getToken('github')
 })
 
 const queryViewer = gql`query viwer { viewer { login } }`
