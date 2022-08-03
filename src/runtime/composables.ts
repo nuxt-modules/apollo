@@ -99,7 +99,7 @@ export const useApollo = () => {
 
   return {
     /**
-     * Retrieve the auth token token for the specified client.
+     * Retrieve the auth token for the specified client. Adheres to the `apollo:auth` hook.
      *
      * @param {string} client The client who's token to retrieve. Defaults to `default`.
      */
@@ -111,15 +111,19 @@ export const useApollo = () => {
     clients: nuxtApp?._apolloClients,
 
     /**
-     * Update the auth token in the Apollo cache
+     * Apply auth token to the specified Apollo client, and optionally reset it's cache.
+     *
+     * @param {string} token The token to be applied.
+     * @param {string} client - Name of the Apollo client. Defaults to `default`.
+     * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
      * */
     onLogin: (token?: string, client?: string, skipResetStore?: boolean) => updateAuth({ token, client, skipResetStore, mode: 'login' }),
 
     /**
-     * Remove the auth token from the Apollo client, and optionally reset the cache.
+     * Remove the auth token from the Apollo client, and optionally reset it's cache.
      *
      * @param {string} client - Name of the Apollo client. Defaults to `default`.
-     * @param {boolean} skipResetStore - If true, the cache will not be reset.
+     * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
      * */
     onLogout: (client?: string, skipResetStore?: boolean) => updateAuth({ client, skipResetStore, mode: 'logout' })
   }
