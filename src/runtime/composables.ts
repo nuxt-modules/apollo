@@ -37,7 +37,7 @@ const prep = (...args: any) => {
 
   const key = args?.[0]?.key || undefined
   const query = args?.[0]?.query || args?.[0]
-  const initialCache = args?.[0]?.cache || false
+  const initialCache = args?.[0]?.cache || true
   let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || 'default'
   const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
 
@@ -46,7 +46,7 @@ const prep = (...args: any) => {
     clientId = 'default'
   }
 
-  const fn = () => clients?.[clientId].query({ query, variables, ...(!initialCache && { fetchPolicy: 'no-cache' }) }).then(r => r.data)
+  const fn = () => clients?.[clientId].query({ query, variables, fetchPolicy: 'no-cache' }).then(r => r.data)
 
   return { key, query, initialCache, clientId, variables, fn }
 }
@@ -98,9 +98,29 @@ export const useApollo = () => {
   }
 
   return {
+    /**
+     * Retrieve the auth token token for the specified client.
+     *
+     * @param {string} client The client who's token to retrieve. Defaults to `default`.
+     */
     getToken,
+
+    /**
+     * Access the configured apollo clients.
+     */
     clients: nuxtApp?._apolloClients,
+
+    /**
+     * Update the auth token in the Apollo cache
+     * */
     onLogin: (token?: string, client?: string, skipResetStore?: boolean) => updateAuth({ token, client, skipResetStore, mode: 'login' }),
+
+    /**
+     * Remove the auth token from the Apollo client, and optionally reset the cache.
+     *
+     * @param {string} client - Name of the Apollo client. Defaults to `default`.
+     * @param {boolean} skipResetStore - If true, the cache will not be reset.
+     * */
     onLogout: (client?: string, skipResetStore?: boolean) => updateAuth({ client, skipResetStore, mode: 'logout' })
   }
 }
