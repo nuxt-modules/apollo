@@ -6,8 +6,7 @@
   "homepage": "https://github.com/nuxt-community/apollo-module",
   "type": "module",
   "exports": {
-    ".": "./dist/module.mjs",
-    "./define": "./dist/define.mjs"
+    ".": "./dist/module.mjs"
   },
   "main": "./dist/module.mjs",
   "types": "./dist/module.d.ts",

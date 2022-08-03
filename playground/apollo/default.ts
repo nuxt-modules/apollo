@@ -1,5 +1,4 @@
-// @ts-ignore
-import { defineApolloClient } from '@nuxtjs/apollo/define'
+import { defineApolloClient } from '@nuxtjs/apollo'
 
 export default defineApolloClient({
   // The GraphQL endpoint.
@@ -19,8 +18,6 @@ export default defineApolloClient({
 
   // LocalStorage token
   tokenName: 'spacex-token',
-
-  persisting: false,
 
   // Specify if the client should solely use WebSocket.
   // requires `wsEndpoint`.

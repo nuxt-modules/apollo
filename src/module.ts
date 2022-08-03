@@ -174,6 +174,8 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
   }
 })
 
+export const defineApolloClient = (config: ClientConfig) => config
+
 declare module '@nuxt/schema' {
   interface RuntimeConfig {
     // @ts-ignore
