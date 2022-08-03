@@ -115,6 +115,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     // TODO: Integrate @vue/apollo-components?
 
     addAutoImport([
+      { name: 'gql', from: 'graphql-tag' },
       ...[
         'useApollo',
         'useAsyncQuery',
