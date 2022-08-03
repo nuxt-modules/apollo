@@ -1,7 +1,7 @@
 import type { OperationVariables, QueryOptions } from '@apollo/client'
 import type { AsyncData } from 'nuxt/dist/app/composables'
 import type { NuxtAppApollo } from '../types'
-import { useCookie, useNuxtApp, useAsyncData, useLazyAsyncData } from '#imports'
+import { ref, useCookie, useNuxtApp, useAsyncData, useLazyAsyncData } from '#imports'
 import NuxtApollo from '#build/apollo'
 
 type TQuery<T> = QueryOptions<OperationVariables, T>['query']
