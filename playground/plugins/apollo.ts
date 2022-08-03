@@ -2,11 +2,11 @@ import type { ErrorResponse } from '@nuxtjs/apollo'
 
 export default defineNuxtPlugin((nuxtApp) => {
   // Nuxt Apollo auth hook
-  nuxtApp.hook('apollo:auth' as any, ({ client, authToken }) => {
+  nuxtApp.hook('apollo:auth' as any, ({ client, token }) => {
     if (client !== 'todos') { return }
 
     // Pass token to the `todos` client
-    authToken.value = '<secret_token>'
+    token.value = '<secret_token>'
   })
 
   // Nuxt Apollo error hook

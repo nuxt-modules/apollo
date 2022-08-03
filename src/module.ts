@@ -15,7 +15,7 @@ function readConfigFile (path: string): ClientConfig {
 }
 
 export interface ModuleHooks {
-  'apollo:auth': (params: { authToken: string, client: string }) => void
+  'apollo:auth': (params: { token: string, client: string }) => void
   'apollo:error': (error: ErrorResponse) => void
 }
 
@@ -188,7 +188,7 @@ declare module '@nuxt/schema' {
   }
 
   interface NuxtHooks {
-    'apollo:auth': (params: { authToken: string, client: string }) => void
+    'apollo:auth': (params: { token: string, client: string }) => void
     'apollo:error': (error: ErrorResponse) => void
   }
 }

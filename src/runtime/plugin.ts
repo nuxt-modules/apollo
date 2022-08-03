@@ -18,29 +18,29 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   for (const [key, clientConfig] of Object.entries(NuxtApollo.clients)) {
     const getAuth = async () => {
-      const authToken = ref<string>()
+      const token = ref<string>()
 
-      await nuxtApp.callHook('apollo:auth' as any, { authToken, client: key })
+      await nuxtApp.callHook('apollo:auth' as any, { token, client: key })
 
-      if (!authToken.value) {
+      if (!token.value) {
         if (clientConfig.tokenStorage === 'cookie') {
           if (process.client) {
-            authToken.value = useCookie(clientConfig.tokenName).value
+            token.value = useCookie(clientConfig.tokenName).value
           } else if (requestCookies?.cookie) {
-            authToken.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+            token.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
           }
         } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
-          authToken.value = localStorage.getItem(clientConfig.tokenName)
+          token.value = localStorage.getItem(clientConfig.tokenName)
         }
 
-        if (!authToken.value) { return }
+        if (!token.value) { return }
       }
 
-      const authScheme = !!authToken.value?.match(/^[a-zA-Z]+\s/)?.[0]
+      const authScheme = !!token.value?.match(/^[a-zA-Z]+\s/)?.[0]
 
-      if (authScheme || clientConfig?.authType === null) { return authToken.value }
+      if (authScheme || clientConfig?.authType === null) { return token.value }
 
-      return `${clientConfig?.authType} ${authToken.value}`
+      return `${clientConfig?.authType} ${token.value}`
     }
 
     const authLink = setContext(async (_, { headers }) => {
