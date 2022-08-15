@@ -156,6 +156,8 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     extendViteConfig((config) => {
       config.plugins = config.plugins || []
       config.plugins.push(GraphQLPlugin())
+
+      if (!nuxt.options.dev) { config.define.__DEV__ = false }
     })
 
     extendWebpackConfig((config) => {
