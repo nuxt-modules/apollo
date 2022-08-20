@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import jiti from 'jiti'
 import { defu } from 'defu'
-import { useLogger, addPlugin, addAutoImport, createResolver, defineNuxtModule, addTemplate, extendWebpackConfig, extendViteConfig } from '@nuxt/kit'
+import { useLogger, addPlugin, addTemplate, addAutoImport, createResolver, defineNuxtModule } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
 import { name, version } from '../package.json'
 import type { ClientConfig, NuxtApolloConfig, ErrorResponse } from './types'
@@ -10,8 +10,8 @@ export type { ClientConfig, ErrorResponse }
 
 const logger = useLogger(name)
 
-function readConfigFile (path: string): ClientConfig {
-  return jiti(import.meta.url, { interopDefault: true, requireCache: false })(path)
+async function readConfigFile (path: string): Promise<ClientConfig> {
+  return await jiti(import.meta.url, { interopDefault: true, requireCache: false })(path)
 }
 
 export interface ModuleHooks {
@@ -38,7 +38,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       secure: process.env.NODE_ENV === 'production'
     }
   },
-  setup (options, nuxt) {
+  async setup (options, nuxt) {
     if (!options.clients || !Object.keys(options.clients).length) {
       throw new Error('[@nuxtjs/apollo] Atleast one client must be configured.')
     }
@@ -56,12 +56,12 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     const clients: Record<string, ClientConfig> = {}
     const configPaths: Record<string, string> = {}
 
-    function prepareClients () {
+    async function prepareClients () {
       // eslint-disable-next-line prefer-const
       for (let [k, v] of Object.entries(options.clients)) {
         if (typeof v === 'string') {
           const path = rootResolver.resolve(v)
-          const resolvedConfig = existsSync(path) && readConfigFile(path)
+          const resolvedConfig = existsSync(path) && await readConfigFile(path)
 
           if (!resolvedConfig) {
             logger.warn(`Unable to resolve Apollo config for client: ${k}`)
@@ -141,38 +141,40 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
           ].map(n => ({ name: n, from: '@vue/apollo-composable' })))
     ])
 
-    prepareClients()
-
-    nuxt.hook('builder:watch', async (_event, path) => {
-      if (!Object.values(configPaths).some(p => p.includes(path))) { return }
-
-      logger.log('[@nuxtjs/apollo] Reloading Apollo configuration')
-
-      prepareClients()
-
-      await nuxt.callHook('builder:generateApp')
-    })
-
-    extendViteConfig((config) => {
+    nuxt.hook('vite:extendConfig', (config) => {
       config.plugins = config.plugins || []
       config.plugins.push(GraphQLPlugin())
 
       if (!nuxt.options.dev) { config.define.__DEV__ = false }
     })
 
-    extendWebpackConfig((config) => {
-      // @ts-ignore
-      const hasGqlLoader = config.module.rules.some((rule: any) => rule?.use === 'graphql-tag/loader')
+    nuxt.hook('webpack:config', (configs) => {
+      for (const config of configs) {
+        // @ts-ignore
+        const hasGqlLoader = config.module.rules.some((rule: any) => rule?.use === 'graphql-tag/loader')
 
-      if (hasGqlLoader) { return }
+        if (hasGqlLoader) { return }
 
-      // @ts-ignore
-      config.module.rules.push({
-        test: /\.(graphql|gql)$/,
-        use: 'graphql-tag/loader',
-        exclude: /(node_modules)/
-      })
+        // @ts-ignore
+        config.module.rules.push({
+          test: /\.(graphql|gql)$/,
+          use: 'graphql-tag/loader',
+          exclude: /(node_modules)/
+        })
+      }
     })
+
+    nuxt.hook('builder:watch', async (_event, path) => {
+      if (!Object.values(configPaths).some(p => p.includes(path))) { return }
+
+      logger.log('[@nuxtjs/apollo] Reloading Apollo configuration')
+
+      await prepareClients()
+
+      await nuxt.callHook('builder:generateApp')
+    })
+
+    await prepareClients()
   }
 })
 
