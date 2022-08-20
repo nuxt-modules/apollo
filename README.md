@@ -1,4 +1,4 @@
-<!-- [![Nuxt Apollo](./docs/public/cover.png)](https://apollo.nuxtjs.org) -->
+![Nuxt Apollo](./docs/public/cover.jpg)
 
 <h1 align="center">Nuxt Apollo</h1>
 

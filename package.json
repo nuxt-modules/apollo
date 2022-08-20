@@ -1,6 +1,6 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "4.0.1-rc.5",
+  "version": "5.0.0",
   "license": "MIT",
   "repository": "https://github.com/nuxt-community/apollo-module",
   "homepage": "https://github.com/nuxt-community/apollo-module",
@@ -48,5 +48,5 @@
   "resolutions": {
     "@nuxtjs/apollo": "link:."
   },
-  "packageManager": "pnpm@7.6.0"
+  "packageManager": "pnpm@7.9.0"
 }
