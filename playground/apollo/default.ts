@@ -12,6 +12,12 @@ export default defineApolloClient({
     credentials: 'same-origin'
   },
 
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network'
+    }
+  },
+
   // Specify a websocket endpoint to be used for subscriptions.
   // The `wss` protocol is recommended in production.
   // wsEndpoint: 'ws://localhost:4000',

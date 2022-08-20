@@ -36,13 +36,13 @@ import queryLaunches from '~/queries/launches.gql'
 
 const queryShips = gql`query ships { ships { id name } }`
 
-const { result, restart, loading } = useQuery(queryShips, null, { fetchPolicy: 'cache-and-network' })
+const { result, restart, loading } = useQuery(queryShips)
 
 const getShips = () => restart()
 
-const { onResult, load } = useLazyQuery(queryLaunches, null, { fetchPolicy: 'no-cache' })
+const { onResult, restart: restartLaunches } = useQuery(queryLaunches)
 onResult(({ data }) => (result.value = data))
 
-const getLaunches = () => load()
+const getLaunches = () => restartLaunches()
 
 </script>
