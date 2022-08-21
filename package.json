@@ -29,6 +29,7 @@
     "cross-fetch": "^3.0.6",
     "universal-cookie": "^4.0.4",
     "graphql": "^15.1.0",
+    "subscriptions-transport-ws": "^0.9.16",
     "vue-apollo": "^3.0.5",
     "webpack-node-externals": "^2.5.2"
   },
