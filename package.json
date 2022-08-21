@@ -28,7 +28,7 @@
     "cross-fetch": "^3.0.6",
     "universal-cookie": "^4.0.4",
     "vue-apollo": "^3.0.5",
-    "vue-cli-plugin-apollo": "^0.22.2",
+    "vue-cli-plugin-apollo": "github:onward-web/vue-cli-plugin-apollo",
     "webpack-node-externals": "^2.5.2"
   },
   "peerDependencies": {
