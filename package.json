@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
-    "@nuxt/kit": "^3.0.0-rc.6",
+    "@nuxt/kit": "^3.0.0-rc.9",
     "@nuxt/module-builder": "^0.1.7",
     "@rollup/plugin-graphql": "^1.1.0",
     "@vue/apollo-composable": "^4.0.0-alpha.19",
@@ -32,14 +32,15 @@
     "destr": "^1.1.1",
     "graphql": "^16.5.0",
     "graphql-ws": "^5.9.1",
-    "jiti": "^1.14.0"
+    "jiti": "^1.14.0",
+    "ohash": "^0.1.5"
   },
   "devDependencies": {
-    "@nuxt/ui": "^0.3.0",
+    "@nuxt/ui": "^0.3.1",
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
     "graphql-tag": "latest",
-    "nuxt": "^3.0.0-rc.6",
+    "nuxt": "^3.0.0-rc.9",
     "standard-version": "latest"
   },
   "publishConfig": {

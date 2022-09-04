@@ -1,7 +1,7 @@
 import { existsSync } from 'fs'
 import jiti from 'jiti'
 import { defu } from 'defu'
-import { useLogger, addPlugin, addTemplate, addAutoImport, createResolver, defineNuxtModule } from '@nuxt/kit'
+import { useLogger, addPlugin, addImports, addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
 import { name, version } from '../package.json'
 import type { ClientConfig, NuxtApolloConfig, ErrorResponse } from './types'
@@ -25,7 +25,10 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
   meta: {
     name,
     version,
-    configKey: 'apollo'
+    configKey: 'apollo',
+    compatibility: {
+      nuxt: '^3.0.0-rc.9'
+    }
   },
   defaults: {
     autoImports: true,
@@ -114,7 +117,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
 
     // TODO: Integrate @vue/apollo-components?
 
-    addAutoImport([
+    addImports([
       { name: 'gql', from: 'graphql-tag' },
       ...[
         'useApollo',
@@ -143,6 +146,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
 
     nuxt.hook('vite:extendConfig', (config) => {
       config.plugins = config.plugins || []
+      // @ts-ignore
       config.plugins.push(GraphQLPlugin())
 
       if (!nuxt.options.dev) { config.define.__DEV__ = false }
