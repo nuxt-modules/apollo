@@ -1,3 +1,5 @@
+import { hash } from 'ohash'
+import { print } from 'graphql'
 import type { OperationVariables, QueryOptions } from '@apollo/client'
 import type { AsyncData } from 'nuxt/dist/app/composables'
 import type { NuxtAppApollo } from '../types'
@@ -14,28 +16,27 @@ type TAsyncQuery<T> = {
   clientId?: string
 }
 
+export function useAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
 export function useAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
 export function useAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string): AsyncData<T, Error>
-export function useAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
 
 export function useAsyncQuery <T> (...args: any) {
   const { key, initialCache, fn } = prep(...args)
-  return key ? useAsyncData<T>(key, fn, { initialCache }) : useAsyncData<T>(fn, { initialCache })
+  return useAsyncData<T>(key, fn, { initialCache })
 }
 
+export function useLazyAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
 export function useLazyAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
 export function useLazyAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string): AsyncData<T, Error>
-export function useLazyAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
 
 export function useLazyAsyncQuery <T> (...args: any) {
   const { key, initialCache, fn } = prep(...args)
-  return key ? useLazyAsyncData<T>(key, fn, { initialCache }) : useLazyAsyncData<T>(fn, { initialCache })
+  return useLazyAsyncData<T>(key, fn, { initialCache })
 }
 
 const prep = (...args: any) => {
   const { clients } = useApollo()
 
-  const key = args?.[0]?.key || undefined
   const query = args?.[0]?.query || args?.[0]
   const initialCache = args?.[0]?.cache || true
   let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || 'default'
@@ -45,6 +46,8 @@ const prep = (...args: any) => {
     console.log(`[@nuxtjs/apollo] Apollo client \`${clientId}\` not found. Falling back to \`default\`.`)
     clientId = 'default'
   }
+
+  const key = args?.[0]?.key || hash({ query: print(query), variables, clientId })
 
   const fn = () => clients?.[clientId].query({ query, variables, fetchPolicy: 'no-cache' }).then(r => r.data)
 
