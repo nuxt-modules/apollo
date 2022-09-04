@@ -40,9 +40,9 @@ const { result, restart, loading } = useQuery(queryShips)
 
 const getShips = () => restart()
 
-const { onResult, restart: restartLaunches } = useQuery(queryLaunches)
+const { onResult, load } = useLazyQuery(queryLaunches)
 onResult(({ data }) => (result.value = data))
 
-const getLaunches = () => restartLaunches()
+const getLaunches = () => load()
 
 </script>
