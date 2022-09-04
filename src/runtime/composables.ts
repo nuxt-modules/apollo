@@ -38,7 +38,7 @@ const prep = (...args: any) => {
   const { clients } = useApollo()
 
   const query = args?.[0]?.query || args?.[0]
-  const initialCache = args?.[0]?.cache || true
+  const initialCache = args?.[0]?.cache ?? true
   let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || 'default'
   const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
 
