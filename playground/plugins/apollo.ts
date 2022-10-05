@@ -2,7 +2,7 @@ import type { ErrorResponse } from '@nuxtjs/apollo'
 
 export default defineNuxtPlugin((nuxtApp) => {
   // Nuxt Apollo auth hook
-  nuxtApp.hook('apollo:auth' as any, ({ client, token }) => {
+  nuxtApp.hook('apollo:auth', ({ client, token }) => {
     if (client !== 'todos') { return }
 
     // Pass token to the `todos` client
@@ -10,7 +10,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   })
 
   // Nuxt Apollo error hook
-  nuxtApp.hook('apollo:error' as any, (error: ErrorResponse) => {
+  nuxtApp.hook('apollo:error', (error: ErrorResponse) => {
     console.log('Apollo Error Handler', error)
   })
 })

@@ -61,7 +61,7 @@ export const useApollo = () => {
     const conf = NuxtApollo?.clients?.[client || 'default']
 
     const token = ref<string>()
-    await nuxtApp.callHook('apollo:auth' as any, { token, client })
+    await nuxtApp.callHook('apollo:auth', { token, client })
 
     if (token.value) { return token.value }
 

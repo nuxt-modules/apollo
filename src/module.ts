@@ -1,5 +1,6 @@
 import { existsSync } from 'fs'
 import jiti from 'jiti'
+import { Ref } from 'vue'
 import { defu } from 'defu'
 import { useLogger, addPlugin, addImports, addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
@@ -12,11 +13,6 @@ const logger = useLogger(name)
 
 async function readConfigFile (path: string): Promise<ClientConfig> {
   return await jiti(import.meta.url, { interopDefault: true, requireCache: false })(path)
-}
-
-export interface ModuleHooks {
-  'apollo:auth': (params: { token: string, client: string }) => void
-  'apollo:error': (error: ErrorResponse) => void
 }
 
 export type ModuleOptions = NuxtApolloConfig
@@ -184,7 +180,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
 
 export const defineApolloClient = (config: ClientConfig) => config
 
-declare module '@nuxt/schema' {
+declare module '#app' {
   interface RuntimeConfig {
     // @ts-ignore
     apollo: NuxtApolloConfig<any>
@@ -195,8 +191,8 @@ declare module '@nuxt/schema' {
     }
   }
 
-  interface NuxtHooks {
-    'apollo:auth': (params: { token: string, client: string }) => void
+  interface RuntimeNuxtHooks {
+    'apollo:auth': (params: { client: string, token: Ref<string> }) => void
     'apollo:error': (error: ErrorResponse) => void
   }
 }

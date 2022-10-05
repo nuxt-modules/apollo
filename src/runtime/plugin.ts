@@ -20,7 +20,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const getAuth = async () => {
       const token = ref<string>()
 
-      await nuxtApp.callHook('apollo:auth' as any, { token, client: key })
+      await nuxtApp.callHook('apollo:auth', { token, client: key })
 
       if (!token.value) {
         if (clientConfig.tokenStorage === 'cookie') {
@@ -87,7 +87,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const errorLink = onError((err) => {
       if (process.env.NODE_ENV === 'production') { return }
 
-      nuxtApp.callHook('apollo:error' as any, err)
+      nuxtApp.callHook('apollo:error', err)
     })
 
     const link = ApolloLink.from([
