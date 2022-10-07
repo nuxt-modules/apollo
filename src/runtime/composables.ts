@@ -39,13 +39,8 @@ const prep = (...args: any) => {
 
   const query = args?.[0]?.query || args?.[0]
   const initialCache = args?.[0]?.cache ?? true
-  let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || 'default'
+  const clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || clients?.default ? 'default' : Object.keys(clients)[0]
   const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
-
-  if (clientId !== 'default' && !Object.keys(clients).includes(clientId)) {
-    console.log(`[@nuxtjs/apollo] Apollo client \`${clientId}\` not found. Falling back to \`default\`.`)
-    clientId = 'default'
-  }
 
   const key = args?.[0]?.key || hash({ query: print(query), variables, clientId })
 
