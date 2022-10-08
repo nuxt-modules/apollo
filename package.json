@@ -1,56 +1,53 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "4.0.1-rc.5",
+  "version": "5.0.0",
   "license": "MIT",
-  "main": "lib/module.js",
-  "typings": "types/index.d.ts",
   "repository": "https://github.com/nuxt-community/apollo-module",
   "homepage": "https://github.com/nuxt-community/apollo-module",
+  "type": "module",
+  "exports": {
+    ".": "./dist/module.mjs"
+  },
+  "main": "./dist/module.mjs",
+  "types": "./dist/module.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "nuxt-module-build",
+    "prepack": "pnpm build",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "prepare": "nuxt-module-build --stub && nuxi prepare playground",
+    "release": "standard-version --prerelease rc && git push --follow-tags && pnpm publish"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "@nuxt/kit": "^3.0.0-rc.11",
+    "@nuxt/module-builder": "^0.1.7",
+    "@rollup/plugin-graphql": "^1.1.0",
+    "@vue/apollo-composable": "^4.0.0-alpha.19",
+    "cookie-es": "^0.5.0",
+    "defu": "^6.0.0",
+    "destr": "^1.1.1",
+    "graphql": "^16.5.0",
+    "graphql-ws": "^5.11.2",
+    "jiti": "^1.15.0",
+    "ohash": "^0.1.5"
+  },
+  "devDependencies": {
+    "@nuxt/ui": "^0.3.3",
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "eslint": "^8.24.0",
+    "graphql-tag": "latest",
+    "nuxt": "^3.0.0-rc.11",
+    "standard-version": "latest"
+  },
   "publishConfig": {
     "access": "public"
   },
-  "files": [
-    "lib",
-    "types/*.d.ts"
-  ],
-  "scripts": {
-    "dev": "nuxt test/fixture",
-    "dev2": "nuxt test/fixture-static-auth",
-    "dev3": "nuxt test/fixture-multi-endpoints",
-    "dev4": "nuxt test/fixture-local-state",
-    "lint": "eslint lib test",
-    "test": "yarn test:fixtures && yarn test:types",
-    "test:fixtures": "jest --forceExit",
-    "test:types": "tsc -p types/test",
-    "release": "standard-version --prerelease rc && git push --follow-tags && npm publish"
+  "resolutions": {
+    "@nuxtjs/apollo": "link:."
   },
-  "dependencies": {
-    "cross-fetch": "^3.0.6",
-    "universal-cookie": "^4.0.4",
-    "vue-apollo": "^3.0.5",
-    "vue-cli-plugin-apollo": "^0.22.2",
-    "webpack-node-externals": "^2.5.2"
-  },
-  "peerDependencies": {
-    "apollo-cache-inmemory": "^1.6.6"
-  },
-  "devDependencies": {
-    "@babel/core": "latest",
-    "@babel/preset-env": "latest",
-    "@nuxt/types": "latest",
-    "@nuxtjs/eslint-config": "latest",
-    "@types/graphql": "latest",
-    "@types/universal-cookie": "latest",
-    "babel-eslint": "latest",
-    "babel-jest": "latest",
-    "codecov": "latest",
-    "dotenv": "latest",
-    "eslint": "latest",
-    "graphql-tag": "latest",
-    "jest": "latest",
-    "jsdom": "latest",
-    "nuxt-edge": "latest",
-    "standard-version": "latest",
-    "typescript": "latest"
-  }
+  "packageManager": "pnpm@7.9.0"
 }

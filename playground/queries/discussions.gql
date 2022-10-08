@@ -1,0 +1,16 @@
+query discussions {
+  repository(owner: "nuxt", name: "framework") {
+    discussions(first: 5) {
+       nodes {
+        author {
+          login
+          avatarUrl
+        }
+        answer {
+          id
+        }
+        body
+      }
+    }
+  }
+}
