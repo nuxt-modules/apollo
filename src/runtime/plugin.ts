@@ -113,7 +113,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     clients[key] = new ApolloClient({
       link,
       cache,
-      name: key,
+      ...(NuxtApollo.clientAwareness && { name: key }),
       ...(process.server
         ? { ssrMode: true }
         : { ssrForceFetchDelay: 100 }),

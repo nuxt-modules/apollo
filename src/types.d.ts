@@ -161,4 +161,13 @@ export interface NuxtApolloConfig<T = ClientConfig> {
    * Configuration for the auth cookie.
    **/
   cookieAttributes?: CookieAttributes;
+
+  /**
+   * Apollo client awareness instructs the client to send two additional headers
+   * `apollographql-client-name` and `apollographql-client-version` in each HTTP request.
+   * This behavior is disabled by default.
+   * @type {boolean}
+   * @default false
+   */
+  clientAwareness?: boolean
 }

@@ -35,7 +35,8 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     cookieAttributes: {
       maxAge: 60 * 60 * 24 * 7,
       secure: process.env.NODE_ENV === 'production'
-    }
+    },
+    clientAwareness: false
   },
   async setup (options, nuxt) {
     if (!options.clients || !Object.keys(options.clients).length) {
@@ -92,9 +93,10 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       getContents: () => [
         'import type { ClientConfig } from "@nuxtjs/apollo"',
         'declare const clients: Record<string, ClientConfig>',
+        'declare const clientAwareness: boolean',
         'declare const proxyCookies: boolean',
         'declare const cookieAttributes: ClientConfig[\'cookieAttributes\']',
-        'export default { clients, proxyCookies, cookieAttributes }'
+        'export default { clients, clientAwareness, proxyCookies, cookieAttributes }'
       ].join('\n')
     })
 
@@ -103,6 +105,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       getContents: () => [
         'export default {',
         ` proxyCookies: ${options.proxyCookies},`,
+        ` clientAwareness: ${options.clientAwareness},`,
         ` cookieAttributes: ${JSON.stringify(options.cookieAttributes)},`,
         ` clients: ${JSON.stringify(clients)}`,
         '}'
