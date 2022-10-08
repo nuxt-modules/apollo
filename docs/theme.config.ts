@@ -10,7 +10,7 @@ export default defineTheme({
     src: '/cover.jpg'
   },
   socials: {
-    github: 'nuxt-community/sanity-module',
+    github: 'nuxt-modules/apollo-module',
     twitter: '@nuxt_js'
   }
 })
