@@ -2,8 +2,8 @@
   "name": "@nuxtjs/apollo",
   "version": "5.0.0",
   "license": "MIT",
-  "repository": "https://github.com/nuxt-community/apollo-module",
-  "homepage": "https://github.com/nuxt-community/apollo-module",
+  "repository": "https://github.com/nuxt-modules/apollo-module",
+  "homepage": "https://apollo.nuxtjs.org",
   "type": "module",
   "exports": {
     ".": "./dist/module.mjs"
