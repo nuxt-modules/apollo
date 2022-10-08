@@ -49,6 +49,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     nuxt.options.build.transpile = nuxt.options.build.transpile || []
     nuxt.options.build.transpile.push(
       resolve('runtime'),
+      '@wry/context',
       '@apollo/client',
       '@vue/apollo-composable',
       'ts-invariant/process')
