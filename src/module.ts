@@ -127,7 +127,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       ...(!options?.autoImports
         ? []
         : [
-            'useQuery', // Shouldn't conflict with h3's useQuery
+            'useQuery',
             'useLazyQuery',
             'useMutation',
             'useSubscription',
@@ -145,11 +145,15 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     ])
 
     nuxt.hook('vite:extendConfig', (config) => {
+      config.optimizeDeps = config.optimizeDeps || {}
+      config.optimizeDeps.exclude = config.optimizeDeps.exclude || []
+      config.optimizeDeps.exclude.push('@vue/apollo-composable')
+
       config.plugins = config.plugins || []
       // @ts-ignore
       config.plugins.push(GraphQLPlugin())
 
-      if (!nuxt.options.dev) { config.define.__DEV__ = false }
+      if (!nuxt.options.dev) { config.define = { ...config.define, __DEV__: false } }
     })
 
     nuxt.hook('webpack:config', (configs) => {
