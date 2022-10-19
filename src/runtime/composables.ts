@@ -92,7 +92,7 @@ export const useApollo = () => {
       }
     }
 
-    if (nuxtApp._apolloWsClients[client]) { nuxtApp._apolloWsClients[client].restart() }
+    if (nuxtApp?._apolloWsClients?.[client]) { nuxtApp._apolloWsClients[client].restart() }
 
     if (skipResetStore) { return }
 
