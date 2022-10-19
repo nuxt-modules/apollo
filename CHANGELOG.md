@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.0.0-alpha.3](https://github.com/nuxt-modules/apollo-module/compare/v5.0.0-alpha.2...v5.0.0-alpha.3) (2022-10-19)
+
+
+### Bug Fixes
+
+* infer default client when not explicitly named ([6015e0a](https://github.com/nuxt-modules/apollo-module/commit/6015e0a6bbc8e0ea0f352727120608f1a6934de3))
+* null check for apolloWsClients ([f1d30fa](https://github.com/nuxt-modules/apollo-module/commit/f1d30faf370bb952908b4bcc2fb69f7c04e383ca))
+
 ### [4.0.1-rc.5](https://github.com/nuxt-community/apollo-module/compare/v4.0.1-rc.4...v4.0.1-rc.5) (2020-11-13)
 
 ### [4.0.1-rc.4](https://github.com/nuxt-community/apollo-module/compare/v4.0.1-rc.3...v4.0.1-rc.4) (2020-10-18)
