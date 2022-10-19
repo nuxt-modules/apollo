@@ -40,9 +40,10 @@ const { result, restart, loading } = useQuery(queryShips)
 
 const getShips = () => restart()
 
-const { onResult, load } = useLazyQuery(queryLaunches)
-onResult(({ data }) => (result.value = data))
+const { load, onError, refetch, result: launchResult } = useLazyQuery(queryLaunches)
+watch(launchResult, (v) => (result.value = v))
 
-const getLaunches = () => load()
+onError((e) => console.error(e))
 
+const getLaunches = () => !launchResult.value ? load() : refetch()
 </script>
