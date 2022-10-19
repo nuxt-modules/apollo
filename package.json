@@ -19,17 +19,17 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "prepare": "nuxt-module-build --stub && nuxi prepare playground",
-    "release": "standard-version --prerelease rc && git push --follow-tags && pnpm publish"
+    "release": "standard-version --prerelease alpha && git push --follow-tags && pnpm publish --tag next"
   },
   "dependencies": {
     "@apollo/client": "^3.6.9",
     "@nuxt/kit": "^3.0.0-rc.11",
-    "@nuxt/module-builder": "^0.1.7",
+    "@nuxt/module-builder": "^0.2.0",
     "@rollup/plugin-graphql": "^1.1.0",
     "@vue/apollo-composable": "4.0.0-beta.1",
     "cookie-es": "^0.5.0",
     "defu": "^6.0.0",
-    "destr": "^1.1.1",
+    "destr": "^1.2.0",
     "graphql": "^16.5.0",
     "graphql-ws": "^5.11.2",
     "jiti": "^1.15.0",
@@ -38,7 +38,7 @@
   "devDependencies": {
     "@nuxt/ui": "^0.3.3",
     "@nuxtjs/eslint-config-typescript": "latest",
-    "eslint": "^8.24.0",
+    "eslint": "^8.25.0",
     "graphql-tag": "latest",
     "nuxt": "^3.0.0-rc.11",
     "standard-version": "latest"
