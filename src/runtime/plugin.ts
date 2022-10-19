@@ -121,6 +121,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       defaultOptions: clientConfig?.defaultOptions
     })
 
+    if (!clients?.default && !NuxtApollo?.clients?.default && key === Object.keys(NuxtApollo.clients)[0]) {
+      clients.default = clients[key]
+    }
+
     const cacheKey = `_apollo:${key}`
 
     nuxtApp.hook('app:rendered', () => {
@@ -136,7 +140,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.provide(ApolloClients, clients)
   nuxtApp._apolloClients = clients
 
-  const defaultClient = clients?.default || clients[Object.keys(clients)[0]]
+  const defaultClient = clients?.default
 
   return {
     provide: {
