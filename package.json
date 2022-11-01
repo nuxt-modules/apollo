@@ -49,5 +49,6 @@
     "nuxt-edge": "latest",
     "standard-version": "latest",
     "typescript": "latest"
-  }
+  },
+  "packageManager": "yarn@3.2.4"
 }
