@@ -14,6 +14,7 @@ importers:
       '@nuxtjs/eslint-config-typescript': latest
       '@rollup/plugin-graphql': ^1.1.0
       '@vue/apollo-composable': 4.0.0-beta.1
+      apollo-upload-client: ^17.0.0
       cookie-es: ^0.5.0
       defu: ^6.0.0
       destr: ^1.2.0
@@ -31,6 +32,7 @@ importers:
       '@nuxt/module-builder': 0.2.0
       '@rollup/plugin-graphql': 1.1.0_graphql@16.6.0
       '@vue/apollo-composable': 4.0.0-beta.1_mqgocqfa4eosf6ggtp5xgoaooq
+      apollo-upload-client: 17.0.0_mqgocqfa4eosf6ggtp5xgoaooq
       cookie-es: 0.5.0
       defu: 6.1.0
       destr: 1.2.0
@@ -1843,6 +1845,18 @@ packages:
     dependencies:
       normalize-path: 3.0.0
       picomatch: 2.3.1
+
+  /apollo-upload-client/17.0.0_mqgocqfa4eosf6ggtp5xgoaooq:
+    resolution: {integrity: sha512-pue33bWVbdlXAGFPkgz53TTmxVMrKeQr0mdRcftNY+PoHIdbGZD0hoaXHvO6OePJAkFz7OiCFUf98p1G/9+Ykw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >= 16.0.0}
+    peerDependencies:
+      '@apollo/client': ^3.0.0
+      graphql: 14 - 16
+    dependencies:
+      '@apollo/client': 3.7.0_bjgwlwebsm7ulvpmjq4c2w36jm
+      extract-files: 11.0.0
+      graphql: 16.6.0
+    dev: false
 
   /aproba/2.0.0:
     resolution: {integrity: sha512-lYe4Gx7QT+MKGbDsA+Z+he/Wtef0BiwDOlK/XkBrdfsh9J/jPPXbX0tE9x9cl27Tmu5gg3QUbUrQYa/y+KOHPQ==}
@@ -3752,6 +3766,11 @@ packages:
       pathe: 0.3.9
       ufo: 0.8.6
     dev: true
+
+  /extract-files/11.0.0:
+    resolution: {integrity: sha512-FuoE1qtbJ4bBVvv94CC7s0oTnKUGvQs+Rjf1L2SJFfS+HTVVjhPFtehPdQ0JiGPqVNfSSZvL5yzHHQq2Z4WNhQ==}
+    engines: {node: ^12.20 || >= 14.13}
+    dev: false
 
   /fast-deep-equal/3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -6620,6 +6639,7 @@ packages:
 
   /stringify-package/1.0.1:
     resolution: {integrity: sha512-sa4DUQsYciMP1xhKWGuFM04fB0LG/9DlluZoSVywUMRNvzid6XucHK0/90xGxRoHrAaROrcHK1aPKaijCtSrhg==}
+    deprecated: This module is not used anymore, and has been replaced by @npmcli/package-json
     dev: true
 
   /strip-ansi/6.0.1:
