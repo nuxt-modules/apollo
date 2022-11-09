@@ -1,0 +1,53 @@
+name: "\U0001F41B Bug report"
+description: "Something isn't working"
+
+labels: ["bug"]
+
+body:
+  - type: textarea
+    id: environment
+    validations:
+      required: true
+    attributes:
+      label: Environment
+      description: You can use `npx nuxi info` to fill this section
+      placeholder: Environment
+
+  - type: textarea
+    id: bug-description
+    validations:
+      required: true
+    attributes:
+      label: Describe the bug
+      description: "What isn't working? Describe the bug you've encountered."
+      placeholder: Bug description
+      
+  - type: textarea
+    id: expected-behaviour
+    validations:
+      required: true
+    attributes:
+      label: Expected behaviour
+      description: "What did you expect to happen? Is there a section in the docs about this?"
+      
+  - type: textarea
+    id: reproduction
+    validations:
+      required: false
+    attributes:
+      label: Reproduction
+      description: "Please provide a link to a repo that can reproduce the problem you ran into. A minimal reproduction is required unless you are absolutely sure that the issue is obvious and the provided information is enough to understand the problem."
+      placeholder: Reproduction
+      
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Optional if a reproduction is provided. Please try not to insert an image but copy paste the log text.
+      render: shell

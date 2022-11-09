@@ -1,0 +1,28 @@
+name: "🚀 Feature request"
+description: Suggest a feature
+labels: ["enhancement"]
+body:
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Your use case
+      description: Add a description of your use case, and how this feature would help you.
+      placeholder: When I do [...] I would expect to be able to do [...]
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: "The solution you'd like"
+      description: "Describe what you want to happen."
+
+  - type: textarea
+    attributes:
+      label: "Possible alternatives"
+      description: "Have you considered any alternative solutions?"
+
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: Is there any other context you think would be helpful to know?

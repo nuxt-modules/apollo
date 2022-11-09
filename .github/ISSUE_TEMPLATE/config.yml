@@ -1,0 +1,8 @@
+contact_links:
+  - name: 📚 Documentation
+    about: Check documentation for usage
+    url: https://apollo.nuxtjs.org
+
+  - name: 💬 Discussions
+    url: https://github.com/nuxt-modules/apollo/discussions
+    about: Use discussions if you have an idea for improvement and asking questions
