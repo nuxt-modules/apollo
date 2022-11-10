@@ -73,7 +73,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
           if (!configPaths[k]) { configPaths[k] = path }
         }
 
-        v.authType = v?.authType || options.authType
+        v.authType = v?.authType || (v?.authType === '' || v?.authType === null) ? null : options.authType
         v.authHeader = v?.authHeader || options.authHeader
         v.tokenName = v?.tokenName || `apollo:${k}.token`
         v.tokenStorage = v?.tokenStorage || options.tokenStorage
