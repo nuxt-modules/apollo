@@ -12,6 +12,7 @@ importers:
       '@nuxt/module-builder': ^0.2.0
       '@nuxt/ui': ^0.3.3
       '@nuxtjs/eslint-config-typescript': latest
+      '@originjs/vite-plugin-commonjs': ^1.0.3
       '@rollup/plugin-graphql': ^1.1.0
       '@vue/apollo-composable': 4.0.0-beta.1
       apollo-upload-client: ^17.0.0
@@ -30,6 +31,7 @@ importers:
       '@apollo/client': 3.7.0_bjgwlwebsm7ulvpmjq4c2w36jm
       '@nuxt/kit': 3.0.0-rc.12
       '@nuxt/module-builder': 0.2.0
+      '@originjs/vite-plugin-commonjs': 1.0.3
       '@rollup/plugin-graphql': 1.1.0_graphql@16.6.0
       '@vue/apollo-composable': 4.0.0-beta.1_mqgocqfa4eosf6ggtp5xgoaooq
       apollo-upload-client: 17.0.0_mqgocqfa4eosf6ggtp5xgoaooq
@@ -804,6 +806,12 @@ packages:
       - eslint-import-resolver-webpack
       - supports-color
     dev: true
+
+  /@originjs/vite-plugin-commonjs/1.0.3:
+    resolution: {integrity: sha512-KuEXeGPptM2lyxdIEJ4R11+5ztipHoE7hy8ClZt3PYaOVQ/pyngd2alaSrPnwyFeOW1UagRBaQ752aA1dTMdOQ==}
+    dependencies:
+      esbuild: 0.14.54
+    dev: false
 
   /@pkgr/utils/2.3.1:
     resolution: {integrity: sha512-wfzX8kc1PMyUILA+1Z/EqoE4UCXGy0iRGMhPwdfae1+f0OXlLqCk+By+aMzgJBzR9AzS4CDizioG6Ss1gvAFJw==}
