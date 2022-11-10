@@ -149,6 +149,8 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       config.optimizeDeps = config.optimizeDeps || {}
       config.optimizeDeps.exclude = config.optimizeDeps.exclude || []
       config.optimizeDeps.exclude.push('@vue/apollo-composable')
+      config.optimizeDeps.esbuildOptions = config.optimizeDeps.esbuildOptions || {}
+      config.optimizeDeps.esbuildOptions.plugins = config.optimizeDeps.esbuildOptions.plugins || []
       config.optimizeDeps.esbuildOptions.plugins.push(esbuildCommonjs(['apollo-upload-client']))
 
       config.plugins = config.plugins || []
