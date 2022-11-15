@@ -33,7 +33,7 @@
     "graphql": "^16.5.0",
     "graphql-ws": "^5.11.2",
     "jiti": "^1.15.0",
-    "ohash": "^0.1.5"
+    "ohash": "^1.0.0"
   },
   "devDependencies": {
     "@nuxt/ui": "^0.3.3",
