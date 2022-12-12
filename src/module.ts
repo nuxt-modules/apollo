@@ -4,7 +4,6 @@ import { Ref } from 'vue'
 import { defu } from 'defu'
 import { useLogger, addPlugin, addImports, addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
-import { esbuildCommonjs, viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import { name, version } from '../package.json'
 import type { ClientConfig, NuxtApolloConfig, ErrorResponse } from './types'
 
@@ -114,6 +113,8 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       ].join('\n')
     }).dst
 
+    nuxt.options.alias['apollo-upload-client'] = 'apollo-upload-client/public/index.mjs'
+
     addPlugin(resolve('runtime/plugin'))
 
     // TODO: Integrate @vue/apollo-components?
@@ -149,14 +150,10 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       config.optimizeDeps = config.optimizeDeps || {}
       config.optimizeDeps.exclude = config.optimizeDeps.exclude || []
       config.optimizeDeps.exclude.push('@vue/apollo-composable')
-      config.optimizeDeps.esbuildOptions = config.optimizeDeps.esbuildOptions || {}
-      config.optimizeDeps.esbuildOptions.plugins = config.optimizeDeps.esbuildOptions.plugins || []
-      config.optimizeDeps.esbuildOptions.plugins.push(esbuildCommonjs(['apollo-upload-client']))
 
       config.plugins = config.plugins || []
       // @ts-ignore
       config.plugins.push(GraphQLPlugin())
-      config.plugins.push(viteCommonjs())
 
       if (!nuxt.options.dev) { config.define = { ...config.define, __DEV__: false } }
     })

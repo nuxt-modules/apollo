@@ -25,7 +25,6 @@
     "@apollo/client": "^3.6.9",
     "@nuxt/kit": "^3.0.0-rc.11",
     "@nuxt/module-builder": "^0.2.0",
-    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@rollup/plugin-graphql": "^1.1.0",
     "@vue/apollo-composable": "4.0.0-beta.1",
     "apollo-upload-client": "^17.0.0",
