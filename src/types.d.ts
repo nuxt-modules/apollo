@@ -106,6 +106,14 @@ export type ClientConfig = {
    * Configuration for the auth cookie.
    **/
   cookieAttributes?: CookieAttributes;
+
+  /**
+   * Determine if the `apollo-upload-client` HttpLink should be used instead of the standard Apollo HttpLink.
+   * This behavior is disabled by default.
+   * @type {boolean}
+   * @default false
+   */
+  useUploadLink?: boolean
 };
 
 export interface NuxtApolloConfig<T = ClientConfig> {

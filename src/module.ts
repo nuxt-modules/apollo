@@ -113,6 +113,8 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       ].join('\n')
     }).dst
 
+    nuxt.options.alias['apollo-upload-client'] = 'apollo-upload-client/public/index.mjs'
+
     addPlugin(resolve('runtime/plugin'))
 
     // TODO: Integrate @vue/apollo-components?
