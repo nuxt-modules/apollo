@@ -3,7 +3,7 @@ import { print } from 'graphql'
 import type { OperationVariables, QueryOptions } from '@apollo/client'
 import type { AsyncData } from 'nuxt/dist/app/composables'
 import type { NuxtAppApollo } from '../types'
-import { ref, useCookie, useNuxtApp, useAsyncData, useLazyAsyncData } from '#imports'
+import { ref, useCookie, useNuxtApp, useAsyncData } from '#imports'
 import NuxtApollo from '#build/apollo'
 
 type TQuery<T> = QueryOptions<OperationVariables, T>['query']
@@ -21,8 +21,8 @@ export function useAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncDa
 export function useAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string): AsyncData<T, Error>
 
 export function useAsyncQuery <T> (...args: any) {
-  const { key, initialCache, fn } = prep(...args)
-  return useAsyncData<T>(key, fn, { initialCache })
+  const { key, fn } = prep(...args)
+  return useAsyncData<T>(key, fn)
 }
 
 export function useLazyAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
@@ -30,43 +30,45 @@ export function useLazyAsyncQuery <T> (query: TQuery<T>, clientId?: string): Asy
 export function useLazyAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string): AsyncData<T, Error>
 
 export function useLazyAsyncQuery <T> (...args: any) {
-  const { key, initialCache, fn } = prep(...args)
-  return useLazyAsyncData<T>(key, fn, { initialCache })
+  const { key, fn } = prep(...args)
+  return useAsyncData<T>(key, fn, { lazy: true })
 }
 
 const prep = (...args: any) => {
   const { clients } = useApollo()
 
   const query = args?.[0]?.query || args?.[0]
-  const initialCache = args?.[0]?.cache ?? true
+  const cache = args?.[0]?.cache ?? true
   const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
   let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || undefined
 
   if (!clientId || !clients?.[clientId]) {
-    clientId = clients?.default ? 'default' : Object.keys(clients)[0]
+    clientId = clients?.default ? 'default' : Object.keys(clients!)[0]
   }
 
   const key = args?.[0]?.key || hash({ query: print(query), variables, clientId })
 
-  const fn = () => clients?.[clientId].query({ query, variables, fetchPolicy: 'no-cache' }).then(r => r.data)
+  const fn = () => clients![clientId]?.query({ query, variables, fetchPolicy: 'no-cache' }).then(r => r.data)
 
-  return { key, query, initialCache, clientId, variables, fn }
+  return { key, query, clientId, variables, fn }
 }
 
 export const useApollo = () => {
-  const nuxtApp = useNuxtApp() as NuxtAppApollo & ReturnType<typeof useNuxtApp>
+  const nuxtApp = useNuxtApp() as NuxtAppApollo
 
   const getToken = async (client?: string) => {
-    const conf = NuxtApollo?.clients?.[client || 'default']
+    client = client || 'default'
 
-    const token = ref<string>()
-    await nuxtApp.callHook('apollo:auth', { token, client })
+    const conf = NuxtApollo?.clients?.[client]
+
+    const token = ref<string | null>(null)
+    await (nuxtApp as ReturnType<typeof useNuxtApp>).callHook('apollo:auth', { token, client })
 
     if (token.value) { return token.value }
 
-    const tokenName = conf?.tokenName
+    const tokenName = conf.tokenName!
 
-    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (process.client && localStorage.getItem(tokenName)) || undefined
+    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (process.client && localStorage.getItem(tokenName)) || null
   }
   type TAuthUpdate = {token?: string, client?: string, mode: 'login' | 'logout', skipResetStore?: boolean}
   const updateAuth = async ({ token, client, mode, skipResetStore }: TAuthUpdate) => {
@@ -74,7 +76,7 @@ export const useApollo = () => {
 
     const conf = NuxtApollo?.clients?.[client]
 
-    const tokenName = client && conf?.tokenName
+    const tokenName = client && conf.tokenName!
 
     if (conf?.tokenStorage === 'cookie') {
       const cookieOpts = (client && conf?.cookieAttributes) || NuxtApollo?.cookieAttributes
@@ -83,7 +85,7 @@ export const useApollo = () => {
 
       if (!cookie.value && mode === 'logout') { return }
 
-      cookie.value = (mode === 'login' && token) || undefined
+      cookie.value = (mode === 'login' && token) || null
     } else if (process.client && conf?.tokenStorage === 'localStorage') {
       if (mode === 'login' && token) {
         localStorage.setItem(tokenName, token)

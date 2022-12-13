@@ -31,8 +31,6 @@
 </template>
 
 <script lang="ts" setup>
-import gql from 'graphql-tag'
-
 const gqlTodos = gql`query todo { todos { id text } }`
 const gqlCreateTodo = gql`mutation createTodo($todo: TodoInput!) { createTodo(todo: $todo) { id } }`
 const gqlTodoAdded = gql`subscription todoAdded { todoAdded { id text } }`

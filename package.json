@@ -22,25 +22,25 @@
     "release": "standard-version --prerelease alpha && git push --follow-tags && pnpm publish --tag next"
   },
   "dependencies": {
-    "@apollo/client": "^3.6.9",
-    "@nuxt/kit": "^3.0.0-rc.11",
-    "@nuxt/module-builder": "^0.2.0",
-    "@rollup/plugin-graphql": "^1.1.0",
+    "@apollo/client": "^3.7.1",
+    "@nuxt/kit": "^3.0.0",
+    "@nuxt/module-builder": "^0.2.1",
+    "@rollup/plugin-graphql": "^2.0.2",
     "@vue/apollo-composable": "4.0.0-beta.1",
     "cookie-es": "^0.5.0",
-    "defu": "^6.0.0",
-    "destr": "^1.2.0",
+    "defu": "^6.1.1",
+    "destr": "^1.2.1",
     "graphql": "^16.5.0",
+    "graphql-tag": "^2.12.6",
     "graphql-ws": "^5.11.2",
     "jiti": "^1.15.0",
-    "ohash": "^0.1.5"
+    "ohash": "^1.0.0"
   },
   "devDependencies": {
     "@nuxt/ui": "^0.3.3",
-    "@nuxtjs/eslint-config-typescript": "latest",
-    "eslint": "^8.25.0",
-    "graphql-tag": "latest",
-    "nuxt": "^3.0.0-rc.11",
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "eslint": "^8.28.0",
+    "nuxt": "^3.0.0",
     "standard-version": "latest"
   },
   "publishConfig": {
@@ -49,5 +49,5 @@
   "resolutions": {
     "@nuxtjs/apollo": "link:."
   },
-  "packageManager": "pnpm@7.9.0"
+  "packageManager": "pnpm@7.18.1"
 }

@@ -93,7 +93,7 @@ export type ClientConfig = {
    * @type {string}
    * @default "Bearer"
    **/
-  authType?: string;
+  authType?: string | null;
 
   /**
    * Name of the Authentication token header.

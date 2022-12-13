@@ -45,13 +45,12 @@
 </template>
 
 <script lang="ts" setup>
-import gql from 'graphql-tag'
 import type { ViewerT, DiscussionT } from '~/types'
 import discussions from '~/queries/discussions.gql'
 
 const { getToken, onLogin, onLogout } = useApollo()
 
-const githubToken = ref(null)
+const githubToken = ref<string | null>(null)
 
 // for testing with cookie `tokenStorage`
 if (process.server) { githubToken.value = await getToken('github') }
@@ -82,7 +81,7 @@ const getViewer = () => {
 const getNuxtDiscussions = () => {
   const { onResult, onError } = useQuery<DiscussionT>(discussions, null, { clientId: 'github', fetchPolicy: 'cache-and-network' })
 
-  onResult(r => (output.value = r.data.repository.discussions.nodes))
+  onResult(r => (output.value = r.data.repository?.discussions?.nodes))
   onError(err => (output.value = err))
 }
 

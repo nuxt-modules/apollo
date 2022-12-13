@@ -30,7 +30,6 @@
 </template>
 
 <script lang="ts" setup>
-import gql from 'graphql-tag'
 // @ts-ignore
 import queryLaunches from '~/queries/launches.gql'
 
@@ -41,9 +40,9 @@ const { result, restart, loading } = useQuery(queryShips)
 const getShips = () => restart()
 
 const { load, onError, refetch, result: launchResult } = useLazyQuery(queryLaunches)
-watch(launchResult, (v) => (result.value = v))
+watch(launchResult, v => (result.value = v))
 
-onError((e) => console.error(e))
+onError(e => console.error(e))
 
 const getLaunches = () => !launchResult.value ? load() : refetch()
 </script>
