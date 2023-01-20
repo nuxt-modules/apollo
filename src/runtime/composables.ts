@@ -40,7 +40,7 @@ const prep = (...args: any) => {
   const query = args?.[0]?.query || args?.[0]
   const cache = args?.[0]?.cache ?? true
   const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
-  let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || undefined
+  let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || (typeof args?.[2] === 'string' && args?.[2]) || undefined
 
   if (!clientId || !clients?.[clientId]) {
     clientId = clients?.default ? 'default' : Object.keys(clients!)[0]
