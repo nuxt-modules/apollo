@@ -12,7 +12,7 @@ export type { ClientConfig, ErrorResponse }
 const logger = useLogger(name)
 
 async function readConfigFile (path: string): Promise<ClientConfig> {
-  return await jiti(import.meta.url, { interopDefault: true, requireCache: false })(path)
+  return await jiti(import.meta.url, { esmResolve: true, interopDefault: true, requireCache: false })(path)
 }
 
 export type ModuleOptions = NuxtApolloConfig
@@ -150,7 +150,6 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       config.optimizeDeps.exclude.push('@vue/apollo-composable')
 
       config.plugins = config.plugins || []
-      // @ts-ignore
       config.plugins.push(GraphQLPlugin())
 
       if (!nuxt.options.dev) { config.define = { ...config.define, __DEV__: false } }
