@@ -2,7 +2,7 @@ import { defineApolloClient } from '@nuxtjs/apollo'
 
 export default defineApolloClient({
   // The GraphQL endpoint.
-  httpEndpoint: 'https://api.spacex.land/graphql',
+  httpEndpoint: 'https://spacex-api-2gl6xp7kua-ue.a.run.app/query',
 
   // Provide a GraphQL endpoint to be used client-side. Overrides `httpEndpoint`.
   // browserHttpEndpoint: '/graphql',

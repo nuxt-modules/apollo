@@ -1,17 +1,19 @@
-query launches($sort: String = "launch_year", $order: String = "desc", $limit: Int = 10) {
-  launches(sort: $sort, order: $order, find: { mission_name: "Starlink" }, limit: $limit) {
+query launches($sort: String = "date", $order: SortOrder = desc, $limit: Int = 10) {
+  launches(sort: $sort, order: $order, filter: { name: "Starlink" }, limit: $limit) {
     id
     details
-    mission_name
-    launch_year
-    launch_success
+    name
+    date
+    success
     links {
-      article_link
-      flickr_images
+      article
+      patch {
+        small
+      }
     }
     rocket {
-      rocket_name
-      rocket_type
+      name
+      type
     }
   }
 }
