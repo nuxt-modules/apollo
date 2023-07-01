@@ -1,3 +1,4 @@
+import { createRequire } from 'module'
 import { existsSync } from 'fs'
 import jiti from 'jiti'
 import { Ref } from 'vue'
@@ -9,6 +10,7 @@ import type { ClientConfig, NuxtApolloConfig, ErrorResponse } from './types'
 
 export type { ClientConfig, ErrorResponse }
 
+const require = createRequire(import.meta.url)
 const logger = useLogger(name)
 
 async function readConfigFile (path: string): Promise<ClientConfig> {
@@ -141,7 +143,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
             'useGlobalQueryLoading',
             'useGlobalMutationLoading',
             'useGlobalSubscriptionLoading'
-          ].map(n => ({ name: n, from: '@vue/apollo-composable' })))
+          ].map((n) => ({ name: n, from: resolve(require.resolve("@vue/apollo-composable")) }))
     ])
 
     nuxt.hook('vite:extendConfig', (config) => {
