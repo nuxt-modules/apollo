@@ -4,6 +4,7 @@ import type { OperationVariables, QueryOptions } from '@apollo/client'
 import type { AsyncData } from 'nuxt/dist/app/composables'
 import type { NuxtAppApollo } from '../types'
 import { ref, useCookie, useNuxtApp, useAsyncData } from '#imports'
+import { callWithNuxt } from '#app'
 import NuxtApollo from '#build/apollo'
 
 type TQuery<T> = QueryOptions<OperationVariables, T>['query']
@@ -68,7 +69,9 @@ export const useApollo = () => {
 
     const tokenName = conf.tokenName!
 
-    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (process.client && localStorage.getItem(tokenName)) || null
+    return conf?.tokenStorage === 'cookie'
+      ? callWithNuxt((nuxtApp as ReturnType<typeof useNuxtApp>), () => useCookie(tokenName).value)
+      : (process.client && localStorage.getItem(tokenName)) || null
   }
   type TAuthUpdate = {token?: string, client?: string, mode: 'login' | 'logout', skipResetStore?: boolean}
   const updateAuth = async ({ token, client, mode, skipResetStore }: TAuthUpdate) => {
