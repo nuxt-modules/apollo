@@ -6,6 +6,7 @@ import { useLogger, addPlugin, addImports, addTemplate, createResolver, defineNu
 import GraphQLPlugin from '@rollup/plugin-graphql'
 import { name, version } from '../package.json'
 import type { ClientConfig, NuxtApolloConfig, ErrorResponse } from './types'
+import { serializeConfig } from './serialize'
 
 export type { ClientConfig, ErrorResponse }
 
@@ -107,8 +108,8 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
         'export default {',
         ` proxyCookies: ${options.proxyCookies},`,
         ` clientAwareness: ${options.clientAwareness},`,
-        ` cookieAttributes: ${JSON.stringify(options.cookieAttributes)},`,
-        ` clients: ${JSON.stringify(clients)}`,
+        ` cookieAttributes: ${serializeConfig(options.cookieAttributes)},`,
+        ` clients: ${serializeConfig(clients)}`,
         '}'
       ].join('\n')
     }).dst
