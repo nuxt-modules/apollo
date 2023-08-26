@@ -1,3 +1,5 @@
+import { createRequire } from 'module'
+import path from 'path'
 import { existsSync } from 'fs'
 import jiti from 'jiti'
 import { Ref } from 'vue'
@@ -45,6 +47,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
 
     const { resolve } = createResolver(import.meta.url)
     const rootResolver = createResolver(nuxt.options.rootDir)
+    const require = createRequire(import.meta.url)
 
     nuxt.options.build.transpile = nuxt.options.build.transpile || []
     nuxt.options.build.transpile.push(
@@ -141,7 +144,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
             'useGlobalQueryLoading',
             'useGlobalMutationLoading',
             'useGlobalSubscriptionLoading'
-          ].map(n => ({ name: n, from: '@vue/apollo-composable' })))
+          ].map(n => ({ name: n, from: resolve(path.dirname(require.resolve('@vue/apollo-composable/package.json'))) })))
     ])
 
     nuxt.hook('vite:extendConfig', (config) => {
