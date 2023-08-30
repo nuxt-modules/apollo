@@ -9,7 +9,7 @@ export default defineAppConfig({
     },
     image: "/cover.jpg",
     socials: {
-      github: "nuxt-modules/apollo-module",
+      github: "nuxt-modules/apollo",
       twitter: "@nuxt_js",
     },
   }
