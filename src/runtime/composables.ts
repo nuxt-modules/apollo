@@ -18,7 +18,6 @@ type TAsyncQuery<T> = {
 
 export function useAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
 export function useAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
-export function useAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string): AsyncData<T, Error>
 export function useAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<T, Error>
 
 export function useAsyncQuery <T> (...args: any) {
@@ -41,7 +40,7 @@ const prep = (...args: any) => {
   const query = args?.[0]?.query || args?.[0]
   const cache = args?.[0]?.cache ?? true
   const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
-  const context = args?.[0]?.context || undefined;
+  const context = args?.[0]?.context
   let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || undefined
 
   if (!clientId || !clients?.[clientId]) {
