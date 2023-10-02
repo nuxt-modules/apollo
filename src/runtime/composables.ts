@@ -1,6 +1,6 @@
 import { hash } from 'ohash'
 import { print } from 'graphql'
-import type { OperationVariables, QueryOptions } from '@apollo/client'
+import type { OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
 import type { AsyncData } from 'nuxt/dist/app/composables'
 import type { NuxtAppApollo } from '../types'
 import { ref, useCookie, useNuxtApp, useAsyncData } from '#imports'
@@ -18,7 +18,7 @@ type TAsyncQuery<T> = {
 
 export function useAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
 export function useAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
-export function useAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string): AsyncData<T, Error>
+export function useAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<T, Error>
 
 export function useAsyncQuery <T> (...args: any) {
   const { key, fn } = prep(...args)
@@ -27,7 +27,7 @@ export function useAsyncQuery <T> (...args: any) {
 
 export function useLazyAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
 export function useLazyAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
-export function useLazyAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string): AsyncData<T, Error>
+export function useLazyAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<T, Error>
 
 export function useLazyAsyncQuery <T> (...args: any) {
   const { key, fn } = prep(...args)
@@ -40,6 +40,7 @@ const prep = (...args: any) => {
   const query = args?.[0]?.query || args?.[0]
   const cache = args?.[0]?.cache ?? true
   const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
+  const context = args?.[0]?.context
   let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || undefined
 
   if (!clientId || !clients?.[clientId]) {
@@ -48,7 +49,7 @@ const prep = (...args: any) => {
 
   const key = args?.[0]?.key || hash({ query: print(query), variables, clientId })
 
-  const fn = () => clients![clientId]?.query({ query, variables, fetchPolicy: 'no-cache' }).then(r => r.data)
+  const fn = () => clients![clientId]?.query({ query, variables, fetchPolicy: 'no-cache', context }).then(r => r.data)
 
   return { key, query, clientId, variables, fn }
 }
