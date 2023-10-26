@@ -122,6 +122,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       ...[
         'useApollo',
         'useAsyncQuery',
+        'useClientSideAsyncQuery',
         'useLazyAsyncQuery'
       ].map(n => ({ name: n, from: resolve('runtime/composables') })),
       ...(!options?.autoImports
