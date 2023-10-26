@@ -170,4 +170,12 @@ export interface NuxtApolloConfig<T = ClientConfig> {
    * @default false
    */
   clientAwareness?: boolean
+
+  /**
+   * If false, Apollo Client sends every created query to the server,
+   * even if a completely identical query is already in flight.
+   * @type {boolean}
+   * @default true
+   **/
+  queryDeduplication?: boolean;
 }
