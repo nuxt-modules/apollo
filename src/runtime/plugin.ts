@@ -1,4 +1,4 @@
-import destr from 'destr'
+import { destr } from 'destr'
 import { onError } from '@apollo/client/link/error'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { ApolloClients, provideApolloClients } from '@vue/apollo-composable'
