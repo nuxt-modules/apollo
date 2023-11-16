@@ -189,19 +189,26 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
 
 export const defineApolloClient = (config: ClientConfig) => config
 
+export interface RuntimeModuleHooks {
+  'apollo:auth': (params: { client: string, token: Ref<string | null> }) => void
+  'apollo:error': (error: ErrorResponse) => void
+}
+
+export interface ModuleRuntimeConfig {
+  apollo: NuxtApolloConfig<any>
+}
+
+export interface ModulePublicRuntimeConfig {
+  apollo: NuxtApolloConfig<any>
+}
+
 declare module '#app' {
-  interface RuntimeConfig {
-    // @ts-ignore
-    apollo: NuxtApolloConfig<any>
+  interface RuntimeNuxtHooks extends RuntimeModuleHooks {}
+}
 
-    // @ts-ignore
-    public:{
-      apollo: NuxtApolloConfig<any>
-    }
-  }
-
-  interface RuntimeNuxtHooks {
-    'apollo:auth': (params: { client: string, token: Ref<string | null> }) => void
-    'apollo:error': (error: ErrorResponse) => void
-  }
+declare module '@nuxt/schema' {
+  interface NuxtConfig { ['apollo']?: Partial<ModuleOptions> }
+  interface NuxtOptions { ['apollo']?: ModuleOptions }
+  interface RuntimeConfig extends ModuleRuntimeConfig {}
+  interface PublicRuntimeConfig extends ModulePublicRuntimeConfig {}
 }
