@@ -3,7 +3,7 @@
  * @param obj Config object
  * @returns Stringified config with kept function expressions
  */
-export const serializeConfig = (obj: any) => {
+export const serializeConfig = (obj: any): string => {
   // Stringify function body
   if (typeof obj === 'function') {
     return obj.toString()
