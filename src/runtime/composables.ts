@@ -9,11 +9,12 @@ import NuxtApollo from '#build/apollo'
 type TQuery<T> = QueryOptions<OperationVariables, T>['query']
 type TVariables<T> = QueryOptions<OperationVariables, T>['variables']
 type TAsyncQuery<T> = {
+  cache?: boolean,
+  context?: DefaultContext,
+  clientId?: string,
+  key?: string,
   query: TQuery<T>,
   variables?: TVariables<T>,
-  key?: string,
-  cache?: boolean
-  clientId?: string
 }
 
 export function useAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
@@ -40,8 +41,8 @@ const prep = (...args: any) => {
   const query = args?.[0]?.query || args?.[0]
   const cache = args?.[0]?.cache ?? true
   const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
-  const context = args?.[0]?.context
-  let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[1]) || undefined
+  const context = args?.[0]?.context || (typeof args?.[1] === 'string' && args?.[3]) || undefined
+  let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[2]) || undefined
 
   if (!clientId || !clients?.[clientId]) {
     clientId = clients?.default ? 'default' : Object.keys(clients!)[0]
