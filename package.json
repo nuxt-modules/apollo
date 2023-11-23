@@ -40,7 +40,7 @@
   "devDependencies": {
     "@nuxt/module-builder": "^0.5.4",
     "@nuxt/schema": "^3.8.2",
-    "@nuxt/ui": "^0.4.1",
+    "@nuxt/ui": "^2.11.0",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@types/node": "^20.9.4",
     "eslint": "^8.54.0",
