@@ -1,6 +1,7 @@
 import { destr } from 'destr'
 import { onError } from '@apollo/client/link/error'
 import { getMainDefinition } from '@apollo/client/utilities'
+import { createApolloProvider } from '@vue/apollo-option'
 import { ApolloClients, provideApolloClients } from '@vue/apollo-composable'
 import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, split } from '@apollo/client/core'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
@@ -136,6 +137,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   provideApolloClients(clients)
   nuxtApp.vueApp.provide(ApolloClients, clients)
+  nuxtApp.vueApp.use(createApolloProvider({ defaultClient: clients?.default as any }))
   nuxtApp._apolloClients = clients
 
   const defaultClient = clients?.default
