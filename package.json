@@ -1,6 +1,6 @@
 {
   "name": "@nuxtjs/apollo",
-  "version": "5.0.0-alpha.9",
+  "version": "5.0.0-alpha.10",
   "license": "MIT",
   "repository": "https://github.com/nuxt-modules/apollo-module",
   "homepage": "https://apollo.nuxtjs.org",
