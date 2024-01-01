@@ -11,6 +11,18 @@ export type NuxtAppApollo = Partial<{
   _apolloWsClients?: Record<string, RestartableClient>;
 }>;
 
+export type AutoImportConfig = {
+  /** 
+   * Specify if the `gql` tag function should be auto-imported
+   * @default true
+   */
+  gql: boolean,
+  /**
+   * Specify if vue-apollo composables should be auto-imported
+   */
+  'vue-apollo': boolean
+}
+
 export type ClientConfig = {
   /**
    * The GraphQL endpoint.
@@ -110,11 +122,11 @@ export type ClientConfig = {
 
 export interface NuxtApolloConfig<T = ClientConfig> {
   /**
-   * Determine if vue-apollo composables should be automatically imported.
-   * @type {boolean}
+   * Determine if vue-apollo composables and `gql` function should be automatically imported.
+   * @type {boolean | AutoImportConfig}
    * @default true
    **/
-  autoImports?: boolean;
+  autoImports?: boolean | AutoImportConfig;
 
   /**
    * Configuration of the Apollo clients.
