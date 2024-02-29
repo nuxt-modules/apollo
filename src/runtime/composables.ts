@@ -1,7 +1,7 @@
 import { hash } from 'ohash'
 import { print } from 'graphql'
 import type { OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
-import type { AsyncData, NuxtError } from 'nuxt/app'
+import type { AsyncData, AsyncDataOptions, NuxtError } from 'nuxt/app'
 import type { NuxtAppApollo } from '../types'
 import { ref, useCookie, useNuxtApp, useAsyncData } from '#imports'
 import NuxtApollo from '#build/apollo'
@@ -26,7 +26,7 @@ export function useAsyncQuery <
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
   NuxtErrorDataT = unknown
-> (opts: TAsyncQuery<T>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+> (opts: TAsyncQuery<T>, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
 export function useAsyncQuery <
   T,
@@ -34,11 +34,11 @@ export function useAsyncQuery <
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
   NuxtErrorDataT = unknown
-> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
 export function useAsyncQuery <T> (...args: any[]) {
-  const { key, fn } = prep<T>(...args)
-  return useAsyncData<T>(key, fn)
+  const { key, fn, options } = prep<T>(...args)
+  return useAsyncData<T>(key, fn, options)
 }
 
 export function useLazyAsyncQuery <
@@ -47,7 +47,7 @@ export function useLazyAsyncQuery <
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
   NuxtErrorDataT = unknown
-> (opts: TAsyncQuery<T>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+> (opts: TAsyncQuery<T>, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
 export function useLazyAsyncQuery <
   T,
@@ -55,11 +55,11 @@ export function useLazyAsyncQuery <
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
   NuxtErrorDataT = unknown
-> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
 export function useLazyAsyncQuery <T> (...args: any) {
-  const { key, fn } = prep<T>(...args)
-  return useAsyncData<T>(key, fn, { lazy: true })
+  const { key, fn, options } = prep<T>(...args)
+  return useAsyncData<T>(key, fn, { ...options, lazy: true })
 }
 
 const prep = <T> (...args: any[]) => {
@@ -72,6 +72,8 @@ const prep = <T> (...args: any[]) => {
   let clientId: string | undefined
   let context: DefaultContext
 
+  let options: AsyncDataOptions<T, T, KeysOf<T>, null> = {}
+
   if ((typeof args?.[0] === 'object' && 'query' in args[0])) {
     query = args?.[0]?.query
     variables = args?.[0]?.variables
@@ -79,12 +81,20 @@ const prep = <T> (...args: any[]) => {
     cache = args?.[0]?.cache ?? true
     context = args?.[0]?.context
     clientId = args?.[0]?.clientId
+    
+    if (typeof args?.[1] === 'object') {
+      options = args?.[1]
+    }
   } else {
     query = args?.[0]
     variables = args?.[1]
 
     clientId = args?.[2]
     context = args?.[3]
+
+    if (typeof args?.[4] === 'object') {
+      options = args?.[4]
+    }
   }
 
   if (!query) { throw new Error('@nuxtjs/apollo: no query provided') }
@@ -104,7 +114,7 @@ const prep = <T> (...args: any[]) => {
     context
   }).then(r => r.data)
 
-  return { key, query, clientId, variables, fn }
+  return { key, query, clientId, variables, fn, options }
 }
 
 export const useApollo = () => {
