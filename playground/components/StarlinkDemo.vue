@@ -1,23 +1,23 @@
 <template>
-  <div flex flex-col gap-4>
-    <NCard p-4>
+  <div class="flex flex-col gap-4">
+    <UCard class="p-4">
       <div class="n-header-upper">
         StarLink Example
       </div>
 
       <div class="flex flex-wrap gap-3 items-center">
-        <NButton @click="getShips">
+        <UButton @click="getShips">
           Load Ships
-        </NButton>
+        </UButton>
 
-        <NButton @click="getLaunches">
+        <UButton @click="getLaunches">
           Load Launches
-        </NButton>
+        </UButton>
       </div>
-    </NCard>
+    </UCard>
 
-    <NCard p-4>
-      <div class="n-header-upper">
+    <UCard class="p-4">
+      <div>
         Raw Output
       </div>
 
@@ -25,7 +25,7 @@
         loading...
       </p>
       <pre v-else>{{ result }}</pre>
-    </NCard>
+    </UCard>
   </div>
 </template>
 

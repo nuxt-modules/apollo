@@ -2,7 +2,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@nuxtjs/apollo'],
 
   colorMode: {
-    preference: 'light',
+    preference: 'dark',
     storageKey: 'na-color-scheme'
   },
 
