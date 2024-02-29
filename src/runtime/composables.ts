@@ -1,56 +1,108 @@
 import { hash } from 'ohash'
 import { print } from 'graphql'
 import type { OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
-import type { AsyncData } from 'nuxt/dist/app/composables'
+import type { AsyncData, NuxtError } from 'nuxt/app'
 import type { NuxtAppApollo } from '../types'
 import { ref, useCookie, useNuxtApp, useAsyncData } from '#imports'
 import NuxtApollo from '#build/apollo'
 
+type PickFrom<T, K extends Array<string>> = T extends Array<any> ? T : T extends Record<string, any> ? keyof T extends K[number] ? T : K[number] extends never ? T : Pick<T, K[number]> : T
+type KeysOf<T> = Array<T extends T ? keyof T extends string ? keyof T : never : never>
+
 type TQuery<T> = QueryOptions<OperationVariables, T>['query']
-type TVariables<T> = QueryOptions<OperationVariables, T>['variables']
+type TVariables<T> = QueryOptions<OperationVariables, T>['variables'] | null
 type TAsyncQuery<T> = {
-  cache?: boolean,
-  context?: DefaultContext,
-  clientId?: string,
-  key?: string,
-  query: TQuery<T>,
-  variables?: TVariables<T>,
+  key?: string
+  query: TQuery<T>
+  variables?: TVariables<T>
+  clientId?: string
+  context?: DefaultContext
+  cache?: boolean
 }
 
-export function useAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
-export function useAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
-export function useAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<T, Error>
+export function useAsyncQuery <
+  T,
+  DataT = T,
+  PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
+  DefaultT = null,
+  NuxtErrorDataT = unknown
+> (opts: TAsyncQuery<T>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
-export function useAsyncQuery <T> (...args: any) {
-  const { key, fn } = prep(...args)
+export function useAsyncQuery <
+  T,
+  DataT = T,
+  PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
+  DefaultT = null,
+  NuxtErrorDataT = unknown
+> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+
+export function useAsyncQuery <T> (...args: any[]) {
+  const { key, fn } = prep<T>(...args)
   return useAsyncData<T>(key, fn)
 }
 
-export function useLazyAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
-export function useLazyAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
-export function useLazyAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<T, Error>
+export function useLazyAsyncQuery <
+  T,
+  DataT = T,
+  PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
+  DefaultT = null,
+  NuxtErrorDataT = unknown
+> (opts: TAsyncQuery<T>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+
+export function useLazyAsyncQuery <
+  T,
+  DataT = T,
+  PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
+  DefaultT = null,
+  NuxtErrorDataT = unknown
+> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
 export function useLazyAsyncQuery <T> (...args: any) {
-  const { key, fn } = prep(...args)
+  const { key, fn } = prep<T>(...args)
   return useAsyncData<T>(key, fn, { lazy: true })
 }
 
-const prep = (...args: any) => {
+const prep = <T> (...args: any[]) => {
   const { clients } = useApollo()
 
-  const query = args?.[0]?.query || args?.[0]
-  const cache = args?.[0]?.cache ?? true
-  const variables = args?.[0]?.variables || (typeof args?.[1] !== 'string' && args?.[1]) || undefined
-  const context = args?.[0]?.context || (typeof args?.[1] === 'string' && args?.[3]) || undefined
-  let clientId = args?.[0]?.clientId || (typeof args?.[1] === 'string' && args?.[2]) || undefined
+  let query: TQuery<T>
+  let variables: TVariables<T>
+
+  let cache: boolean = true
+  let clientId: string | undefined
+  let context: DefaultContext
+
+  if ((typeof args?.[0] === 'object' && 'query' in args[0])) {
+    query = args?.[0]?.query
+    variables = args?.[0]?.variables
+
+    cache = args?.[0]?.cache ?? true
+    context = args?.[0]?.context
+    clientId = args?.[0]?.clientId
+  } else {
+    query = args?.[0]
+    variables = args?.[1]
+
+    clientId = args?.[2]
+    context = args?.[3]
+  }
+
+  if (!query) { throw new Error('@nuxtjs/apollo: no query provided') }
 
   if (!clientId || !clients?.[clientId]) {
-    clientId = clients?.default ? 'default' : Object.keys(clients!)[0]
+    clientId = clients?.default ? 'default' : Object.keys(clients!)?.[0]
+
+    if (!clientId) { throw new Error('@nuxtjs/apollo: no client found') }
   }
 
   const key = args?.[0]?.key || hash({ query: print(query), variables, clientId })
 
-  const fn = () => clients![clientId]?.query({ query, variables, fetchPolicy: cache ? 'cache-first' : 'no-cache', context }).then(r => r.data)
+  const fn = () => clients![clientId!]?.query<T>({
+    query,
+    variables: variables || undefined,
+    fetchPolicy: cache ? 'cache-first' : 'no-cache',
+    context
+  }).then(r => r.data)
 
   return { key, query, clientId, variables, fn }
 }
@@ -83,6 +135,7 @@ export const useApollo = () => {
     if (conf?.tokenStorage === 'cookie') {
       const cookieOpts = (client && conf?.cookieAttributes) || NuxtApollo?.cookieAttributes
 
+      // @ts-ignore
       const cookie = useCookie(tokenName, cookieOpts)
 
       if (!cookie.value && mode === 'logout') { return }
