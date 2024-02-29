@@ -18,7 +18,7 @@ export default defineNuxtConfig({
         wsEndpoint: 'wss://nuxt-gql-server-2gl6xp7kua-ue.a.run.app/query',
         httpLinkOptions: {
           headers: {
-            'X-CUSTOM-HEADER': 123
+            'X-CUSTOM-HEADER': '123'
           }
         }
       }

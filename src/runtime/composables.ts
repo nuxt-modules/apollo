@@ -1,9 +1,11 @@
 import { hash } from 'ohash'
 import { print } from 'graphql'
-import type { OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
+import type { ApolloClient, OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
 import type { AsyncData, AsyncDataOptions, NuxtError } from 'nuxt/app'
-import type { NuxtAppApollo } from '../types'
+import type { RestartableClient } from './ws'
 import { ref, isRef, reactive, useCookie, useNuxtApp, useAsyncData } from '#imports'
+import { NuxtApollo } from '#apollo'
+import type { ApolloClientKeys } from '#apollo'
 
 type PickFrom<T, K extends Array<string>> = T extends Array<any> ? T : T extends Record<string, any> ? keyof T extends K[number] ? T : K[number] extends never ? T : Pick<T, K[number]> : T
 type KeysOf<T> = Array<T extends T ? keyof T extends string ? keyof T : never : never>
@@ -14,7 +16,7 @@ type TAsyncQuery<T> = {
   key?: string
   query: TQuery<T>
   variables?: TVariables<T>
-  clientId?: string
+  clientId?: ApolloClientKeys
   context?: DefaultContext
   cache?: boolean
 }
@@ -33,7 +35,7 @@ export function useAsyncQuery <
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
   NuxtErrorDataT = unknown
-> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+> (query: TQuery<T>, variables?: TVariables<T>, clientId?: ApolloClientKeys, context?: DefaultContext, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
 export function useAsyncQuery <T> (...args: any[]) {
   const { key, fn, options } = prep<T>(...args)
@@ -68,7 +70,7 @@ const prep = <T> (...args: any[]) => {
   let variables: TVariables<T>
 
   let cache: boolean = true
-  let clientId: string | undefined
+  let clientId: ApolloClientKeys | undefined
   let context: DefaultContext
 
   let options: AsyncDataOptions<T, T, KeysOf<T>, null> = {}
@@ -80,7 +82,7 @@ const prep = <T> (...args: any[]) => {
     cache = args?.[0]?.cache ?? true
     context = args?.[0]?.context
     clientId = args?.[0]?.clientId
-    
+
     if (typeof args?.[1] === 'object') {
       options = args?.[1]
     }
@@ -99,7 +101,7 @@ const prep = <T> (...args: any[]) => {
   if (!query) { throw new Error('@nuxtjs/apollo: no query provided') }
 
   if (!clientId || !clients?.[clientId]) {
-    clientId = clients?.default ? 'default' : Object.keys(clients!)?.[0]
+    clientId = (clients?.default ? 'default' : Object.keys(clients!)?.[0]) as ApolloClientKeys
 
     if (!clientId) { throw new Error('@nuxtjs/apollo: no client found') }
   }
@@ -108,7 +110,7 @@ const prep = <T> (...args: any[]) => {
     variables = isRef(variables) ? variables : reactive(variables)
 
     options.watch = options.watch || []
-    options.watch.push(variables) 
+    options.watch.push(variables)
   }
 
   const key = args?.[0]?.key || hash({ query: print(query), variables, clientId })
@@ -123,10 +125,20 @@ const prep = <T> (...args: any[]) => {
   return { key, query, clientId, variables, fn, options }
 }
 
-export const useApollo = () => {
-  const nuxtApp = useNuxtApp() as NuxtAppApollo
+export function useApollo (): {
+  clients: Record<ApolloClientKeys, ApolloClient<any>> | undefined
+  getToken: (client?: ApolloClientKeys) => Promise<string | null | undefined>
+  onLogin: (token?: string, client?: ApolloClientKeys, skipResetStore?: boolean) => Promise<void>
+  onLogout: (client?: ApolloClientKeys, skipResetStore?: boolean) => Promise<void>
+}
 
-  const getToken = async (client?: string) => {
+export function useApollo () {
+  const nuxtApp = useNuxtApp() as {
+    _apolloClients?: Record<ApolloClientKeys, ApolloClient<any>>;
+    _apolloWsClients?: Record<ApolloClientKeys, RestartableClient>;
+  }
+
+  const getToken = async (client?: ApolloClientKeys) => {
     client = client || 'default'
 
     const conf = NuxtApollo?.clients?.[client]
@@ -140,7 +152,7 @@ export const useApollo = () => {
 
     return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (process.client && localStorage.getItem(tokenName)) || null
   }
-  type TAuthUpdate = {token?: string, client?: string, mode: 'login' | 'logout', skipResetStore?: boolean}
+  type TAuthUpdate = {token?: string, client?: ApolloClientKeys, mode: 'login' | 'logout', skipResetStore?: boolean}
   const updateAuth = async ({ token, client, mode, skipResetStore }: TAuthUpdate) => {
     client = client || 'default'
 
@@ -169,6 +181,7 @@ export const useApollo = () => {
 
     if (skipResetStore) { return }
 
+    // eslint-disable-next-line no-console
     await nuxtApp?._apolloClients?.[client].resetStore().catch(e => console.log('%cError on cache reset', 'color: orange;', e.message))
   }
 
@@ -192,7 +205,7 @@ export const useApollo = () => {
      * @param {string} client - Name of the Apollo client. Defaults to `default`.
      * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
      * */
-    onLogin: (token?: string, client?: string, skipResetStore?: boolean) => updateAuth({ token, client, skipResetStore, mode: 'login' }),
+    onLogin: (token?: string, client?: ApolloClientKeys, skipResetStore?: boolean) => updateAuth({ token, client, skipResetStore, mode: 'login' }),
 
     /**
      * Remove the auth token from the Apollo client, and optionally reset it's cache.
@@ -200,6 +213,6 @@ export const useApollo = () => {
      * @param {string} client - Name of the Apollo client. Defaults to `default`.
      * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
      * */
-    onLogout: (client?: string, skipResetStore?: boolean) => updateAuth({ client, skipResetStore, mode: 'logout' })
+    onLogout: (client?: ApolloClientKeys, skipResetStore?: boolean) => updateAuth({ client, skipResetStore, mode: 'logout' })
   }
 }

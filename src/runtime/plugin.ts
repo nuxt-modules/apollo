@@ -10,25 +10,28 @@ import createRestartableClient from './ws'
 import { useApollo } from './composables'
 import { ref, useCookie, defineNuxtPlugin, useRequestHeaders } from '#imports'
 
-import NuxtApollo from '#apollo'
+import { NuxtApollo } from '#apollo'
+import type { ApolloClientKeys } from '#apollo'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const requestCookies = (process.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
 
-  const clients: { [key: string]: ApolloClient<any> } = {}
+  const clients = {} as Record<ApolloClientKeys, ApolloClient<any>>
 
   for (const [key, clientConfig] of Object.entries(NuxtApollo.clients)) {
     const getAuth = async () => {
-      const token = ref<string | null>()
+      const token = ref<string | null>(null)
 
       await nuxtApp.callHook('apollo:auth', { token, client: key })
 
       if (!token.value) {
         if (clientConfig.tokenStorage === 'cookie') {
           if (process.client) {
-            token.value = useCookie(clientConfig.tokenName!).value
+            const t = useCookie(clientConfig.tokenName!).value
+            if (t) { token.value = t }
           } else if (requestCookies?.cookie) {
-            token.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+            const t = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+            if (t) { token.value = t }
           }
         } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
           token.value = localStorage.getItem(clientConfig.tokenName!)
@@ -82,6 +85,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       wsLink = new GraphQLWsLink(wsClient)
 
       nuxtApp._apolloWsClients = nuxtApp._apolloWsClients || {}
+
+      // @ts-ignore
       nuxtApp._apolloWsClients[key] = wsClient
     }
 
@@ -109,7 +114,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     const cache = new InMemoryCache(clientConfig.inMemoryCacheOptions)
 
-    clients[key] = new ApolloClient({
+    clients[key as ApolloClientKeys] = new ApolloClient({
       link,
       cache,
       ...(NuxtApollo.clientAwareness && { name: key }),
@@ -121,7 +126,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     })
 
     if (!clients?.default && !NuxtApollo?.clients?.default && key === Object.keys(NuxtApollo.clients)[0]) {
-      clients.default = clients[key]
+      clients.default = clients[key as ApolloClientKeys]
     }
 
     const cacheKey = `_apollo:${key}`
