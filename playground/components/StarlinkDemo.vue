@@ -6,7 +6,7 @@
       </div>
 
       <div class="flex flex-wrap gap-3 items-center">
-        <UButton @click="getShips">
+        <UButton @click="refresh">
           Load Ships
         </UButton>
 
@@ -17,14 +17,19 @@
     </UCard>
 
     <UCard class="p-4">
+      <div class="mb-4">
+        <label for="limit" class="mr-2">Limit:</label>
+        <input class="w-10" type="number" v-model.number="limit" min="1" />
+      </div>
+
       <div>
         Raw Output
       </div>
 
-      <p v-if="loading">
+      <p v-if="pending">
         loading...
       </p>
-      <pre v-else>{{ result }}</pre>
+      <pre v-else>{{ data }}</pre>
     </UCard>
   </div>
 </template>
@@ -33,14 +38,23 @@
 // @ts-ignore
 import queryLaunches from '~/queries/launches.gql'
 
-const queryShips = gql`query ships { ships { id name } }`
+const queryShips = gql`
+  query ships($limit: Int! = 2) {
+    ships(limit: $limit) {
+      id
+      name
+    }
+  }
+`
 
-const { result, restart, loading } = useQuery(queryShips)
+const limit = ref(2)
 
-const getShips = () => restart()
+const { data, refresh, pending } = await useAsyncQuery(queryShips, { limit })
 
-const { load, onError, refetch, result: launchResult } = useLazyQuery(queryLaunches)
-watch(launchResult, v => (result.value = v))
+const { load, onError, refetch, result: launchResult } = useLazyQuery(queryLaunches, undefined, {
+  fetchPolicy: 'no-cache'
+})
+watch(launchResult, v => (data.value = v))
 
 onError(e => console.error(e))
 

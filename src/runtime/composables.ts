@@ -3,8 +3,7 @@ import { print } from 'graphql'
 import type { OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
 import type { AsyncData, AsyncDataOptions, NuxtError } from 'nuxt/app'
 import type { NuxtAppApollo } from '../types'
-import { ref, useCookie, useNuxtApp, useAsyncData } from '#imports'
-import NuxtApollo from '#build/apollo'
+import { ref, isRef, reactive, useCookie, useNuxtApp, useAsyncData } from '#imports'
 
 type PickFrom<T, K extends Array<string>> = T extends Array<any> ? T : T extends Record<string, any> ? keyof T extends K[number] ? T : K[number] extends never ? T : Pick<T, K[number]> : T
 type KeysOf<T> = Array<T extends T ? keyof T extends string ? keyof T : never : never>
@@ -103,6 +102,13 @@ const prep = <T> (...args: any[]) => {
     clientId = clients?.default ? 'default' : Object.keys(clients!)?.[0]
 
     if (!clientId) { throw new Error('@nuxtjs/apollo: no client found') }
+  }
+
+  if (variables) {
+    variables = isRef(variables) ? variables : reactive(variables)
+
+    options.watch = options.watch || []
+    options.watch.push(variables) 
   }
 
   const key = args?.[0]?.key || hash({ query: print(query), variables, clientId })
