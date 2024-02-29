@@ -2,7 +2,7 @@
 const apis = ref([
   { label: 'Starlink', value: 'starlink' },
   { label: 'Todos', value: 'todos' },
-  { label: 'Github', value: 'github' },
+  { label: 'Github', value: 'github' }
 ])
 
 const apiCookie = useCookie('apollo_api', { default: () => apis.value[0].value })
@@ -17,8 +17,8 @@ watch(api, value => (apiCookie.value = value))
         <UCard class="p4">
           <form class="flex gap-3 items-center">
             <URadioGroup
-              :options="apis"
               v-model="api"
+              :options="apis"
               legend="Choose GraphQL API"
             />
           </form>

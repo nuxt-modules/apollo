@@ -19,7 +19,7 @@
     <UCard class="p-4">
       <div class="mb-4">
         <label for="limit" class="mr-2">Limit:</label>
-        <input class="w-10" type="number" v-model.number="limit" min="1" />
+        <input v-model.number="limit" class="w-10" type="number" min="1">
       </div>
 
       <div>
@@ -55,7 +55,7 @@ const { load, onError, refetch, result: launchResult } = useLazyQuery(queryLaunc
   fetchPolicy: 'no-cache'
 })
 watch(launchResult, v => (data.value = v))
-
+// eslint-disable-next-line no-console
 onError(e => console.error(e))
 
 const getLaunches = () => !launchResult.value ? load() : refetch()

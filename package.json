@@ -22,6 +22,7 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxi prepare playground",
+    "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore .",
     "release": "standard-version --prerelease alpha && git push --follow-tags && pnpm publish --tag next"
   },
   "dependencies": {
