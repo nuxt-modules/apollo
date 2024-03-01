@@ -69,7 +69,7 @@ const prep = <T> (...args: any[]) => {
   let query: TQuery<T>
   let variables: TVariables<T>
 
-  let cache: boolean = true
+  let cache: boolean
   let clientId: ApolloClientKeys | undefined
   let context: DefaultContext
 
@@ -79,7 +79,7 @@ const prep = <T> (...args: any[]) => {
     query = args?.[0]?.query
     variables = args?.[0]?.variables
 
-    cache = args?.[0]?.cache ?? true
+    cache = args?.[0]?.cache
     context = args?.[0]?.context
     clientId = args?.[0]?.clientId
 
@@ -118,7 +118,7 @@ const prep = <T> (...args: any[]) => {
   const fn = () => clients![clientId!]?.query<T>({
     query,
     variables: variables || undefined,
-    fetchPolicy: cache ? 'cache-first' : 'no-cache',
+    ...(cache && { fetchPolicy: 'cache-first' }),
     context
   }).then(r => r.data)
 
