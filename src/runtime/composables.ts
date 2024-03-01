@@ -26,6 +26,15 @@ export function useAsyncQuery <T> (...args: any) {
   return useAsyncData<T>(key, fn)
 }
 
+export function useClientSideAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
+export function useClientSideAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
+export function useClientSideAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<T, Error>
+
+export function useClientSideAsyncQuery <T> (...args: any) {
+  const { key, fn } = prep(...args)
+  return useAsyncData<T>(key, fn, { server: false })
+}
+
 export function useLazyAsyncQuery <T> (opts: TAsyncQuery<T>): AsyncData<T, Error>
 export function useLazyAsyncQuery <T> (query: TQuery<T>, clientId?: string): AsyncData<T, Error>
 export function useLazyAsyncQuery <T> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext): AsyncData<T, Error>
