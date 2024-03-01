@@ -1,5 +1,5 @@
 query discussions {
-  repository(owner: "nuxt", name: "framework") {
+  repository(owner: "nuxt", name: "nuxt") {
     discussions(first: 5) {
        nodes {
         author {

@@ -1,75 +1,80 @@
 <template>
-  <div flex flex-col gap-4>
-    <NCard p-4>
+  <div class="flex flex-col gap-4">
+    <UCard class="p-4">
       <div class="n-header-upper">
         Github Example
       </div>
 
       <div class="flex flex-wrap gap-3 items-center">
-        <NTextInput
+        <UInput
           v-model="githubToken"
           icon="carbon-logo-github"
           placeholder="Your Github Token"
         />
 
-        <NButton @click="setToken">
+        <UButton @click="setToken">
           Set Token
-        </NButton>
+        </UButton>
 
-        <NButton @click="clearToken">
+        <UButton @click="clearToken">
           Clear Token
-        </NButton>
+        </UButton>
       </div>
 
       <div class="mt-4 flex flex-wrap gap-3 items-center">
-        <NButton :disabled="!githubToken" @click="getViewer">
+        <UButton :disabled="!githubToken" @click="getViewer">
           Load @me
-        </NButton>
+        </UButton>
 
-        <NButton :disabled="!githubToken" @click="getNuxtDiscussions">
+        <UButton :disabled="!githubToken" @click="getNuxtDiscussions">
           Load Nuxt Discussions
-        </NButton>
+        </UButton>
       </div>
-    </NCard>
+    </UCard>
 
-    <NCard p-4>
-      <div class="n-header-upper">
+    <UCard class="p-4">
+      <div>
         Raw Output
       </div>
 
-      <pre w-100>
+      <pre class="w-100">
         {{ JSON.stringify(output, null, 2) }}
       </pre>
-    </NCard>
+    </UCard>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { ViewerT, DiscussionT } from '~/types'
 import discussions from '~/queries/discussions.gql'
+import { NuxtApollo } from '#apollo'
 
 const { getToken, onLogin, onLogout } = useApollo()
 
-const githubToken = ref<string | null>(null)
+const githubToken = useState<string | null | undefined>()
 
 // for testing with cookie `tokenStorage`
-if (process.server) { githubToken.value = await getToken('github') }
-
-onMounted(async () => {
+if (import.meta.server && NuxtApollo.clients?.github?.tokenStorage === 'cookie') {
   githubToken.value = await getToken('github')
-})
+} else if (import.meta.client) {
+  onMounted(async () => {
+    githubToken.value = await getToken('github')
+  })
+}
 
 const queryViewer = gql`query viwer { viewer { login } }`
 
 const output = ref()
 
-if (githubToken.value) {
-  const whoAmI = await useAsyncQuery({ query: queryViewer, clientId: 'github' })
+const whoAmI = await useAsyncQuery({ query: queryViewer, clientId: 'github' }, {
+  immediate: !!githubToken.value
+})
 
-  if (whoAmI?.data.value) {
-    output.value = whoAmI.data.value
-  }
-}
+watch(whoAmI.data, (data) => {
+  if (!data) { return }
+
+  output.value = data
+}, { immediate: true })
 
 const getViewer = () => {
   const { onResult, onError } = useQuery<ViewerT>(queryViewer, null, { clientId: 'github', fetchPolicy: 'cache-and-network' })
@@ -90,6 +95,5 @@ const setToken = () => {
 
   onLogin(githubToken.value, 'github')
 }
-const clearToken = () => onLogout('github').then(() => (githubToken.value = null))
-
+const clearToken = () => onLogout('github', true).then(() => (githubToken.value = null))
 </script>
