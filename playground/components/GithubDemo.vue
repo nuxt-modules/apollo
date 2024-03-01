@@ -1,46 +1,46 @@
 <template>
-  <div flex flex-col gap-4>
-    <NCard p-4>
+  <div class="flex flex-col gap-4">
+    <UCard class="p-4">
       <div class="n-header-upper">
         Github Example
       </div>
 
       <div class="flex flex-wrap gap-3 items-center">
-        <NTextInput
+        <UInput
           v-model="githubToken"
           icon="carbon-logo-github"
           placeholder="Your Github Token"
         />
 
-        <NButton @click="setToken">
+        <UButton @click="setToken">
           Set Token
-        </NButton>
+        </UButton>
 
-        <NButton @click="clearToken">
+        <UButton @click="clearToken">
           Clear Token
-        </NButton>
+        </UButton>
       </div>
 
       <div class="mt-4 flex flex-wrap gap-3 items-center">
-        <NButton :disabled="!githubToken" @click="getViewer">
+        <UButton :disabled="!githubToken" @click="getViewer">
           Load @me
-        </NButton>
+        </UButton>
 
-        <NButton :disabled="!githubToken" @click="getNuxtDiscussions">
+        <UButton :disabled="!githubToken" @click="getNuxtDiscussions">
           Load Nuxt Discussions
-        </NButton>
+        </UButton>
       </div>
-    </NCard>
+    </UCard>
 
-    <NCard p-4>
-      <div class="n-header-upper">
+    <UCard class="p-4">
+      <div>
         Raw Output
       </div>
 
-      <pre w-100>
+      <pre class="w-100">
         {{ JSON.stringify(output, null, 2) }}
       </pre>
-    </NCard>
+    </UCard>
   </div>
 </template>
 

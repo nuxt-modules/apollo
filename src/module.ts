@@ -1,9 +1,9 @@
 import { existsSync } from 'fs'
 import jiti from 'jiti'
-import type { Ref } from 'vue'
 import { defu } from 'defu'
 import { useLogger, addPlugin, addImports, addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
+import type { PluginOption } from 'vite'
 import { name, version } from '../package.json'
 import type { ClientConfig, NuxtApolloConfig, ErrorResponse } from './types'
 import { serializeConfig } from './serialize'
@@ -18,7 +18,7 @@ async function readConfigFile (path: string): Promise<ClientConfig> {
 
 export type ModuleOptions = NuxtApolloConfig
 
-export default defineNuxtModule<NuxtApolloConfig<any>>({
+export default defineNuxtModule<ModuleOptions>({
   meta: {
     name,
     version,
@@ -35,13 +35,15 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     proxyCookies: true,
     cookieAttributes: {
       maxAge: 60 * 60 * 24 * 7,
-      secure: process.env.NODE_ENV === 'production'
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
     },
     clientAwareness: false
   },
   async setup (options, nuxt) {
     if (!options.clients || !Object.keys(options.clients).length) {
-      throw new Error('[@nuxtjs/apollo] Atleast one client must be configured.')
+      logger.warn('No apollo clients configured.')
+      return
     }
 
     const { resolve } = createResolver(import.meta.url)
@@ -95,18 +97,22 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       filename: 'apollo.d.ts',
       getContents: () => [
         'import type { ClientConfig } from "@nuxtjs/apollo"',
-        'declare const clients: Record<string, ClientConfig>',
-        'declare const clientAwareness: boolean',
-        'declare const proxyCookies: boolean',
-        'declare const cookieAttributes: ClientConfig[\'cookieAttributes\']',
-        'export default { clients, clientAwareness, proxyCookies, cookieAttributes }'
+        'declare module \'#apollo\' {',
+        `  export type ApolloClientKeys = '${Object.keys(clients).join('\' | \'')}'`,
+        '  export const NuxtApollo: {',
+        '    clients: Record<ApolloClientKeys, ClientConfig>',
+        '    clientAwareness: boolean',
+        '    proxyCookies: boolean',
+        '    cookieAttributes: ClientConfig[\'cookieAttributes\']',
+        '  }',
+        '}'
       ].join('\n')
     })
 
     addTemplate({
       filename: 'apollo.mjs',
       getContents: () => [
-        'export default {',
+        'export const NuxtApollo = {',
         ` proxyCookies: ${options.proxyCookies},`,
         ` clientAwareness: ${options.clientAwareness},`,
         ` cookieAttributes: ${serializeConfig(options.cookieAttributes)},`,
@@ -154,7 +160,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
       config.optimizeDeps.exclude.push('@vue/apollo-composable')
 
       config.plugins = config.plugins || []
-      config.plugins.push(GraphQLPlugin())
+      config.plugins.push(GraphQLPlugin() as PluginOption)
 
       if (!nuxt.options.dev) { config.define = { ...config.define, __DEV__: false } }
     })
@@ -191,21 +197,12 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
 
 export const defineApolloClient = (config: ClientConfig) => config
 
-export interface RuntimeModuleHooks {
-  'apollo:auth': (params: { client: string, token: Ref<string | null> }) => void
-  'apollo:error': (error: ErrorResponse) => void
-}
-
 export interface ModuleRuntimeConfig {
   apollo: NuxtApolloConfig<any>
 }
 
 export interface ModulePublicRuntimeConfig {
   apollo: NuxtApolloConfig<any>
-}
-
-declare module '#app' {
-  interface RuntimeNuxtHooks extends RuntimeModuleHooks {}
 }
 
 declare module '@nuxt/schema' {

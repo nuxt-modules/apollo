@@ -11,6 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   // Nuxt Apollo error hook
   nuxtApp.hook('apollo:error', (error: ErrorResponse) => {
+    // eslint-disable-next-line no-console
     console.log('Apollo Error Handler', error)
   })
 })

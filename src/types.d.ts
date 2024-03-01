@@ -1,15 +1,9 @@
 import type { ClientOptions } from 'graphql-ws'
-import type { ApolloClient, HttpOptions, DefaultOptions, InMemoryCacheConfig } from '@apollo/client'
-import type { CookieOptions } from 'nuxt/dist/app/composables'
-import type { RestartableClient } from './runtime/ws'
+import type { HttpOptions, DefaultOptions, InMemoryCacheConfig } from '@apollo/client'
+import type { CookieOptions } from 'nuxt/app'
 export type { ErrorResponse } from '@apollo/client/link/error'
 
 type CookieAttributes = Omit< CookieOptions, 'encode' | 'decode' | 'expires' | 'default'>;
-
-export type NuxtAppApollo = Partial<{
-  _apolloClients?: Record<string, ApolloClient<any>>;
-  _apolloWsClients?: Record<string, RestartableClient>;
-}>;
 
 export type ClientConfig = {
   /**
@@ -108,7 +102,7 @@ export type ClientConfig = {
   cookieAttributes?: CookieAttributes;
 };
 
-export interface NuxtApolloConfig<T = ClientConfig> {
+export interface NuxtApolloConfig<T = false> {
   /**
    * Determine if vue-apollo composables should be automatically imported.
    * @type {boolean}
@@ -119,7 +113,7 @@ export interface NuxtApolloConfig<T = ClientConfig> {
   /**
    * Configuration of the Apollo clients.
    **/
-  clients?: Record< string, T extends boolean ? string | ClientConfig : ClientConfig >;
+  clients?: Record< string, T extends false ? string | ClientConfig : ClientConfig >;
 
   /**
    * Default options to be applied to all Apollo clients.

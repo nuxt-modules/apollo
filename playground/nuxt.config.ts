@@ -1,8 +1,10 @@
 export default defineNuxtConfig({
+  devtools: { enabled: true },
+
   modules: ['@nuxt/ui', '@nuxtjs/apollo'],
 
   colorMode: {
-    preference: 'light',
+    preference: 'dark',
     storageKey: 'na-color-scheme'
   },
 
@@ -18,7 +20,7 @@ export default defineNuxtConfig({
         wsEndpoint: 'wss://nuxt-gql-server-2gl6xp7kua-ue.a.run.app/query',
         httpLinkOptions: {
           headers: {
-            'X-CUSTOM-HEADER': 123
+            'X-CUSTOM-HEADER': '123'
           }
         }
       }

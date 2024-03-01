@@ -6,29 +6,34 @@ import { ApolloClients, provideApolloClients } from '@vue/apollo-composable'
 import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, split } from '@apollo/client/core'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { setContext } from '@apollo/client/link/context'
+import type { ClientConfig, ErrorResponse } from '../types'
 import createRestartableClient from './ws'
 import { useApollo } from './composables'
 import { ref, useCookie, defineNuxtPlugin, useRequestHeaders } from '#imports'
+import type { Ref } from '#imports'
 
-import NuxtApollo from '#apollo'
+import { NuxtApollo } from '#apollo'
+import type { ApolloClientKeys } from '#apollo'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const requestCookies = (process.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
 
-  const clients: { [key: string]: ApolloClient<any> } = {}
+  const clients = {} as Record<ApolloClientKeys, ApolloClient<any>>
 
-  for (const [key, clientConfig] of Object.entries(NuxtApollo.clients)) {
+  for (const [key, clientConfig] of Object.entries(NuxtApollo.clients) as [ApolloClientKeys, ClientConfig][]) {
     const getAuth = async () => {
-      const token = ref<string | null>()
+      const token = ref<string | null>(null)
 
       await nuxtApp.callHook('apollo:auth', { token, client: key })
 
       if (!token.value) {
         if (clientConfig.tokenStorage === 'cookie') {
           if (process.client) {
-            token.value = useCookie(clientConfig.tokenName!).value
+            const t = useCookie(clientConfig.tokenName!).value
+            if (t) { token.value = t }
           } else if (requestCookies?.cookie) {
-            token.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+            const t = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+            if (t) { token.value = t }
           }
         } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
           token.value = localStorage.getItem(clientConfig.tokenName!)
@@ -82,6 +87,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       wsLink = new GraphQLWsLink(wsClient)
 
       nuxtApp._apolloWsClients = nuxtApp._apolloWsClients || {}
+
+      // @ts-ignore
       nuxtApp._apolloWsClients[key] = wsClient
     }
 
@@ -109,7 +116,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     const cache = new InMemoryCache(clientConfig.inMemoryCacheOptions)
 
-    clients[key] = new ApolloClient({
+    clients[key as ApolloClientKeys] = new ApolloClient({
       link,
       cache,
       ...(NuxtApollo.clientAwareness && { name: key }),
@@ -121,7 +128,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     })
 
     if (!clients?.default && !NuxtApollo?.clients?.default && key === Object.keys(NuxtApollo.clients)[0]) {
-      clients.default = clients[key]
+      clients.default = clients[key as ApolloClientKeys]
     }
 
     const cacheKey = `_apollo:${key}`
@@ -149,3 +156,30 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   }
 })
+
+export interface ModuleRuntimeHooks {
+  'apollo:auth': (params: { client: ApolloClientKeys, token: Ref<string | null> }) => void
+  'apollo:error': (error: ErrorResponse) => void
+}
+
+interface DollarApolloHelpers extends ReturnType<typeof useApollo> {}
+interface DollarApollo {
+  clients: Record<ApolloClientKeys, ApolloClient<any>>
+  defaultClient: ApolloClient<any>
+}
+
+declare module '#app' {
+  interface RuntimeNuxtHooks extends ModuleRuntimeHooks {}
+  interface NuxtApp {
+    $apolloHelpers: DollarApolloHelpers
+    $apollo: DollarApollo
+  }
+}
+
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $apolloHelpers: DollarApolloHelpers
+    // @ts-ignore
+    $apollo: DollarApollo
+  }
+}

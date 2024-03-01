@@ -1,32 +1,32 @@
 <template>
-  <div flex flex-col gap-4>
-    <NCard p-4>
+  <div class="flex flex-col gap-4">
+    <UCard class="p-4">
       <div class="n-header-upper">
         Todos Example
       </div>
 
       <div class="flex flex-wrap gap-3 items-center">
-        <NButton @click="refresh">
+        <UButton @click="refresh">
           Load Todos
-        </NButton>
+        </UButton>
 
-        <NButton :disabled="!subscribe" @click="createTodo">
+        <UButton :disabled="!subscribe" @click="createTodo">
           Create Todo
-        </NButton>
+        </UButton>
 
-        <NButton :disabled="subscribe" @click="todoAdded">
+        <UButton :disabled="subscribe" @click="todoAdded">
           Subscribe
-        </NButton>
+        </UButton>
       </div>
-    </NCard>
+    </UCard>
 
-    <NCard p-4>
-      <div class="n-header-upper">
+    <UCard class="p-4">
+      <div>
         Raw Output
       </div>
 
       <pre v-if="data">{{ data }}</pre>
-    </NCard>
+    </UCard>
   </div>
 </template>
 
@@ -35,7 +35,8 @@ const gqlTodos = gql`query todo { todos { id text } }`
 const gqlCreateTodo = gql`mutation createTodo($todo: TodoInput!) { createTodo(todo: $todo) { id } }`
 const gqlTodoAdded = gql`subscription todoAdded { todoAdded { id text } }`
 
-const { data, refresh } = await useAsyncQuery(gqlTodos, 'todos')
+type TodoEntry = { id: string, text: string }
+const { data, refresh } = await useAsyncQuery<TodoEntry[]>(gqlTodos, null, 'todos')
 
 const { mutate: todoMutation } = useMutation(gqlCreateTodo, { clientId: 'todos' })
 
@@ -59,6 +60,7 @@ function todoAdded () {
   })
 
   onError((e) => {
+    // eslint-disable-next-line no-console
     console.log(e)
   })
 }
