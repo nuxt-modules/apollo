@@ -43,7 +43,8 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup (options, nuxt) {
     if (!options.clients || !Object.keys(options.clients).length) {
-      throw new Error('[@nuxtjs/apollo] Atleast one client must be configured.')
+      logger.warn('No apollo clients configured.')
+      return
     }
 
     const { resolve } = createResolver(import.meta.url)

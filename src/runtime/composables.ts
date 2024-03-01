@@ -13,14 +13,40 @@ type KeysOf<T> = Array<T extends T ? keyof T extends string ? keyof T : never : 
 type TQuery<T> = QueryOptions<OperationVariables, T>['query']
 type TVariables<T> = QueryOptions<OperationVariables, T>['variables'] | null
 type TAsyncQuery<T> = {
+  /**
+   * A unique key to ensure the query can be properly de-duplicated across requests. Defaults to a hash of the query and variables.
+   */
   key?: string
+  /**
+   * A GraphQL query string parsed into an AST with the gql template literal.
+   */
   query: TQuery<T>
+  /**
+   * An object containing all of the GraphQL variables your query requires to execute.
+   *
+   * Each key in the object corresponds to a variable name, and that key's value corresponds to the variable value.
+   */
   variables?: TVariables<T>
+  /**
+   * The name of the Apollo Client to use. Defaults to `default`.
+   */
   clientId?: ApolloClientKeys
+  /**
+   * If you're using Apollo Link, this object is the initial value of the context object that's passed along your link chain.
+   */
   context?: DefaultContext
+  /**
+   * If `true`, this overrides the default fetchPolicy for the Apollo Client to `cache-first`.
+   * */
   cache?: boolean
 }
 
+/**
+ * `useAsyncQuery` resolves the GraphQL query asynchronously in a SSR-friendly composable.
+ *
+ * @param opts An object containing the query, variables, clientId, context, and cache options.
+ * @param options Customize the underlying `useAsyncData` composable.
+ */
 export function useAsyncQuery <
   T,
   DataT = T,
@@ -29,6 +55,15 @@ export function useAsyncQuery <
   NuxtErrorDataT = unknown
 > (opts: TAsyncQuery<T>, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
+/**
+ * `useAsyncQuery` resolves the GraphQL query asynchronously in a SSR-friendly composable.
+ *
+ * @param query A GraphQL query string parsed into an AST with the gql template literal.
+ * @param variables An object containing all of the GraphQL variables your query requires to execute.
+ * @param clientId The name of the Apollo Client to use. Defaults to `default`.
+ * @param context The context object that's passed along your link chain.
+ * @param options Customize the underlying `useAsyncData` composable.
+ */
 export function useAsyncQuery <
   T,
   DataT = T,
@@ -42,6 +77,12 @@ export function useAsyncQuery <T> (...args: any[]) {
   return useAsyncData<T>(key, fn, options)
 }
 
+/**
+ * `useLazyAsyncQuery` resolves the GraphQL query after loading the route, instead of blocking client-side navigation.
+ *
+ * @param opts An object containing the query, variables, clientId, context, and cache options.
+ * @param options Customize the underlying `useAsyncData` composable.
+ */
 export function useLazyAsyncQuery <
   T,
   DataT = T,
@@ -50,6 +91,15 @@ export function useLazyAsyncQuery <
   NuxtErrorDataT = unknown
 > (opts: TAsyncQuery<T>, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
+/**
+ * `useLazyAsyncQuery` resolves the GraphQL query after loading the route, instead of blocking client-side navigation.
+ *
+ * @param query A GraphQL query string parsed into an AST with the gql template literal.
+ * @param variables An object containing all of the GraphQL variables your query requires to execute.
+ * @param clientId The name of the Apollo Client to use. Defaults to `default`.
+ * @param context The context object that's passed along your link chain.
+ * @param options Customize the underlying `useAsyncData` composable.
+ */
 export function useLazyAsyncQuery <
   T,
   DataT = T,
@@ -113,7 +163,7 @@ const prep = <T> (...args: any[]) => {
     options.watch.push(variables)
   }
 
-  const key = args?.[0]?.key || hash({ query: print(query), variables, clientId })
+  const key: string = args?.[0]?.key || hash({ query: print(query), variables, clientId })
 
   const fn = () => clients![clientId!]?.query<T>({
     query,
@@ -126,9 +176,32 @@ const prep = <T> (...args: any[]) => {
 }
 
 export function useApollo (): {
+  /**
+   * Access the configured apollo clients.
+   */
   clients: Record<ApolloClientKeys, ApolloClient<any>> | undefined
+  /**
+   * Retrieve the auth token for the specified client. Adheres to the `apollo:auth` hook.
+   *
+   * @param {string} client The client who's token to retrieve. Defaults to `default`.
+   */
   getToken: (client?: ApolloClientKeys) => Promise<string | null | undefined>
+
+  /**
+   * Apply auth token to the specified Apollo client, and optionally reset it's cache.
+   *
+   * @param {string} token The token to be applied.
+   * @param {string} client - Name of the Apollo client. Defaults to `default`.
+   * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
+   * */
   onLogin: (token?: string, client?: ApolloClientKeys, skipResetStore?: boolean) => Promise<void>
+
+  /**
+   * Remove the auth token from the Apollo client, and optionally reset it's cache.
+   *
+   * @param {string} client - Name of the Apollo client. Defaults to `default`.
+   * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
+   * */
   onLogout: (client?: ApolloClientKeys, skipResetStore?: boolean) => Promise<void>
 }
 
@@ -186,33 +259,12 @@ export function useApollo () {
   }
 
   return {
-    /**
-     * Retrieve the auth token for the specified client. Adheres to the `apollo:auth` hook.
-     *
-     * @param {string} client The client who's token to retrieve. Defaults to `default`.
-     */
     getToken,
 
-    /**
-     * Access the configured apollo clients.
-     */
     clients: nuxtApp?._apolloClients,
 
-    /**
-     * Apply auth token to the specified Apollo client, and optionally reset it's cache.
-     *
-     * @param {string} token The token to be applied.
-     * @param {string} client - Name of the Apollo client. Defaults to `default`.
-     * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
-     * */
     onLogin: (token?: string, client?: ApolloClientKeys, skipResetStore?: boolean) => updateAuth({ token, client, skipResetStore, mode: 'login' }),
 
-    /**
-     * Remove the auth token from the Apollo client, and optionally reset it's cache.
-     *
-     * @param {string} client - Name of the Apollo client. Defaults to `default`.
-     * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
-     * */
     onLogout: (client?: ApolloClientKeys, skipResetStore?: boolean) => updateAuth({ client, skipResetStore, mode: 'logout' })
   }
 }
