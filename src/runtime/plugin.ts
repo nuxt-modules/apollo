@@ -6,9 +6,11 @@ import { ApolloClients, provideApolloClients } from '@vue/apollo-composable'
 import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, split } from '@apollo/client/core'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
 import { setContext } from '@apollo/client/link/context'
+import type { ClientConfig, ErrorResponse } from '../types'
 import createRestartableClient from './ws'
 import { useApollo } from './composables'
 import { ref, useCookie, defineNuxtPlugin, useRequestHeaders } from '#imports'
+import type { Ref } from '#imports'
 
 import { NuxtApollo } from '#apollo'
 import type { ApolloClientKeys } from '#apollo'
@@ -18,7 +20,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const clients = {} as Record<ApolloClientKeys, ApolloClient<any>>
 
-  for (const [key, clientConfig] of Object.entries(NuxtApollo.clients)) {
+  for (const [key, clientConfig] of Object.entries(NuxtApollo.clients) as [ApolloClientKeys, ClientConfig][]) {
     const getAuth = async () => {
       const token = ref<string | null>(null)
 
@@ -155,6 +157,11 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 })
 
+export interface ModuleRuntimeHooks {
+  'apollo:auth': (params: { client: ApolloClientKeys, token: Ref<string | null> }) => void
+  'apollo:error': (error: ErrorResponse) => void
+}
+
 interface DollarApolloHelpers extends ReturnType<typeof useApollo> {}
 interface DollarApollo {
   clients: Record<ApolloClientKeys, ApolloClient<any>>
@@ -162,6 +169,7 @@ interface DollarApollo {
 }
 
 declare module '#app' {
+  interface RuntimeNuxtHooks extends ModuleRuntimeHooks {}
   interface NuxtApp {
     $apolloHelpers: DollarApolloHelpers
     $apollo: DollarApollo

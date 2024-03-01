@@ -1,6 +1,5 @@
 import { existsSync } from 'fs'
 import jiti from 'jiti'
-import type { Ref } from 'vue'
 import { defu } from 'defu'
 import { useLogger, addPlugin, addImports, addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 import GraphQLPlugin from '@rollup/plugin-graphql'
@@ -198,21 +197,12 @@ export default defineNuxtModule<ModuleOptions>({
 
 export const defineApolloClient = (config: ClientConfig) => config
 
-export interface ModuleRuntimeHooks {
-  'apollo:auth': (params: { client: string, token: Ref<string | null> }) => void
-  'apollo:error': (error: ErrorResponse) => void
-}
-
 export interface ModuleRuntimeConfig {
   apollo: NuxtApolloConfig<any>
 }
 
 export interface ModulePublicRuntimeConfig {
   apollo: NuxtApolloConfig<any>
-}
-
-declare module '#app' {
-  interface RuntimeNuxtHooks extends ModuleRuntimeHooks {}
 }
 
 declare module '@nuxt/schema' {
