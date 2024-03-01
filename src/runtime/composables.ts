@@ -1,7 +1,7 @@
 import { hash } from 'ohash'
 import { print } from 'graphql'
 import type { ApolloClient, OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
-import type { AsyncData, AsyncDataOptions, NuxtError } from 'nuxt/app'
+import type { AsyncData, AsyncDataOptions, NuxtError, NuxtApp } from 'nuxt/app'
 import type { RestartableClient } from './ws'
 import { ref, isRef, reactive, useCookie, useNuxtApp, useAsyncData } from '#imports'
 import { NuxtApollo } from '#apollo'
@@ -192,7 +192,7 @@ export function useApollo (): {
    *
    * @param {string} token The token to be applied.
    * @param {string} client - Name of the Apollo client. Defaults to `default`.
-   * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
+   * @param {boolean} skipResetStore - If `false`, Resets your entire store by clearing out your cache and then re-executing all of your active queries.
    * */
   onLogin: (token?: string, client?: ApolloClientKeys, skipResetStore?: boolean) => Promise<void>
 
@@ -200,21 +200,23 @@ export function useApollo (): {
    * Remove the auth token from the Apollo client, and optionally reset it's cache.
    *
    * @param {string} client - Name of the Apollo client. Defaults to `default`.
-   * @param {boolean} skipResetStore - If `true`, the cache will not be reset.
+   * @param {boolean} skipResetStore - If `false`, Resets your entire store by clearing out your cache and then re-executing all of your active queries.
    * */
   onLogout: (client?: ApolloClientKeys, skipResetStore?: boolean) => Promise<void>
 }
 
 export function useApollo () {
-  const nuxtApp = useNuxtApp() as {
-    _apolloClients?: Record<ApolloClientKeys, ApolloClient<any>>;
-    _apolloWsClients?: Record<ApolloClientKeys, RestartableClient>;
+  const nuxtApp = useNuxtApp() as NuxtApp & {
+    _apolloClients?: Record<ApolloClientKeys, ApolloClient<any>>
+    _apolloWsClients?: Record<ApolloClientKeys, RestartableClient>
   }
 
   const getToken = async (client?: ApolloClientKeys) => {
     client = client || 'default'
 
     const conf = NuxtApollo?.clients?.[client]
+
+    if (!conf) { return }
 
     const token = ref<string | null>(null)
     await (nuxtApp as ReturnType<typeof useNuxtApp>).callHook('apollo:auth', { token, client })
@@ -223,13 +225,17 @@ export function useApollo () {
 
     const tokenName = conf.tokenName!
 
-    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (process.client && localStorage.getItem(tokenName)) || null
+    return conf?.tokenStorage === 'cookie'
+      ? nuxtApp.runWithContext(() => useCookie(tokenName).value)
+      : (process.client && localStorage.getItem(tokenName)) || null
   }
   type TAuthUpdate = {token?: string, client?: ApolloClientKeys, mode: 'login' | 'logout', skipResetStore?: boolean}
   const updateAuth = async ({ token, client, mode, skipResetStore }: TAuthUpdate) => {
     client = client || 'default'
 
     const conf = NuxtApollo?.clients?.[client]
+
+    if (!conf) { return }
 
     const tokenName = client && conf.tokenName!
 

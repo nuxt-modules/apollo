@@ -47,29 +47,34 @@
 <script lang="ts" setup>
 import type { ViewerT, DiscussionT } from '~/types'
 import discussions from '~/queries/discussions.gql'
+import { NuxtApollo } from '#apollo'
 
 const { getToken, onLogin, onLogout } = useApollo()
 
-const githubToken = ref<string | null>(null)
+const githubToken = useState<string | null | undefined>()
 
 // for testing with cookie `tokenStorage`
-if (process.server) { githubToken.value = await getToken('github') }
-
-onMounted(async () => {
+if (import.meta.server && NuxtApollo.clients?.github?.tokenStorage === 'cookie') {
   githubToken.value = await getToken('github')
-})
+} else if (import.meta.client) {
+  onMounted(async () => {
+    githubToken.value = await getToken('github')
+  })
+}
 
 const queryViewer = gql`query viwer { viewer { login } }`
 
 const output = ref()
 
-if (githubToken.value) {
-  const whoAmI = await useAsyncQuery({ query: queryViewer, clientId: 'github' })
+const whoAmI = await useAsyncQuery({ query: queryViewer, clientId: 'github' }, {
+  immediate: !!githubToken.value
+})
 
-  if (whoAmI?.data.value) {
-    output.value = whoAmI.data.value
-  }
-}
+watch(whoAmI.data, (data) => {
+  if (!data) { return }
+
+  output.value = data
+}, { immediate: true })
 
 const getViewer = () => {
   const { onResult, onError } = useQuery<ViewerT>(queryViewer, null, { clientId: 'github', fetchPolicy: 'cache-and-network' })
@@ -90,6 +95,5 @@ const setToken = () => {
 
   onLogin(githubToken.value, 'github')
 }
-const clearToken = () => onLogout('github').then(() => (githubToken.value = null))
-
+const clearToken = () => onLogout('github', true).then(() => (githubToken.value = null))
 </script>
