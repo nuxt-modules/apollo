@@ -28,7 +28,10 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     }
   },
   defaults: {
-    autoImports: true,
+    autoImports: {
+      gql: true,
+      'vue-apollo': true
+    },
     authType: 'Bearer',
     authHeader: 'Authorization',
     tokenStorage: 'cookie',
@@ -122,31 +125,37 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     // TODO: Integrate @vue/apollo-components?
 
     addImports([
-      { name: 'gql', from: 'graphql-tag' },
-      ...[
-        'useApollo',
-        'useAsyncQuery',
-        'useLazyAsyncQuery'
-      ].map(n => ({ name: n, from: resolve('runtime/composables') })),
-      ...(!options?.autoImports
-        ? []
-        : [
-            'useQuery',
-            'useLazyQuery',
-            'useMutation',
-            'useSubscription',
+      'useApollo',
+      'useAsyncQuery',
+      'useLazyAsyncQuery'
+    ].map(n => ({ name: n, from: resolve('runtime/composables') })))
 
-            'useApolloClient',
+    // Resolve individual autoImport config
+    const shouldAutoImportGqlTag = typeof options.autoImports === 'boolean' ? options.autoImports : options.autoImports?.gql
+    const shouldAutoImportVueApolloComposables = typeof options.autoImports === 'boolean' ? options.autoImports : options.autoImports?.['vue-apollo']
 
-            'useQueryLoading',
-            'useMutationLoading',
-            'useSubscriptionLoading',
-
-            'useGlobalQueryLoading',
-            'useGlobalMutationLoading',
-            'useGlobalSubscriptionLoading'
-          ].map(n => ({ name: n, from: '@vue/apollo-composable' })))
-    ])
+    if (shouldAutoImportGqlTag) {
+      addImports({ name: 'gql', from: 'graphql-tag' })
+    }
+    if (shouldAutoImportVueApolloComposables) {
+      addImports([
+        ...(!options?.autoImports
+          ? []
+          : [
+              'useQuery',
+              'useLazyQuery',
+              'useMutation',
+              'useSubscription',
+              'useApolloClient',
+              'useQueryLoading',
+              'useMutationLoading',
+              'useSubscriptionLoading',
+              'useGlobalQueryLoading',
+              'useGlobalMutationLoading',
+              'useGlobalSubscriptionLoading'
+            ].map(n => ({ name: n, from: '@vue/apollo-composable' })))
+      ])
+    }
 
     nuxt.hook('vite:extendConfig', (config) => {
       config.optimizeDeps = config.optimizeDeps || {}
