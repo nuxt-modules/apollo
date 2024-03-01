@@ -55,5 +55,5 @@
   "resolutions": {
     "@nuxtjs/apollo": "link:."
   },
-  "packageManager": "pnpm@8.15.2"
+  "packageManager": "pnpm@8.15.4"
 }
