@@ -154,3 +154,24 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   }
 })
+
+interface DollarApolloHelpers extends ReturnType<typeof useApollo> {}
+interface DollarApollo {
+  clients: Record<ApolloClientKeys, ApolloClient<any>>
+  defaultClient: ApolloClient<any>
+}
+
+declare module '#app' {
+  interface NuxtApp {
+    $apolloHelpers: DollarApolloHelpers
+    $apollo: DollarApollo
+  }
+}
+
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $apolloHelpers: DollarApolloHelpers
+    // @ts-ignore
+    $apollo: DollarApollo
+  }
+}
