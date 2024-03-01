@@ -36,7 +36,8 @@ export default defineNuxtModule<ModuleOptions>({
     proxyCookies: true,
     cookieAttributes: {
       maxAge: 60 * 60 * 24 * 7,
-      secure: process.env.NODE_ENV === 'production'
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
     },
     clientAwareness: false
   },
