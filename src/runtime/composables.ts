@@ -3,7 +3,7 @@ import { print } from 'graphql'
 import type { ApolloClient, OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
 import type { AsyncData, AsyncDataOptions, NuxtError, NuxtApp } from 'nuxt/app'
 import type { RestartableClient } from './ws'
-import { ref, isRef, reactive, useCookie, useNuxtApp, useAsyncData } from '#imports'
+import { ref, unref, isRef, reactive, useCookie, useNuxtApp, useAsyncData } from '#imports'
 import { NuxtApollo } from '#apollo'
 import type { ApolloClientKeys } from '#apollo'
 
@@ -163,11 +163,11 @@ const prep = <T> (...args: any[]) => {
     options.watch.push(variables)
   }
 
-  const key: string = args?.[0]?.key || hash({ query: print(query), variables, clientId })
+  const key: string = args?.[0]?.key || hash({ query: print(query), unref(variables), clientId })
 
   const fn = () => clients![clientId!]?.query<T>({
     query,
-    variables: variables || undefined,
+    variables: unref(variables) || undefined,
     ...(cache && { fetchPolicy: 'cache-first' }),
     context
   }).then(r => r.data)
