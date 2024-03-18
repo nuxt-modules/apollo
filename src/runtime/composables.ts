@@ -163,7 +163,7 @@ const prep = <T> (...args: any[]) => {
     options.watch.push(variables)
   }
 
-  const key: string = args?.[0]?.key || hash({ query: print(query), unref(variables), clientId })
+  const key: string = args?.[0]?.key || hash({ query: print(query), variables: unref(variables), clientId })
 
   const fn = () => clients![clientId!]?.query<T>({
     query,
