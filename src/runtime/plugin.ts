@@ -124,7 +124,8 @@ export default defineNuxtPlugin((nuxtApp) => {
         ? { ssrMode: true }
         : { ssrForceFetchDelay: 100 }),
       connectToDevTools: clientConfig.connectToDevTools || false,
-      defaultOptions: clientConfig?.defaultOptions
+      defaultOptions: clientConfig?.defaultOptions,
+      queryDeduplication: NuxtApollo.queryDeduplication
     })
 
     if (!clients?.default && !NuxtApollo?.clients?.default && key === Object.keys(NuxtApollo.clients)[0]) {
