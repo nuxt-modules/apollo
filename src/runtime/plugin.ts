@@ -13,7 +13,7 @@ import { ref, useCookie, defineNuxtPlugin, useRequestHeaders } from '#imports'
 import NuxtApollo from '#apollo'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const requestCookies = (process.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
+  const requestCookies = (import.meta.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
 
   const clients: { [key: string]: ApolloClient<any> } = {}
 
@@ -25,12 +25,12 @@ export default defineNuxtPlugin((nuxtApp) => {
 
       if (!token.value) {
         if (clientConfig.tokenStorage === 'cookie') {
-          if (process.client) {
+          if (import.meta.client) {
             token.value = useCookie(clientConfig.tokenName!).value
           } else if (requestCookies?.cookie) {
             token.value = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
           }
-        } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
+        } else if (import.meta.client && clientConfig.tokenStorage === 'localStorage') {
           token.value = localStorage.getItem(clientConfig.tokenName!)
         }
 
@@ -60,13 +60,13 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     const httpLink = authLink.concat(createHttpLink({
       ...(clientConfig?.httpLinkOptions && clientConfig.httpLinkOptions),
-      uri: (process.client && clientConfig.browserHttpEndpoint) || clientConfig.httpEndpoint,
+      uri: (import.meta.client && clientConfig.browserHttpEndpoint) || clientConfig.httpEndpoint,
       headers: { ...(clientConfig?.httpLinkOptions?.headers || {}) }
     }))
 
     let wsLink: GraphQLWsLink | null = null
 
-    if (process.client && clientConfig.wsEndpoint) {
+    if (import.meta.client && clientConfig.wsEndpoint) {
       const wsClient = createRestartableClient({
         ...clientConfig.wsLinkOptions,
         url: clientConfig.wsEndpoint,
@@ -113,7 +113,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       link,
       cache,
       ...(NuxtApollo.clientAwareness && { name: key }),
-      ...(process.server
+      ...(import.meta.server
         ? { ssrMode: true }
         : { ssrForceFetchDelay: 100 }),
       connectToDevTools: clientConfig.connectToDevTools || false,
@@ -130,7 +130,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       nuxtApp.payload.data[cacheKey] = cache.extract()
     })
 
-    if (process.client && nuxtApp.payload.data[cacheKey]) {
+    if (import.meta.client && nuxtApp.payload.data[cacheKey]) {
       cache.restore(destr(JSON.stringify(nuxtApp.payload.data[cacheKey])))
     }
   }

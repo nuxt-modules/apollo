@@ -53,7 +53,7 @@ const { getToken, onLogin, onLogout } = useApollo()
 const githubToken = ref<string | null>(null)
 
 // for testing with cookie `tokenStorage`
-if (process.server) { githubToken.value = await getToken('github') }
+if (import.meta.server) { githubToken.value = await getToken('github') }
 
 onMounted(async () => {
   githubToken.value = await getToken('github')

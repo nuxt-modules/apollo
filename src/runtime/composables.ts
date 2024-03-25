@@ -70,7 +70,7 @@ export const useApollo = () => {
 
     const tokenName = conf.tokenName!
 
-    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (process.client && localStorage.getItem(tokenName)) || null
+    return conf?.tokenStorage === 'cookie' ? useCookie(tokenName).value : (import.meta.client && localStorage.getItem(tokenName)) || null
   }
   type TAuthUpdate = {token?: string, client?: string, mode: 'login' | 'logout', skipResetStore?: boolean}
   const updateAuth = async ({ token, client, mode, skipResetStore }: TAuthUpdate) => {
@@ -88,7 +88,7 @@ export const useApollo = () => {
       if (!cookie.value && mode === 'logout') { return }
 
       cookie.value = (mode === 'login' && token) || null
-    } else if (process.client && conf?.tokenStorage === 'localStorage') {
+    } else if (import.meta.client && conf?.tokenStorage === 'localStorage') {
       if (mode === 'login' && token) {
         localStorage.setItem(tokenName, token)
       } else if (mode === 'logout') {
