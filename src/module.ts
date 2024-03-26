@@ -1,3 +1,4 @@
+import { relative, resolve } from 'node:path'
 import { existsSync } from 'fs'
 import jiti from 'jiti'
 import type { Ref } from 'vue'
@@ -176,6 +177,7 @@ export default defineNuxtModule<NuxtApolloConfig<any>>({
     })
 
     nuxt.hook('builder:watch', async (_event, path) => {
+      path = relative(nuxt.options.srcDir, resolve(nuxt.options.srcDir, path))
       if (!Object.values(configPaths).some(p => p.includes(path))) { return }
 
       logger.log('[@nuxtjs/apollo] Reloading Apollo configuration')
