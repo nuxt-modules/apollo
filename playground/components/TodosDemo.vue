@@ -10,11 +10,17 @@
           Load Todos
         </UButton>
 
-        <UButton :disabled="!subscribe" @click="createTodo">
+        <UButton
+          :disabled="!subscribe"
+          @click="createTodo"
+        >
           Create Todo
         </UButton>
 
-        <UButton :disabled="subscribe" @click="todoAdded">
+        <UButton
+          :disabled="subscribe"
+          @click="todoAdded"
+        >
           Subscribe
         </UButton>
       </div>
@@ -40,17 +46,17 @@ const { data, refresh } = await useAsyncQuery<TodoEntry[]>(gqlTodos, null, 'todo
 
 const { mutate: todoMutation } = useMutation(gqlCreateTodo, { clientId: 'todos' })
 
-function createTodo () {
+function createTodo() {
   todoMutation({
     todo: {
-      text: 'Random ' + Math.floor(Math.random() * 100)
-    }
+      text: 'Random ' + Math.floor(Math.random() * 100),
+    },
   })
 }
 
 const subscribe = ref(false)
 
-function todoAdded () {
+function todoAdded() {
   subscribe.value = true
 
   const { onResult, onError } = useSubscription(gqlTodoAdded, null, { clientId: 'todos' })
@@ -60,7 +66,6 @@ function todoAdded () {
   })
 
   onError((e) => {
-    // eslint-disable-next-line no-console
     console.log(e)
   })
 }

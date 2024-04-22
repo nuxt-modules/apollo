@@ -2,7 +2,7 @@
 const apis = ref([
   { label: 'Starlink', value: 'starlink' },
   { label: 'Todos', value: 'todos' },
-  { label: 'Github', value: 'github' }
+  { label: 'Github', value: 'github' },
 ])
 
 const apiCookie = useCookie('apollo_api', { default: () => apis.value[0].value })

@@ -13,7 +13,8 @@ export const serializeConfig = (obj: any): string => {
   if (typeof obj === 'object') {
     if (Array.isArray(obj)) {
       return `[${obj.map(serializeConfig).join(', ')}]`
-    } else {
+    }
+    else {
       return `{${Object.entries(obj).map(([key, value]) => `${serializeConfig(key)}: ${serializeConfig(value)}`).join(', ')}}`
     }
   }

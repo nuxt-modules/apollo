@@ -26,8 +26,8 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build build --stub && nuxi prepare playground",
-    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
-    "lint:fix": "eslint --fix --ext .js,.ts,.vue --ignore-path .gitignore .",
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint:fix": "eslint --fix --ignore-path .gitignore .",
     "release": "standard-version --prerelease alpha && git push --follow-tags && pnpm publish --tag next"
   },
   "dependencies": {
@@ -48,10 +48,10 @@
     "@nuxt/module-builder": "^0.5.5",
     "@nuxt/schema": "^3.10.3",
     "@nuxt/ui": "^2.14.1",
-    "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@types/node": "^20.11.24",
-    "eslint": "^8.57.0",
-    "nuxt": "^3.10.3"
+    "eslint": "^9.1.1",
+    "nuxt": "^3.10.3",
+    "@nuxt/eslint-config": "^0.3.9"
   },
   "publishConfig": {
     "access": "public"

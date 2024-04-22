@@ -16,7 +16,7 @@ import { NuxtApollo } from '#apollo'
 import type { ApolloClientKeys } from '#apollo'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const requestCookies = (process.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
+  const requestCookies = (import.meta.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
 
   const clients = {} as Record<ApolloClientKeys, ApolloClient<any>>
 
@@ -28,14 +28,16 @@ export default defineNuxtPlugin((nuxtApp) => {
 
       if (!token.value) {
         if (clientConfig.tokenStorage === 'cookie') {
-          if (process.client) {
+          if (import.meta.client) {
             const t = useCookie(clientConfig.tokenName!).value
             if (t) { token.value = t }
-          } else if (requestCookies?.cookie) {
+          }
+          else if (requestCookies?.cookie) {
             const t = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
             if (t) { token.value = t }
           }
-        } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
+        }
+        else if (import.meta.client && clientConfig.tokenStorage === 'localStorage') {
           token.value = localStorage.getItem(clientConfig.tokenName!)
         }
 
@@ -58,20 +60,20 @@ export default defineNuxtPlugin((nuxtApp) => {
         headers: {
           ...headers,
           ...(requestCookies && requestCookies),
-          [clientConfig.authHeader!]: auth
-        }
+          [clientConfig.authHeader!]: auth,
+        },
       }
     })
 
     const httpLink = authLink.concat(createHttpLink({
       ...(clientConfig?.httpLinkOptions && clientConfig.httpLinkOptions),
-      uri: (process.client && clientConfig.browserHttpEndpoint) || clientConfig.httpEndpoint,
-      headers: { ...(clientConfig?.httpLinkOptions?.headers || {}) }
+      uri: (import.meta.client && clientConfig.browserHttpEndpoint) || clientConfig.httpEndpoint,
+      headers: { ...(clientConfig?.httpLinkOptions?.headers || {}) },
     }))
 
     let wsLink: GraphQLWsLink | null = null
 
-    if (process.client && clientConfig.wsEndpoint) {
+    if (import.meta.client && clientConfig.wsEndpoint) {
       const wsClient = createRestartableClient({
         ...clientConfig.wsLinkOptions,
         url: clientConfig.wsEndpoint,
@@ -81,14 +83,14 @@ export default defineNuxtPlugin((nuxtApp) => {
           if (!auth) { return }
 
           return { headers: { [clientConfig.authHeader!]: auth } }
-        }
+        },
       })
 
       wsLink = new GraphQLWsLink(wsClient)
 
       nuxtApp._apolloWsClients = nuxtApp._apolloWsClients || {}
 
-      // @ts-ignore
+      // @ts-expect-error
       nuxtApp._apolloWsClients[key] = wsClient
     }
 
@@ -109,9 +111,9 @@ export default defineNuxtPlugin((nuxtApp) => {
                     return (definition.kind === 'OperationDefinition' && definition.operation === 'subscription')
                   },
                   wsLink,
-                  httpLink)
-                ])
-          ])
+                  httpLink),
+                ]),
+          ]),
     ])
 
     const cache = new InMemoryCache(clientConfig.inMemoryCacheOptions)
@@ -120,11 +122,11 @@ export default defineNuxtPlugin((nuxtApp) => {
       link,
       cache,
       ...(NuxtApollo.clientAwareness && { name: key }),
-      ...(process.server
+      ...(import.meta.server
         ? { ssrMode: true }
         : { ssrForceFetchDelay: 100 }),
       connectToDevTools: clientConfig.connectToDevTools || false,
-      defaultOptions: clientConfig?.defaultOptions
+      defaultOptions: clientConfig?.defaultOptions,
     })
 
     if (!clients?.default && !NuxtApollo?.clients?.default && key === Object.keys(NuxtApollo.clients)[0]) {
@@ -137,7 +139,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       nuxtApp.payload.data[cacheKey] = cache.extract()
     })
 
-    if (process.client && nuxtApp.payload.data[cacheKey]) {
+    if (import.meta.client && nuxtApp.payload.data[cacheKey]) {
       cache.restore(destr(JSON.stringify(nuxtApp.payload.data[cacheKey])))
     }
   }
@@ -152,8 +154,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   return {
     provide: {
       apolloHelpers: useApollo(),
-      apollo: { clients, defaultClient }
-    }
+      apollo: { clients, defaultClient },
+    },
   }
 })
 
@@ -179,7 +181,7 @@ declare module '#app' {
 declare module 'vue' {
   interface ComponentCustomProperties {
     $apolloHelpers: DollarApolloHelpers
-    // @ts-ignore
+    // @ts-expect-error
     $apollo: DollarApollo
   }
 }

@@ -37,7 +37,7 @@ type TAsyncQuery<T> = {
   context?: DefaultContext
   /**
    * If `true`, this overrides the default fetchPolicy for the Apollo Client to `cache-first`.
-   * */
+   */
   cache?: boolean
 }
 
@@ -47,13 +47,13 @@ type TAsyncQuery<T> = {
  * @param opts An object containing the query, variables, clientId, context, and cache options.
  * @param options Customize the underlying `useAsyncData` composable.
  */
-export function useAsyncQuery <
+export function useAsyncQuery<
   T,
   DataT = T,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
-  NuxtErrorDataT = unknown
-> (opts: TAsyncQuery<T>, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+  NuxtErrorDataT = unknown,
+>(opts: TAsyncQuery<T>, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
 /**
  * `useAsyncQuery` resolves the GraphQL query asynchronously in a SSR-friendly composable.
@@ -64,15 +64,15 @@ export function useAsyncQuery <
  * @param context The context object that's passed along your link chain.
  * @param options Customize the underlying `useAsyncData` composable.
  */
-export function useAsyncQuery <
+export function useAsyncQuery<
   T,
   DataT = T,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
-  NuxtErrorDataT = unknown
-> (query: TQuery<T>, variables?: TVariables<T>, clientId?: ApolloClientKeys, context?: DefaultContext, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+  NuxtErrorDataT = unknown,
+>(query: TQuery<T>, variables?: TVariables<T>, clientId?: ApolloClientKeys, context?: DefaultContext, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
-export function useAsyncQuery <T> (...args: any[]) {
+export function useAsyncQuery<T>(...args: any[]) {
   const { key, fn, options } = prep<T>(...args)
   return useAsyncData<T>(key, fn, options)
 }
@@ -83,13 +83,13 @@ export function useAsyncQuery <T> (...args: any[]) {
  * @param opts An object containing the query, variables, clientId, context, and cache options.
  * @param options Customize the underlying `useAsyncData` composable.
  */
-export function useLazyAsyncQuery <
+export function useLazyAsyncQuery<
   T,
   DataT = T,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
-  NuxtErrorDataT = unknown
-> (opts: TAsyncQuery<T>, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+  NuxtErrorDataT = unknown,
+>(opts: TAsyncQuery<T>, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
 /**
  * `useLazyAsyncQuery` resolves the GraphQL query after loading the route, instead of blocking client-side navigation.
@@ -100,15 +100,15 @@ export function useLazyAsyncQuery <
  * @param context The context object that's passed along your link chain.
  * @param options Customize the underlying `useAsyncData` composable.
  */
-export function useLazyAsyncQuery <
+export function useLazyAsyncQuery<
   T,
   DataT = T,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = null,
-  NuxtErrorDataT = unknown
-> (query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
+  NuxtErrorDataT = unknown,
+>(query: TQuery<T>, variables?: TVariables<T>, clientId?: string, context?: DefaultContext, options?: AsyncDataOptions<T, DataT, PickKeys, DefaultT>): AsyncData<PickFrom<DataT, PickKeys> | DefaultT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>) | null>
 
-export function useLazyAsyncQuery <T> (...args: any) {
+export function useLazyAsyncQuery<T>(...args: any) {
   const { key, fn, options } = prep<T>(...args)
   return useAsyncData<T>(key, fn, { ...options, lazy: true })
 }
@@ -136,7 +136,8 @@ const prep = <T> (...args: any[]) => {
     if (typeof args?.[1] === 'object') {
       options = args?.[1]
     }
-  } else {
+  }
+  else {
     query = args?.[0]
     variables = args?.[1]
 
@@ -169,13 +170,13 @@ const prep = <T> (...args: any[]) => {
     query,
     variables: unref(variables) || undefined,
     ...(cache && { fetchPolicy: 'cache-first' }),
-    context
+    context,
   }).then(r => r.data)
 
   return { key, query, clientId, variables, fn, options }
 }
 
-export function useApollo (): {
+export function useApollo(): {
   /**
    * Access the configured apollo clients.
    */
@@ -193,7 +194,7 @@ export function useApollo (): {
    * @param {string} token The token to be applied.
    * @param {string} client - Name of the Apollo client. Defaults to `default`.
    * @param {boolean} skipResetStore - If `false`, Resets your entire store by clearing out your cache and then re-executing all of your active queries.
-   * */
+   */
   onLogin: (token?: string, client?: ApolloClientKeys, skipResetStore?: boolean) => Promise<void>
 
   /**
@@ -201,11 +202,11 @@ export function useApollo (): {
    *
    * @param {string} client - Name of the Apollo client. Defaults to `default`.
    * @param {boolean} skipResetStore - If `false`, Resets your entire store by clearing out your cache and then re-executing all of your active queries.
-   * */
+   */
   onLogout: (client?: ApolloClientKeys, skipResetStore?: boolean) => Promise<void>
 }
 
-export function useApollo () {
+export function useApollo() {
   const nuxtApp = useNuxtApp() as NuxtApp & {
     _apolloClients?: Record<ApolloClientKeys, ApolloClient<any>>
     _apolloWsClients?: Record<ApolloClientKeys, RestartableClient>
@@ -227,9 +228,9 @@ export function useApollo () {
 
     return conf?.tokenStorage === 'cookie'
       ? nuxtApp.runWithContext(() => useCookie(tokenName).value)
-      : (process.client && localStorage.getItem(tokenName)) || null
+      : (import.meta.client && localStorage.getItem(tokenName)) || null
   }
-  type TAuthUpdate = {token?: string, client?: ApolloClientKeys, mode: 'login' | 'logout', skipResetStore?: boolean}
+  type TAuthUpdate = { token?: string, client?: ApolloClientKeys, mode: 'login' | 'logout', skipResetStore?: boolean }
   const updateAuth = async ({ token, client, mode, skipResetStore }: TAuthUpdate) => {
     client = client || 'default'
 
@@ -242,16 +243,18 @@ export function useApollo () {
     if (conf?.tokenStorage === 'cookie') {
       const cookieOpts = (client && conf?.cookieAttributes) || NuxtApollo?.cookieAttributes
 
-      // @ts-ignore
+      // @ts-expect-error
       const cookie = useCookie(tokenName, cookieOpts)
 
       if (!cookie.value && mode === 'logout') { return }
 
       cookie.value = (mode === 'login' && token) || null
-    } else if (process.client && conf?.tokenStorage === 'localStorage') {
+    }
+    else if (import.meta.client && conf?.tokenStorage === 'localStorage') {
       if (mode === 'login' && token) {
         localStorage.setItem(tokenName, token)
-      } else if (mode === 'logout') {
+      }
+      else if (mode === 'logout') {
         localStorage.removeItem(tokenName)
       }
     }
@@ -260,7 +263,6 @@ export function useApollo () {
 
     if (skipResetStore) { return }
 
-    // eslint-disable-next-line no-console
     await nuxtApp?._apolloClients?.[client].resetStore().catch(e => console.log('%cError on cache reset', 'color: orange;', e.message))
   }
 
@@ -271,6 +273,6 @@ export function useApollo () {
 
     onLogin: (token?: string, client?: ApolloClientKeys, skipResetStore?: boolean) => updateAuth({ token, client, skipResetStore, mode: 'login' }),
 
-    onLogout: (client?: ApolloClientKeys, skipResetStore?: boolean) => updateAuth({ client, skipResetStore, mode: 'logout' })
+    onLogout: (client?: ApolloClientKeys, skipResetStore?: boolean) => updateAuth({ client, skipResetStore, mode: 'logout' }),
   }
 }

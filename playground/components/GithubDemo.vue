@@ -22,11 +22,17 @@
       </div>
 
       <div class="mt-4 flex flex-wrap gap-3 items-center">
-        <UButton :disabled="!githubToken" @click="getViewer">
+        <UButton
+          :disabled="!githubToken"
+          @click="getViewer"
+        >
           Load @me
         </UButton>
 
-        <UButton :disabled="!githubToken" @click="getNuxtDiscussions">
+        <UButton
+          :disabled="!githubToken"
+          @click="getNuxtDiscussions"
+        >
           Load Nuxt Discussions
         </UButton>
       </div>
@@ -56,7 +62,8 @@ const githubToken = useState<string | null | undefined>()
 // for testing with cookie `tokenStorage`
 if (import.meta.server && NuxtApollo.clients?.github?.tokenStorage === 'cookie') {
   githubToken.value = await getToken('github')
-} else if (import.meta.client) {
+}
+else if (import.meta.client) {
   onMounted(async () => {
     githubToken.value = await getToken('github')
   })
@@ -67,7 +74,7 @@ const queryViewer = gql`query viwer { viewer { login } }`
 const output = ref()
 
 const whoAmI = await useAsyncQuery({ query: queryViewer, clientId: 'github' }, {
-  immediate: !!githubToken.value
+  immediate: !!githubToken.value,
 })
 
 watch(whoAmI.data, (data) => {

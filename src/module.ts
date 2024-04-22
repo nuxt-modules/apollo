@@ -1,4 +1,4 @@
-import { existsSync } from 'fs'
+import { existsSync } from 'node:fs'
 import jiti from 'jiti'
 import { defu } from 'defu'
 import { useLogger, addPlugin, addImports, addTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
@@ -12,7 +12,7 @@ export type { ClientConfig, ErrorResponse }
 
 const logger = useLogger(name)
 
-async function readConfigFile (path: string): Promise<ClientConfig> {
+async function readConfigFile(path: string): Promise<ClientConfig> {
   return await jiti(import.meta.url, { esmResolve: true, interopDefault: true, requireCache: false })(path)
 }
 
@@ -24,8 +24,8 @@ export default defineNuxtModule<ModuleOptions>({
     version,
     configKey: 'apollo',
     compatibility: {
-      nuxt: '^3.0.0-rc.9'
-    }
+      nuxt: '^3.0.0-rc.9',
+    },
   },
   defaults: {
     autoImports: true,
@@ -36,11 +36,11 @@ export default defineNuxtModule<ModuleOptions>({
     cookieAttributes: {
       maxAge: 60 * 60 * 24 * 7,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax'
+      sameSite: 'lax',
     },
-    clientAwareness: false
+    clientAwareness: false,
   },
-  async setup (options, nuxt) {
+  async setup(options, nuxt) {
     if (!options.clients || !Object.keys(options.clients).length) {
       logger.warn('No apollo clients configured.')
       return
@@ -61,7 +61,7 @@ export default defineNuxtModule<ModuleOptions>({
     const clients: Record<string, ClientConfig> = {}
     const configPaths: Record<string, string> = {}
 
-    async function prepareClients () {
+    async function prepareClients() {
       // eslint-disable-next-line prefer-const
       for (let [k, v] of Object.entries(options.clients || {})) {
         if (typeof v === 'string') {
@@ -105,8 +105,8 @@ export default defineNuxtModule<ModuleOptions>({
         '    proxyCookies: boolean',
         '    cookieAttributes: ClientConfig[\'cookieAttributes\']',
         '  }',
-        '}'
-      ].join('\n')
+        '}',
+      ].join('\n'),
     })
 
     addTemplate({
@@ -117,8 +117,8 @@ export default defineNuxtModule<ModuleOptions>({
         ` clientAwareness: ${options.clientAwareness},`,
         ` cookieAttributes: ${serializeConfig(options.cookieAttributes)},`,
         ` clients: ${serializeConfig(clients)}`,
-        '}'
-      ].join('\n')
+        '}',
+      ].join('\n'),
     })
 
     nuxt.options.alias['#apollo'] = resolve(nuxt.options.buildDir, 'apollo')
@@ -132,7 +132,7 @@ export default defineNuxtModule<ModuleOptions>({
       ...[
         'useApollo',
         'useAsyncQuery',
-        'useLazyAsyncQuery'
+        'useLazyAsyncQuery',
       ].map(n => ({ name: n, from: resolve('runtime/composables') })),
       ...(!options?.autoImports
         ? []
@@ -150,8 +150,8 @@ export default defineNuxtModule<ModuleOptions>({
 
             'useGlobalQueryLoading',
             'useGlobalMutationLoading',
-            'useGlobalSubscriptionLoading'
-          ].map(n => ({ name: n, from: '@vue/apollo-composable' })))
+            'useGlobalSubscriptionLoading',
+          ].map(n => ({ name: n, from: '@vue/apollo-composable' }))),
     ])
 
     nuxt.hook('vite:extendConfig', (config) => {
@@ -167,16 +167,16 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.hook('webpack:config', (configs) => {
       for (const config of configs) {
-        // @ts-ignore
+        // @ts-expect-error
         const hasGqlLoader = config.module.rules.some((rule: any) => rule?.use === 'graphql-tag/loader')
 
         if (hasGqlLoader) { return }
 
-        // @ts-ignore
+        // @ts-expect-error
         config.module.rules.push({
           test: /\.(graphql|gql)$/,
           use: 'graphql-tag/loader',
-          exclude: /(node_modules)/
+          exclude: /(node_modules)/,
         })
       }
     })
@@ -192,7 +192,7 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     await prepareClients()
-  }
+  },
 })
 
 export const defineApolloClient = (config: ClientConfig) => config
