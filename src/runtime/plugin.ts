@@ -138,7 +138,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     })
 
     if (process.client && nuxtApp.payload.data[cacheKey]) {
-      cache.restore(destr(JSON.stringify(nuxtApp.payload.data[cacheKey])))
+      cache.restore(nuxtApp.payload.data[cacheKey])
     }
   }
 
