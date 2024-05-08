@@ -16,7 +16,7 @@ import { NuxtApollo } from '#apollo'
 import type { ApolloClientKeys } from '#apollo'
 
 export default defineNuxtPlugin((nuxtApp) => {
-  const requestCookies = (process.server && NuxtApollo.proxyCookies && useRequestHeaders(['cookie'])) || undefined
+  const requestCookies = process.server ? useRequestHeaders(['cookie']) : {}
 
   const clients = {} as Record<ApolloClientKeys, ApolloClient<any>>
 
@@ -31,8 +31,8 @@ export default defineNuxtPlugin((nuxtApp) => {
           if (process.client) {
             const t = useCookie(clientConfig.tokenName!).value
             if (t) { token.value = t }
-          } else if (requestCookies?.cookie) {
-            const t = requestCookies.cookie.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
+          } else if (process.server) {
+            const t = requestCookies.cookie?.split(';').find(c => c.trim().startsWith(`${clientConfig.tokenName}=`))?.split('=')?.[1]
             if (t) { token.value = t }
           }
         } else if (process.client && clientConfig.tokenStorage === 'localStorage') {
@@ -49,6 +49,8 @@ export default defineNuxtPlugin((nuxtApp) => {
       return `${clientConfig?.authType} ${token.value}`
     }
 
+    const cookiesToProxy = (process.server && NuxtApollo.proxyCookies) ? requestCookies : {}
+
     const authLink = setContext(async (_, { headers }) => {
       const auth = await getAuth()
 
@@ -57,7 +59,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       return {
         headers: {
           ...headers,
-          ...(requestCookies && requestCookies),
+          ...cookiesToProxy,
           [clientConfig.authHeader!]: auth
         }
       }
