@@ -1,6 +1,6 @@
 import { hash } from 'ohash'
 import { print } from 'graphql'
-import type { ApolloClient, OperationVariables, QueryOptions, DefaultContext } from '@apollo/client'
+import type { ApolloClient, OperationVariables, QueryOptions, DefaultContext, FetchPolicy } from '@apollo/client'
 import type { AsyncData, AsyncDataOptions, NuxtError } from 'nuxt/app'
 import type { RestartableClient } from './ws'
 import { ref, isRef, reactive, useCookie, useNuxtApp, useAsyncData } from '#imports'
@@ -165,10 +165,12 @@ const prep = <T> (...args: any[]) => {
 
   const key: string = args?.[0]?.key || hash({ query: print(query), variables, clientId })
 
+  const fetchPolicy = cache === undefined && { fetchPolicy: cache ? 'cache-first' : 'no-cache' as FetchPolicy }
+
   const fn = () => clients![clientId!]?.query<T>({
     query,
     variables: variables || undefined,
-    ...(cache && { fetchPolicy: 'cache-first' }),
+    ...fetchPolicy,
     context
   }).then(r => r.data)
 
