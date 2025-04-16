@@ -1,5 +1,6 @@
 import { destr } from 'destr'
 import { onError } from '@apollo/client/link/error'
+import { createPersistedQueryLink } from '@apollo/client/link/persisted-queries'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { createApolloProvider } from '@vue/apollo-option'
 import { ApolloClients, provideApolloClients } from '@vue/apollo-composable'
@@ -69,6 +70,36 @@ export default defineNuxtPlugin((nuxtApp) => {
       headers: { ...(clientConfig?.httpLinkOptions?.headers || {}) }
     }))
 
+    let httpLinkChain = httpLink
+
+    if (clientConfig.persisting) {
+      const sha256 = async (query: string) => {
+        if (import.meta.server) {
+          // Server-side hashing using Node.js crypto
+          const crypto = await import('node:crypto')
+          return crypto.createHash('sha256').update(query).digest('hex')
+        } else if (import.meta.client) {
+          // Client-side hashing using browser's SubtleCrypto API
+          const encoder = new TextEncoder()
+          const data = encoder.encode(query)
+          const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+          return Array.from(new Uint8Array(hashBuffer))
+            .map(byte => byte.toString(16).padStart(2, '0'))
+            .join('')
+        }
+        throw new Error('Unsupported environment')
+      }
+
+      const apqOptions = {
+        ...(typeof clientConfig.persisting === 'object' ? clientConfig.persisting : {}),
+        sha256
+      }
+
+      const persistedQueriesLink = createPersistedQueryLink(apqOptions)
+
+      httpLinkChain = persistedQueriesLink.concat(httpLink)
+    }
+
     let wsLink: GraphQLWsLink | null = null
 
     if (process.client && clientConfig.wsEndpoint) {
@@ -99,7 +130,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const link = ApolloLink.from([
       errorLink,
       ...(!wsLink
-        ? [httpLink]
+        ? [httpLinkChain]
         : [
             ...(clientConfig?.websocketsOnly
               ? [wsLink]
@@ -109,7 +140,7 @@ export default defineNuxtPlugin((nuxtApp) => {
                     return (definition.kind === 'OperationDefinition' && definition.operation === 'subscription')
                   },
                   wsLink,
-                  httpLink)
+                  httpLinkChain)
                 ])
           ])
     ])

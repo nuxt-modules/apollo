@@ -1,5 +1,5 @@
 import type { ClientOptions } from 'graphql-ws'
-import type { HttpOptions, DefaultOptions, InMemoryCacheConfig } from '@apollo/client'
+import type { HttpOptions, DefaultOptions, InMemoryCacheConfig, PersistedQueryLink } from '@apollo/client'
 import type { CookieOptions } from 'nuxt/app'
 export type { ErrorResponse } from '@apollo/client/link/error'
 
@@ -38,8 +38,10 @@ export type ClientConfig = {
    **/
   wsEndpoint?: string;
 
-  // Enable Automatic Query persisting with Apollo Engine
-  // persisting?: boolean
+  /**
+   * Configure Automatic Persited Queries
+   **/
+  persisting?: PersistedQueryLink.Options | null;
 
   /**
    * Specify if the client should solely use WebSocket.
