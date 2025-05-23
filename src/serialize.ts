@@ -10,7 +10,7 @@ export const serializeConfig = (obj: any): string => {
   }
 
   // Run recursively on objects and arrays
-  if (typeof obj === 'object') {
+  if (typeof obj === 'object' && obj !== null) {
     if (Array.isArray(obj)) {
       return `[${obj.map(serializeConfig).join(', ')}]`
     } else {
