@@ -29,7 +29,7 @@ export type ClientConfig = {
    * Provide additional configuration for the `GraphQLWsLink`.
    * See https://github.com/enisdenjo/graphql-ws/blob/master/docs/interfaces/client.ClientOptions.md
    **/
-  wsLinkOptions?: Omit<ClientOptions, 'url' | 'connectionParams'>;
+  wsLinkOptions?: Omit<ClientOptions, 'url'>;
 
   /**
    * Specify a websocket endpoint to be used for subscriptions.
