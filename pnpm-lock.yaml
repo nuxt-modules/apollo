@@ -13,7 +13,7 @@ importers:
     dependencies:
       '@apollo/client':
         specifier: ^3.9.5
-        version: 3.9.5(graphql-ws@5.15.0)(graphql@16.8.1)
+        version: 3.9.5(graphql-ws@6.0.6)(graphql@16.8.1)
       '@nuxt/kit':
         specifier: ^3.10.3
         version: 3.10.3(rollup@3.29.4)
@@ -39,8 +39,8 @@ importers:
         specifier: ^2.12.6
         version: 2.12.6(graphql@16.8.1)
       graphql-ws:
-        specifier: ^5.15.0
-        version: 5.15.0(graphql@16.8.1)
+        specifier: ^6.0.6
+        version: 6.0.6(graphql@16.8.1)
       jiti:
         specifier: ^1.21.0
         version: 1.21.0
@@ -106,7 +106,7 @@ packages:
     resolution: {integrity: sha512-gFPqTG7otEJ8uP6wrhDv6mqwGWYZKNvAcCq6u9hOj0c+IKCEsY4L1oC9trPq2SaWIzAfHvqfBDxF591JkMf+kg==}
     dev: true
 
-  /@apollo/client@3.9.5(graphql-ws@5.15.0)(graphql@16.8.1):
+  /@apollo/client@3.9.5(graphql-ws@6.0.6)(graphql@16.8.1):
     resolution: {integrity: sha512-7y+c8MTPU+hhTwvcGVtMMGIgWduzrvG1mz5yJMRyqYbheBkkky3Lki6ADWVSBXG1lZoOtPYvB2zDgVfKb2HSsw==}
     peerDependencies:
       graphql: ^15.0.0 || ^16.0.0
@@ -130,7 +130,7 @@ packages:
       '@wry/trie': 0.5.0
       graphql: 16.8.1
       graphql-tag: 2.12.6(graphql@16.8.1)
-      graphql-ws: 5.15.0(graphql@16.8.1)
+      graphql-ws: 6.0.6(graphql@16.8.1)
       hoist-non-react-statics: 3.3.2
       optimism: 0.18.0
       prop-types: 15.8.1
@@ -2557,7 +2557,7 @@ packages:
       '@vue/composition-api':
         optional: true
     dependencies:
-      '@apollo/client': 3.9.5(graphql-ws@5.15.0)(graphql@16.8.1)
+      '@apollo/client': 3.9.5(graphql-ws@6.0.6)(graphql@16.8.1)
       graphql: 16.8.1
       throttle-debounce: 5.0.0
       ts-essentials: 9.4.1(typescript@5.3.3)
@@ -2573,7 +2573,7 @@ packages:
       '@apollo/client': ^3.2.1
       vue: ^3.1.0
     dependencies:
-      '@apollo/client': 3.9.5(graphql-ws@5.15.0)(graphql@16.8.1)
+      '@apollo/client': 3.9.5(graphql-ws@6.0.6)(graphql@16.8.1)
       throttle-debounce: 5.0.0
       vue: 3.4.21(typescript@5.3.3)
     dev: false
@@ -4935,11 +4935,24 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /graphql-ws@5.15.0(graphql@16.8.1):
-    resolution: {integrity: sha512-xWGAtm3fig9TIhSaNsg0FaDZ8Pyn/3re3RFlP4rhQcmjRDIPpk1EhRuNB+YSJtLzttyuToaDiNhwT1OMoGnJnw==}
-    engines: {node: '>=10'}
+  /graphql-ws@6.0.6(graphql@16.8.1):
+    resolution: {integrity: sha512-zgfER9s+ftkGKUZgc0xbx8T7/HMO4AV5/YuYiFc+AtgcO5T0v8AxYYNQ+ltzuzDZgNkYJaFspm5MMYLjQzrkmw==}
+    engines: {node: '>=20'}
     peerDependencies:
-      graphql: '>=0.11 <=16'
+      '@fastify/websocket': ^10 || ^11
+      crossws: ~0.3
+      graphql: ^15.10.1 || ^16
+      uWebSockets.js: ^20
+      ws: ^8
+    peerDependenciesMeta:
+      '@fastify/websocket':
+        optional: true
+      crossws:
+        optional: true
+      uWebSockets.js:
+        optional: true
+      ws:
+        optional: true
     dependencies:
       graphql: 16.8.1
     dev: false

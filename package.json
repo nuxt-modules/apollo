@@ -40,7 +40,7 @@
     "destr": "^2.0.3",
     "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
-    "graphql-ws": "^5.15.0",
+    "graphql-ws": "^6.0.6",
     "jiti": "^1.21.0",
     "ohash": "^1.1.3"
   },
