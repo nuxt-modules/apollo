@@ -40,6 +40,7 @@
 - Ensure you have the latest LTS version of Node.js installed
 - Run `corepack enable`
 - Install dependencies using `pnpm install`
+- Build the module and prepare the playground `pnpm dev:prepare`
 - Start playground with `pnpm dev`
 
 ## License
