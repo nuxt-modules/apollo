@@ -41,7 +41,7 @@
     "graphql": "^16.11.0",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^6.0.6",
-    "jiti": "^1.21.7",
+    "jiti": "^2.5.1",
     "ohash": "^1.1.6"
   },
   "devDependencies": {
