@@ -135,7 +135,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       ...(import.meta.server
         ? { ssrMode: true }
         : { ssrForceFetchDelay: 100 }),
-      connectToDevTools: clientConfig.connectToDevTools || false,
+      devtools: { enabled: clientConfig.connectToDevTools || false },
       defaultOptions: clientConfig?.defaultOptions
     })
 
