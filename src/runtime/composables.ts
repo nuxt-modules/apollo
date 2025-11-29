@@ -139,7 +139,7 @@ const prep = <T> (...args: any[]) => {
     context = firstArg.context!
     clientId = firstArg.clientId
 
-    if (typeof args?.[1] === 'object' && args?.[1] !== null && 'watch' in args[1]) {
+    if (typeof args?.[1] === 'object' && args?.[1] !== null) {
       options = args?.[1]
     }
   } else {
