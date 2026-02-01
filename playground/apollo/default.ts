@@ -27,5 +27,8 @@ export default defineApolloClient({
 
   // Specify if the client should solely use WebSocket.
   // requires `wsEndpoint`.
-  websocketsOnly: false
+  websocketsOnly: false,
+
+  // Specify if the client should use `apollo-upload-client` for file uploads.
+  useApolloUploadLink: true
 })
