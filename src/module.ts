@@ -39,7 +39,8 @@ export default defineNuxtModule<ModuleOptions>({
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax'
     },
-    clientAwareness: false
+    clientAwareness: false,
+    useApolloUploadLink: true
   },
   async setup(options, nuxt) {
     if (!options.clients || !Object.keys(options.clients).length) {
@@ -84,6 +85,7 @@ export default defineNuxtModule<ModuleOptions>({
         v.authHeader = v?.authHeader || options.authHeader
         v.tokenName = v?.tokenName || `apollo:${k}.token`
         v.tokenStorage = v?.tokenStorage || options.tokenStorage
+        v.useApolloUploadLink = v?.useApolloUploadLink || options.useApolloUploadLink
         if (v.cookieAttributes) {
           v.cookieAttributes = defu(v?.cookieAttributes, options.cookieAttributes)
         }

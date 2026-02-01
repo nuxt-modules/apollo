@@ -101,6 +101,13 @@ export type ClientConfig = {
    * Configuration for the auth cookie.
    */
   cookieAttributes?: CookieAttributes
+
+  /**
+   * Use 'apollo-upload-client' for file uploads, instead of the standard apollo HttpLink.
+   * @type {boolean}
+   * @default true
+   */
+  useApolloUploadLink?: boolean
 }
 
 export interface NuxtApolloConfig<T = false> {
@@ -165,4 +172,11 @@ export interface NuxtApolloConfig<T = false> {
    * @default false
    */
   clientAwareness?: boolean
+
+  /**
+   * Use 'apollo-upload-client' for file uploads, instead of the standard apollo HttpLink.
+   * @type {boolean}
+   * @default true
+   */
+  useApolloUploadLink?: boolean
 }
