@@ -25,7 +25,7 @@ export default defineNuxtModule<ModuleOptions>({
     version,
     configKey: 'apollo',
     compatibility: {
-      nuxt: '^3.0.0 || ^4.0.0'
+      nuxt: '^3.0.0 || ^4.0.0 || ^5.0.0-0'
     }
   },
   defaults: {
@@ -159,13 +159,17 @@ export default defineNuxtModule<ModuleOptions>({
           ].map(n => ({ name: n, from: '@vue/apollo-composable' })))
     ])
 
+    const graphqlPlugin = GraphQLPlugin() as PluginOption
+
     nuxt.hook('vite:extendConfig', (config) => {
       config.optimizeDeps = config.optimizeDeps || {}
       config.optimizeDeps.exclude = config.optimizeDeps.exclude || []
       config.optimizeDeps.exclude.push('@vue/apollo-composable')
 
       config.plugins = config.plugins || []
-      config.plugins.push(GraphQLPlugin() as PluginOption)
+      if (!config.plugins.includes(graphqlPlugin)) {
+        config.plugins.push(graphqlPlugin)
+      }
 
       if (!nuxt.options.dev) {
         config.define = { ...config.define, __DEV__: false }
