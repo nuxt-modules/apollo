@@ -1,3 +1,5 @@
+import GraphQLPlugin from '@rollup/plugin-graphql'
+
 export default defineNuxtConfig({
 
   modules: ['@nuxt/ui', '@nuxtjs/apollo'],
@@ -6,6 +8,10 @@ export default defineNuxtConfig({
   colorMode: {
     preference: 'dark',
     storageKey: 'na-color-scheme'
+  },
+
+  vite: {
+    plugins: [Promise.resolve([GraphQLPlugin()])]
   },
 
   apollo: {
