@@ -167,7 +167,7 @@ export default defineNuxtModule<ModuleOptions>({
       config.optimizeDeps.exclude.push('@vue/apollo-composable')
 
       config.plugins = config.plugins || []
-      if (!config.plugins.includes(graphqlPlugin)) {
+      if (!config.plugins.some(plugin => plugin && typeof plugin === 'object' && 'name' in plugin && plugin.name === 'graphql')) {
         config.plugins.push(graphqlPlugin)
       }
 
