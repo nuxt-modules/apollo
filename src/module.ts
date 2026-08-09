@@ -12,6 +12,16 @@ export type { ClientConfig, ErrorResponse }
 
 const logger = useLogger(name)
 
+async function hasGraphQLPlugin(options: PluginOption[]): Promise<boolean> {
+  for (const option of options) {
+    const plugin = await option
+    if (Array.isArray(plugin) ? await hasGraphQLPlugin(plugin) : plugin && plugin.name === 'graphql') {
+      return true
+    }
+  }
+  return false
+}
+
 async function readConfigFile(path: string): Promise<ClientConfig> {
   const jiti = createJiti(import.meta.url)
   return await jiti.import(path, { default: true })
@@ -161,13 +171,13 @@ export default defineNuxtModule<ModuleOptions>({
 
     const graphqlPlugin = GraphQLPlugin() as PluginOption
 
-    nuxt.hook('vite:extendConfig', (config) => {
+    nuxt.hook('vite:extendConfig', async (config) => {
       config.optimizeDeps = config.optimizeDeps || {}
       config.optimizeDeps.exclude = config.optimizeDeps.exclude || []
       config.optimizeDeps.exclude.push('@vue/apollo-composable')
 
       config.plugins = config.plugins || []
-      if (!config.plugins.some(plugin => plugin && typeof plugin === 'object' && 'name' in plugin && plugin.name === 'graphql')) {
+      if (!await hasGraphQLPlugin(config.plugins)) {
         config.plugins.push(graphqlPlugin)
       }
 

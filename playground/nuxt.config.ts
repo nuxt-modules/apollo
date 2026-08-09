@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    plugins: [GraphQLPlugin()]
+    plugins: [Promise.resolve([GraphQLPlugin()])]
   },
 
   apollo: {
