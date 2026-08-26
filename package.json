@@ -39,7 +39,7 @@
     "release": "standard-version --prerelease alpha && git push --follow-tags && pnpm publish --tag next"
   },
   "dependencies": {
-    "@apollo/client": "^3.13.8",
+    "@apollo/client": "^4.2.12",
     "@nuxt/kit": "^4.0.2",
     "@rollup/plugin-graphql": "^2.0.5",
     "@vue/apollo-composable": "^4.2.2",
