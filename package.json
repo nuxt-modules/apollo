@@ -57,7 +57,7 @@
     "@nuxt/eslint-config": "^1.7.0",
     "@nuxt/module-builder": "^1.0.1",
     "@nuxt/schema": "^4.0.2",
-    "@nuxt/ui": "^3.3.0",
+    "@nuxt/ui": "^4.11.0",
     "@types/node": "^24.1.0",
     "eslint": "^9.31.0",
     "nuxt": "^4.0.2"
