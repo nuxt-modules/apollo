@@ -6,8 +6,8 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
-    "docus": "^4.0.2",
-    "better-sqlite3": "^12.2.0",
-    "nuxt": "^4.0.2"
+    "docus": "^4.2.0",
+    "better-sqlite3": "^12.11.1",
+    "nuxt": "^4.5.2"
   }
 }
