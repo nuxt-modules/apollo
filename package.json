@@ -41,7 +41,7 @@
   "dependencies": {
     "@apollo/client": "^3.13.8",
     "@nuxt/kit": "^4.0.2",
-    "@rollup/plugin-graphql": "^2.0.5",
+    "@rollup/plugin-graphql": "^3.0.0",
     "@vue/apollo-composable": "^4.2.2",
     "@vue/apollo-option": "^4.2.2",
     "defu": "^6.1.4",
