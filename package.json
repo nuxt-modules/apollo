@@ -46,7 +46,7 @@
     "@vue/apollo-option": "^4.2.2",
     "defu": "^6.1.4",
     "destr": "^2.0.5",
-    "graphql": "^16.11.0",
+    "graphql": "^17.0.2",
     "graphql-tag": "^2.12.6",
     "graphql-ws": "^6.0.6",
     "jiti": "^2.5.1",
