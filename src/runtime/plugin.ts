@@ -156,7 +156,9 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   provideApolloClients(clients)
   nuxtApp.vueApp.provide(ApolloClients, clients)
-  nuxtApp.vueApp.use(createApolloProvider({ defaultClient: clients?.default }))
+  if (NuxtApollo.optionsApi) {
+    nuxtApp.vueApp.use(createApolloProvider({ defaultClient: clients?.default }))
+  }
   nuxtApp._apolloClients = clients
 
   const defaultClient = clients?.default
