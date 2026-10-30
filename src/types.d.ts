@@ -165,4 +165,12 @@ export interface NuxtApolloConfig<T = false> {
    * @default false
    */
   clientAwareness?: boolean
+
+  /**
+   * Install the Vue Apollo Options API provider (the `apollo` component option and the `this.$apollo` methods).
+   * It is a global mixin that runs on every component, so disable it if you only use composables.
+   * @type {boolean}
+   * @default true
+   */
+  optionsApi?: boolean
 }
